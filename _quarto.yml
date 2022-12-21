@@ -1,23 +1,48 @@
 project:
   type: book
+  output-dir: _book
+  preview:
+    port: 5896
+    browser: true
+  render:
+    - "*.qmd"
+  resources:
+    - "data/"
+    - "images/"
+    - "figs/"
 
 book:
-  title: "mybook"
-  author: "Jane Doe"
-  date: "4/12/2022"
+  title: "Yet Another R Dataviz Book"
+  reader-mode: true
+  author: "John Paul Helveston"
+  date: "12/19/2022"
+
+  page-footer:
+    left: |
+      Yet Another R Dataviz Book was written by John Paul Helveston
+    right: |
+      This book was built with <a href="https://quarto.org/">Quarto</a>.
+  cover-image: cover.png
+  favicon: cover.png
+
+  site-url: https://yardbook.jhelvy.com/
+  repo-url: https://github.com/jhelvy/yardbook/
+  repo-branch: main
+  repo-actions: [edit, issue]
+
   chapters:
     - index.qmd
     - intro.qmd
-    - summary.qmd
-    - references.qmd
 
-bibliography: references.bib
+    - part: part.qmd
+      chapters:
+        - chapter.qmd
 
 format:
   html:
-    theme: cosmo
-  pdf:
-    documentclass: scrreprt
+    theme:
+      - cosmo
+    code-link: true
 
-
-
+    author-meta: "John Paul Helveston"
+    callout-appearance: simple

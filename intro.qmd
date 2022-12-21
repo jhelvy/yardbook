@@ -1,5 +1,15 @@
-# Introduction
+# Introduction {#sec-introduction .unnumbered}
 
-This is a book created from markdown and executable code.
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
 
-See @knuth84 for additional discussion of literate programming.
+This is a Quarto book.
+
+To learn more about Quarto books visit <https://quarto.org/docs/books>.
+
+```{r}
+1 + 1
+```
