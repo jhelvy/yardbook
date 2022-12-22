@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Yet Another R Dataviz Book",
+    "section": "",
+    "text": "Preface\n\n\n\nThis is a Quarto book."
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Introduction",
+    "section": "",
+    "text": "This is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n#> [1] 2"
+  },
+  {
+    "objectID": "part.html#title",
+    "href": "part.html#title",
+    "title": "Title",
+    "section": "Title",
+    "text": "Title\ntext"
+  },
+  {
+    "objectID": "chapter.html#title",
+    "href": "chapter.html#title",
+    "title": "1  Title",
+    "section": "1.1 Title",
+    "text": "1.1 Title\ntext"
+  }
+]
