@@ -37,6 +37,7 @@ book:
     - part: part.qmd
       chapters:
         - chapter.qmd
+        - amounts.qmd
 
 format:
   html:

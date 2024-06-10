@@ -1,4 +1,4 @@
-# Title {#sec-chapter}
+# Amounts {#sec-chapter}
 
 ```{r}
 #| echo: false
@@ -6,6 +6,6 @@
 source("_common.R")
 ```
 
-## Title
+## Plotting amounts
 
 Changes here
