@@ -4,27 +4,51 @@
     "href": "index.html",
     "title": "Yet Another R Dataviz Book",
     "section": "",
-    "text": "Preface\n\n\n\nThis is a Quarto book."
+    "text": "Preface\nThis is a Quarto book.\nSome text here",
+    "crumbs": [
+      "Preface"
+    ]
   },
   {
     "objectID": "intro.html",
     "href": "intro.html",
     "title": "Introduction",
     "section": "",
-    "text": "This is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n#> [1] 2"
+    "text": "This is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n#&gt; [1] 2",
+    "crumbs": [
+      "Introduction"
+    ]
   },
   {
-    "objectID": "part.html#title",
-    "href": "part.html#title",
+    "objectID": "part.html",
+    "href": "part.html",
     "title": "Title",
-    "section": "Title",
-    "text": "Title\ntext"
+    "section": "",
+    "text": "Title\ntext",
+    "crumbs": [
+      "Title"
+    ]
   },
   {
-    "objectID": "chapter.html#title",
-    "href": "chapter.html#title",
+    "objectID": "chapter.html",
+    "href": "chapter.html",
     "title": "1  Title",
-    "section": "1.1 Title",
-    "text": "1.1 Title\ntext"
+    "section": "",
+    "text": "1.1 Title\nChanges here",
+    "crumbs": [
+      "Title",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Title</span>"
+    ]
+  },
+  {
+    "objectID": "amounts.html",
+    "href": "amounts.html",
+    "title": "2  Amounts",
+    "section": "",
+    "text": "2.1 Plotting amounts\nChanges here",
+    "crumbs": [
+      "Title",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Amounts</span>"
+    ]
   }
 ]
