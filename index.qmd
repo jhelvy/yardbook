@@ -9,7 +9,3 @@ source("_common.R")
 This is a Quarto book.
 
 Some text here
-
-Testing Testing
-This is Lola
-Lola was here

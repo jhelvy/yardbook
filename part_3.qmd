@@ -1,0 +1,11 @@
+# Data Visualization {#sec-part}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Data Visualization
+
+text

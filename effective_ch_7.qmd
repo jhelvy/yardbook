@@ -1,0 +1,11 @@
+# Effective Charts {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Effective Charts
+
+Changes here

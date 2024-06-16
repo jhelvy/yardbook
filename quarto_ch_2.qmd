@@ -1,0 +1,11 @@
+# Quarto Basics {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Quarto Basics
+
+Changes here

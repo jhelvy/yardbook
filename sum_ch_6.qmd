@@ -1,0 +1,11 @@
+# Summarizing {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Summarizing
+
+Changes here

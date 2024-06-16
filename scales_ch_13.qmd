@@ -1,0 +1,11 @@
+# Adjusting Scales {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Adjusting Scales
+
+Changes here

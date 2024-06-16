@@ -1,0 +1,11 @@
+# Good Data Practices {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Good Data Practices
+
+Changes here

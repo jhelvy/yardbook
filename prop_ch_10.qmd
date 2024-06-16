@@ -1,0 +1,11 @@
+# Proportions {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Proportions
+
+Changes here

@@ -1,0 +1,11 @@
+# Tidy Data {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Tidy Data
+
+Changes here

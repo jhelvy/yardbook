@@ -33,11 +33,28 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-
-    - part: part.qmd
+    - part: part_1.qmd
       chapters:
-        - chapter.qmd
-        - amounts.qmd
+        - quarto_ch_2.qmd
+        - ggplot_ch_3.qmd
+    - part: part_2.qmd
+      chapters:
+        - tidy_ch_4.qmd
+        - good_prac_ch_5.qmd
+    - part: part_3.qmd
+      chapters:
+        - sum_ch_6.qmd
+        - effective_ch_7.qmd
+        - trends_ch_8.qmd
+        - amounts_ch_9.qmd
+        - prop_ch_10.qmd
+        - comparisons_ch_11.qmd
+        - maps_ch_12.qmd
+        - scales_ch_13.qmd
+        - aesthetics_ch_14.qmd
+        - anim_ch_15.qmd
+        - interact_ch_16.qmd
+    
 
 format:
   html:

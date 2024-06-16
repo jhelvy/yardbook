@@ -1,4 +1,4 @@
-# Amounts {#sec-chapter}
+# Ggplot Basics {#sec-chapter}
 
 ```{r}
 #| echo: false
@@ -6,6 +6,6 @@
 source("_common.R")
 ```
 
-## Plotting amounts
+## Ggplot Basics
 
 Changes here

@@ -1,0 +1,11 @@
+# Comparisons {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Comparisons
+
+Changes here

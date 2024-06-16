@@ -1,0 +1,11 @@
+# Interactivity {#sec-chapter}
+
+```{r}
+#| echo: false
+#| message: false
+source("_common.R")
+```
+
+## Interactivity
+
+Changes here
