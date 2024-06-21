@@ -14,17 +14,17 @@ project:
 book:
   title: "Yet Another R Dataviz Book"
   reader-mode: true
-  author: "John Paul Helveston"
-  date: "12/19/2022"
-
+  author:
+    - "John Paul Helveston"
+    - "Lola Nurullaeva"
+  date: "08/01/2024"
   page-footer:
     left: |
-      Yet Another R Dataviz Book was written by John Paul Helveston
+      Yet Another R Dataviz Book was written by John Paul Helveston & Lola Nurullaeva
     right: |
       This book was built with <a href="https://quarto.org/">Quarto</a>.
   cover-image: cover.png
   favicon: cover.png
-
   site-url: https://yardbook.jhelvy.com/
   repo-url: https://github.com/jhelvy/yardbook/
   repo-branch: main
@@ -55,11 +55,11 @@ book:
         - anim_ch_15.qmd
         - interact_ch_16.qmd
     
-
 format:
   html:
     theme:
       - cosmo
+      - style.css
     code-link: true
 
     author-meta: "John Paul Helveston"
