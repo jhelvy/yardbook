@@ -114,17 +114,7 @@ This
 ```
 Gives us this
 
-# HEADER 1 {.unnumbered}
-
-## HEADER 2 {.unnumbered}
-
-### HEADER 3 {.unnumbered}
-
-#### HEADER 4 {.unnumbered}
-
-##### HEADER 5 {.unnumbered}
-
-###### HEADER 6 {.unnumbered}
+<img src = "images/headers.png" width = 1000>
 
 --------------------------------------------------------------------------------
 
@@ -224,7 +214,8 @@ head(penguins)
 ````
 ...will produce this when compiled: 
 
-```{r}
+```{r} 
+#| echo: false
 library(palmerpenguins)
 
 head(penguins)
@@ -240,7 +231,7 @@ All options [here](https://quarto.org/docs/reference/cells/cells-knitr.html)
 knitr::include_graphics('images/chunks_options.png')
 ```
 
-.center[By default, code chunks print **code** + **output**]
+By default, code chunks print **code** + **output**
 
 ````markdown
 `r ''````{r}
