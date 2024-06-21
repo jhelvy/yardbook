@@ -13,3 +13,11 @@ source("_common.R")
 > * Know how to work with headers and code chunks in .qmd files.
 > * Know how to format code chunks and text in .qmd files.
 > * Know how to render Quarto documents to various outputs.
+
+## Working with Quarto
+
+Quarto is a multilingual version of RMarkdown built on Pandoc that allows us to seamlessly combine text and code to create dynamic outputs. Like RMarkdown, it utilizes Knittr to render outputs in the form of documents, web pages, and more.  
+
+<center>
+<img src="images/how-qmd-works.png" width=100%>
+</center>
