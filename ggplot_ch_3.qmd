@@ -6,6 +6,96 @@
 source("_common.R")
 ```
 
-## Ggplot Basics
+> ### Learning Objectives {.unnumbered}
+>
+> * Get
+> * Understand
+> * Know 
+> * Know 
+> * Know 
 
-Changes here
+## Reading in Data
+
+Use the `here` package to create file paths
+
+```{r, eval=FALSE}
+path <- here::here("folder", "file.csv")
+```
+
+Import data with these functions:
+
+File type  | Function       | Library
+-----------|----------------|----------
+`.csv`     | `read_csv()`   | **readr**
+`.txt`     | `read.table()` | **utils**
+`.xlsx`    | `read_excel()` | **readxl**
+
+#### Importing Comma Separated Values (.csv) {.unnumbered}
+
+Read in `.csv` files with `read_csv()`:
+
+```{r}
+library(tidyverse)
+library(here)
+
+csvPath <- here('data', 'milk_production.csv')
+milk_production <- read_csv(csvPath) #<<
+
+head(milk_production)
+```
+
+#### Importing Text Files (.txt) {.unnumbered}
+
+Read in `.txt` files with `read.table()`:
+
+```{r}
+txtPath <- here('data', 'nasa_global_temps.txt')
+global_temps <- read.table(txtPath, skip = 5, header = FALSE) #<<
+
+head(global_temps)
+```
+
+#### Importing Text Files (.txt) {.unnumbered}
+
+Read in `.txt` files with `read.table()`:
+
+```{r}
+txtPath <- here('data', 'nasa_global_temps.txt')
+global_temps <- read.table(txtPath, skip = 5, header = FALSE)
+names(global_temps) <- c('year', 'no_smoothing', 'loess') # Add header #<<
+
+head(global_temps)
+```
+
+# Importing Excel Files (.xlsx) {.unnumbered}
+
+Read in `.xlsx` files with `read_excel()`:
+
+```{r}
+library(readxl)
+
+xlsxPath <- here('data', 'pv_cell_production.xlsx')
+pv_cells <- read_excel(xlsxPath, sheet = 'Cell Prod by Country', skip = 2) #<<
+```
+
+```{r}
+glimpse(pv_cells)
+```
+
+
+#### Importing Excel Files (.xlsx) {.unnumbered}
+
+Read in `.xlsx` files with `read_excel()`:
+
+```{r}
+library(readxl)
+
+xlsxPath <- here('data', 'pv_cell_production.xlsx')
+pv_cells <- read_excel(xlsxPath, sheet = 'Cell Prod by Country', skip = 2) %>%
+  mutate(Year = as.numeric(Year)) %>% # Convert "non-years" to NA #<<
+  filter(!is.na(Year)) # Drop NA rows in Year #<<
+```
+
+```{r}
+glimpse(pv_cells)
+```
