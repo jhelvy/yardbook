@@ -224,7 +224,8 @@ head(penguins)
 ````
 ...will produce this when compiled: 
 
-```{r}
+```{r} 
+#| echo: false
 library(palmerpenguins)
 
 head(penguins)
@@ -240,7 +241,7 @@ All options [here](https://quarto.org/docs/reference/cells/cells-knitr.html)
 knitr::include_graphics('images/chunks_options.png')
 ```
 
-.center[By default, code chunks print **code** + **output**]
+By default, code chunks print **code** + **output**
 
 ````markdown
 `r ''````{r}
