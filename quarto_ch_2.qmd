@@ -114,17 +114,7 @@ This
 ```
 Gives us this
 
-# HEADER 1 {.unnumbered}
-
-## HEADER 2 {.unnumbered}
-
-### HEADER 3 {.unnumbered}
-
-#### HEADER 4 {.unnumbered}
-
-##### HEADER 5 {.unnumbered}
-
-###### HEADER 6 {.unnumbered}
+<img src = "images/headers.png" width = 1000>
 
 --------------------------------------------------------------------------------
 
