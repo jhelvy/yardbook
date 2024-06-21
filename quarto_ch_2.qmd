@@ -21,3 +21,294 @@ Quarto is a multilingual version of RMarkdown built on Pandoc that allows us to 
 <center>
 <img src="images/how-qmd-works.png" width=100%>
 </center>
+
+Use R Projects (.Rproj files) to organize your analysis - **don't double-click .R files**!
+
+<center>
+<img src = "images/rproj.png" width = "75">
+</center>
+
+### Render to multiple outputs {.unnumbered}
+
+PDF uses LaTeX:
+
+```{r}
+#| eval: false 
+---
+title: Your title
+author: Author name
+format: pdf 
+---
+```
+
+If you don't have LaTeX on your computer, install tinytex in R:
+
+```{r}
+#| eval: false 
+
+tinytex::install_tinytex()
+```
+
+Microsoft Word:
+
+```{r}
+#| eval: false 
+---
+title: Your title
+author: Author name
+format: docx
+---
+```
+
+## Anatomy of a Quarto Markdown Document
+
+A Quarto Markdown document (.qmd) has three main parts:
+
+* Header
+* Markdown text
+* R code
+
+### Header {.unnumbered}
+
+Define overall document options in the header
+
+```{r}
+#| eval: false 
+---
+title: Your title
+author: Author name
+format: html
+---
+```
+
+Add table of contents, change theme
+
+```{r}
+#| eval: false 
+---
+title: Your title
+author: Author name
+toc: true 
+format:
+  html:
+    theme: united
+---
+```
+
+### Markdown Text {.unnumbered}
+
+This
+
+```markdown
+# HEADER 1
+
+## HEADER 2
+
+### HEADER 3
+
+#### HEADER 4
+
+##### HEADER 5
+
+###### HEADER 6
+```
+Gives us this
+
+# HEADER 1 {.unnumbered}
+
+## HEADER 2 {.unnumbered}
+
+### HEADER 3 {.unnumbered}
+
+#### HEADER 4 {.unnumbered}
+
+##### HEADER 5 {.unnumbered}
+
+###### HEADER 6 {.unnumbered}
+
+--------------------------------------------------------------------------------
+
+Type this...
+
+- `normal text`
+- `_italic text_`
+- `*italic text*`
+- `**bold text**`
+- `***bold italic text***`
+- `~~strikethrough~~`
+- `` `code text` ``
+
+..to get this
+
+- normal text
+- _italic text_
+- *italic text*
+- **bold text**
+- ***bold italic text***
+- ~~strikethrough~~
+- `code text`
+
+Bullet list:
+
+```{r, eval=FALSE}
+- first item
+- second item
+- third item
+```
+
+- first item
+- second item
+- third item
+
+Numbered list:
+
+```{r, eval=FALSE}
+1. first item
+2. second item
+3. third item
+```
+
+1. first item
+2. second item
+3. third item
+
+Simple **url link** to another site:
+
+```{r, eval=FALSE}
+[Download R](http://www.r-project.org/)
+```
+
+[Download R](http://www.r-project.org/)
+
+#### Don't want to use Markdown? {.unnumbered}
+
+#### <span style="color: red;">Use Visual Mode!</span> {.unnumbered}
+
+<center>
+<img src="images/visual-mode.png" width=700>
+</center>
+
+### R Code {.unnumbered}
+
+#### Inline R code {.unnumbered}
+
+```{r, eval=FALSE}
+`r insert code here`
+```
+
+```{r, eval=FALSE}
+The sum of 3 and 4 is `r 3 + 4`
+```
+
+Produces this:
+
+The sum of 3 and 4 is `r 3 + 4`
+
+#### R Code chunks {.unnumbered}
+
+````markdown
+`r ''````{r}
+insert code here
+insert more code here
+```
+````
+
+This code chunk...
+
+````markdown
+`r ''````{r}
+library(palmerpenguins)
+
+head(penguins)
+```
+````
+...will produce this when compiled: 
+
+```{r}
+library(palmerpenguins)
+
+head(penguins)
+```
+
+#### Chunk Options {.unnumbered}
+
+Control what chunks output using options
+
+All options [here](https://quarto.org/docs/reference/cells/cells-knitr.html)
+
+```{r, echo=FALSE, out.width='60%'}
+knitr::include_graphics('images/chunks_options.png')
+```
+
+.center[By default, code chunks print **code** + **output**]
+
+````markdown
+`r ''````{r}
+#| echo: false
+
+cat('hello world!')
+```
+````
+
+Prints only **output**<br>(doesn't show code)
+
+```{r}
+#| echo: false
+
+cat('hello world!')
+```
+
+````markdown
+`r ''````{r}
+#| eval: false
+
+cat('hello world!')
+```
+````
+
+Prints only **code**<br>(doesn't run the code)
+
+```{r}
+#| eval: false
+
+cat('hello world!')
+```
+
+````markdown
+`r ''````{r}
+#| include: false
+
+cat('hello world!')
+```
+````
+
+Runs, but doesn't print anything
+
+```{r}
+#| include: false
+
+cat('hello world!')
+```
+
+#### A Global `setup` Chunk 🌍 {.unnumbered}
+
+````markdown
+`r ''````{r}
+#| label: setup
+#| include: false
+
+knitr::opts_chunk$set(
+    warning = FALSE,
+    message = FALSE,
+    fig.path = "figs/",
+    fig.width = 7.252,
+    fig.height = 4,
+    comment = "#>",
+    fig.retina = 3
+)
+```
+````
+- Typically the first chunk
+- All following chunks will use these options (i.e., sets global chunk options)
+- You can (and should) use individual chunk options too
+- Often where we load libraries, etc.
