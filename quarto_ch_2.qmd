@@ -6,6 +6,10 @@
 source("_common.R")
 ```
 
-## Quarto Basics
-
-Changes here
+> ### Learning Objectives {.unnumbered}
+>
+> * Get familiar with the workflow of using Quarto in RStudio.
+> * Understand the anatomy of a Quarto Markdown Document.
+> * Know how to work with headers and code chunks in .qmd files.
+> * Know how to format code chunks and text in .qmd files.
+> * Know how to render Quarto documents to various outputs.
