@@ -27,11 +27,11 @@ gapminder <- read_csv(here('data', 'gapminder.csv'))
 
 > ### Learning Objectives {.unnumbered}
 >
-> * Get
-> * Understand
-> * Know 
-> * Know 
-> * Know 
+> * Learn the functions necessary to import various file types.
+> * Understand the basic features of ggplot.
+> * Create plots from data in a dataframe. 
+> * Make basic customizations to ggplot figures. 
+> * Create simple scatterplots and histograms.
 
 ## Reading in Data
 
@@ -348,7 +348,7 @@ wildlife_impacts %>%
 <img src="figs/birds_scales1.png" width = 500>
 </center>
 
-#### 5) Adjust scales - customize break points (if you want) {.unnumbered}
+##### Customize break points (if you want) {.unnumbered}
 
 ```{r, eval=FALSE}
 # Format the data frame
@@ -377,7 +377,7 @@ wildlife_impacts %>%
 ##### Four `cowplot` themes you should know {.unnumbered}
 
 <center>
-<img src="figs/cowplot_themes.png" width=1000>
+<img src="figs/cowplot_themes.png" width=700>
 </center>
 
 For horizontal bars, add only vertical grid
