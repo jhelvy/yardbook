@@ -3,7 +3,26 @@
 ```{r}
 #| echo: false
 #| message: false
+#| include: false
 source("_common.R")
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+
+library(knitr)
+library(tidyverse)
+library(cowplot)
+library(fontawesome)
+library(kableExtra)
+library(countdown)
+library(metathis)
+library(ggrepel)
+library(readxl)
+library(lubridate)
+library(janitor)
+library(here)
+
+# Read in data sets for chapter
+wildlife_impacts <- read_csv(here('data', 'wildlife_impacts.csv'))
+gapminder <- read_csv(here('data', 'gapminder.csv'))
 ```
 
 > ### Learning Objectives {.unnumbered}
@@ -67,7 +86,7 @@ names(global_temps) <- c('year', 'no_smoothing', 'loess') # Add header #<<
 head(global_temps)
 ```
 
-# Importing Excel Files (.xlsx) {.unnumbered}
+#### Importing Excel Files (.xlsx) {.unnumbered}
 
 Read in `.xlsx` files with `read_excel()`:
 
@@ -82,20 +101,359 @@ pv_cells <- read_excel(xlsxPath, sheet = 'Cell Prod by Country', skip = 2) #<<
 glimpse(pv_cells)
 ```
 
+## Layering with ggplot
 
-#### Importing Excel Files (.xlsx) {.unnumbered}
+#### "Grammar of Graphics" {.unnumbered}
+<center>
+<img src="images/making_a_ggplot.jpeg" width=600>
+</center>
 
-Read in `.xlsx` files with `read_excel()`:
+Concept developed by Leland Wilkinson (1999)
+
+**ggplot2** package developed by Hadley Wickham (2005)
+
+#### Making plot layers with ggplot2 {.unnumbered}
+
+##### 1. The data {.unnumbered}
+##### 2. The aesthetic mapping (what goes on the axes?) {.unnumbered}
+##### 3. The geometries (points? bars? etc.) {.unnumbered}
+##### 4. The annotations / labels {.unnumbered}
+##### 5. The theme {.unnumbered}
+
+#### Layer 1: The data {.unnumbered}
 
 ```{r}
-library(readxl)
-
-xlsxPath <- here('data', 'pv_cell_production.xlsx')
-pv_cells <- read_excel(xlsxPath, sheet = 'Cell Prod by Country', skip = 2) %>%
-  mutate(Year = as.numeric(Year)) %>% # Convert "non-years" to NA #<<
-  filter(!is.na(Year)) # Drop NA rows in Year #<<
+head(mpg)
 ```
+
+The `ggplot()` function initializes the plot with whatever data you're using
+
+```{r ggblank, fig.show='hide'}
+mpg %>% 
+  ggplot()
+```
+
+```{r ref.label='ggblank', echo=FALSE, fig.height=5, fig.width=7}
+```
+
+#### Layer 2: The aesthetic mapping {.unnumbered}
+
+The `aes()` function determines which variables will be _mapped_ to the geometries<br>(e.g. the axes)
+
+```{r ggaes, fig.show='hide'}
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) #<<
+```
+
+```{r ref.label='ggaes', echo=FALSE, fig.height=5, fig.width=7}
+```
+
+#### Layer 3: The geometries {.unnumbered}
+
+Use `+` to add geometries, e.g. `geom_points()` for points
+
+```{r ggpoint, fig.show='hide'}
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point() #<<
+```
+
+```{r ref.label='ggpoint', echo=FALSE, fig.height=5, fig.width=7}
+```
+
+#### Layer 4: The annotations / labels {.unnumbered}
+
+Use `labs()` to modify most labels
+
+```{r gglabs, fig.show='hide'}
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point() +
+  labs( #<<
+    x = "Engine displacement (liters)",  #<<
+    y = "Highway fuel economy (mpg)",  #<<
+    title = "Most larger engine vehicles are less fuel efficient" #<<
+  ) #<<
+```
+
+```{r ref.label='gglabs', echo=FALSE, fig.height=5, fig.width=7}
+```
+
+#### Layer 5: The theme {.unnumbered}
+
+```{r ggtheme_bw, fig.show='hide'}
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point() +
+  labs(
+    x = "Engine displacement (liters)",  
+    y = "Highway fuel economy (mpg)", 
+    title = "Most larger engine vehicles are less fuel efficient"
+  ) + 
+  theme_bw() #<<
+```
+
+```{r ref.label='ggtheme_bw', echo=FALSE, fig.height=5, fig.width=7}
+```
+
+##### Common themes {.unnumbered}
+
+`theme_bw()`
+
+```{r, fig.height=4, fig.width=6}
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point() +
+  theme_bw() #<<
+```
+
+`theme_minimal()`
+
+```{r, fig.height=4, fig.width=6}
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point() +
+  theme_minimal() #<<
+```
+
+`theme_classic()`
+
+```{r, fig.height=4, fig.width=6}
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point() +
+  theme_classic() #<<
+```
+
+`theme_void()`
+
+```{r, fig.height=4, fig.width=6}
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point() +
+  theme_void() #<<
+```
+
+## Making a (good) ggplot
+
+1. Format data frame
+2. Add geoms
+3. Flip coordinates?
+4. Reorder factors?
+5. Adjust scales
+6. Adjust theme
+7. Annotate
+
+#### 1) Format data frame {.unnumbered}
 
 ```{r}
-glimpse(pv_cells)
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) #<<
 ```
+
+#### 2) Add geoms {.unnumbered}
+
+```{r, eval=FALSE}
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) %>%
+
+# Add geoms
+  ggplot() +
+  geom_col(
+      aes(x = operator, y = n), #<<
+      width = 0.7, alpha = 0.8)
+```
+
+<center>
+<img src="figs/birds_before.png" width = 500>
+</center>
+
+
+#### 3) Flip coordinates - can you read the labels? {.unnumbered}
+
+```{r, eval=FALSE}
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) %>%
+
+# Add geoms
+  ggplot() +
+  geom_col(
+      aes(x = operator, y = n),
+      width = 0.7, alpha = 0.8) +
+
+# Flip coordinates
+  coord_flip() #<<
+```
+
+<center>
+<img src="figs/birds_coord_flip.png" width=500>
+</center>
+
+```{r, eval=FALSE}
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) %>%
+
+# Add geoms
+  ggplot() +
+  geom_col(
+      aes(x = n, y = operator), #<<
+      width = 0.7, alpha = 0.8)
+```
+
+<center>
+<img src="figs/birds_coord_flip.png" width=500>
+</center>
+
+#### 4) Reorder factors with `reorder()` {.unnumbered}
+
+```{r, eval=FALSE}
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) %>%
+
+# Add geoms
+  ggplot() +
+  geom_col(
+      aes(x = n, y = reorder(operator, n)), #<<
+      width = 0.7, alpha = 0.8)
+```
+
+<center>
+<img src="figs/birds_fct_reorder.png" width = 500>
+</center>
+
+#### 5) Adjust scales {.unnumbered}
+
+```{r, eval=FALSE}
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) %>%
+
+# Add geoms
+  ggplot() +
+  geom_col(
+      aes(x = n, y = reorder(operator, n)),
+      width = 0.7, alpha = 0.8) +
+
+# Adjust x axis scale
+  scale_x_continuous( #<<
+    expand = expansion(mult = c(0, 0.05))) #<<
+```
+
+<center>
+<img src="figs/birds_scales1.png" width = 500>
+</center>
+
+#### 5) Adjust scales - customize break points (if you want) {.unnumbered}
+
+```{r, eval=FALSE}
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) %>%
+
+# Add geoms
+  ggplot() +
+  geom_col(
+      aes(x = n, y = reorder(operator, n)),
+      width = 0.7, alpha = 0.8) +
+
+# Adjust x axis scale
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.05)),
+    breaks = c(0, 10000, 20000), #<<
+    limits = c(0, 20000)) #<<
+```
+
+<center>
+<img src="figs/birds_scales2.png" width = 500>
+</center>
+
+#### 6) Adjust theme {.unnumbered}
+
+##### Four `cowplot` themes you should know {.unnumbered}
+
+<center>
+<img src="figs/cowplot_themes.png" width=1000>
+</center>
+
+For horizontal bars, add only vertical grid
+
+```{r, eval=FALSE}
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) %>%
+
+# Add geoms
+  ggplot() +
+  geom_col(
+      aes(x = n, y = reorder(operator, n)),
+      width = 0.7, alpha = 0.8) +
+
+# Adjust x axis scale
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.05))) +
+
+# Adjust theme
+  theme_minimal_vgrid() #<<
+```
+
+<center>
+<img src="figs/birds_theme.png" width=500>
+</center>
+
+#### 7) Annotate {.unnumbered}
+
+```{r, eval=FALSE}
+# Format the data frame
+wildlife_impacts %>%
+  count(operator) %>%
+  mutate(operator = str_to_title(operator)) %>% #<<
+
+# Add geoms
+  ggplot() +
+  geom_col(
+      aes(x = n, y = reorder(operator, n)),
+      width = 0.7, alpha = 0.8) +
+
+# Adjust x axis scale
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.05))) +
+
+# Adjust theme
+  theme_minimal_vgrid() +
+
+# Annotate
+  labs( #<<
+    x = 'Count', #<<
+    y = NULL) #<<
+```
+
+<center>
+<img src="figs/birds_after.png" width = 500>
+</center>
+
+#### Finished product {.unnumbered}
+
+```{r, eval=FALSE}
+wildlife_impacts %>%
+  count(operator) %>%
+  mutate(operator = str_to_title(operator)) %>%
+  ggplot() +
+  geom_col(
+      aes(x = n, y = reorder(operator, n)),
+      width = 0.7, alpha = 0.8) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.05))) +
+  theme_minimal_vgrid() +
+  labs(
+    x = 'Count',
+    y = NULL)
+```
+
+<center>
+<img src="figs/birds_after.png" width = 500>
+</center>
