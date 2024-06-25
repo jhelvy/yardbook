@@ -3,9 +3,158 @@
 ```{r}
 #| echo: false
 #| message: false
+#| include: false
 source("_common.R")
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(here)
+library(knitr)
+library(tidyverse)
+library(cowplot)
+library(fontawesome)
+library(kableExtra)
+library(countdown)
+library(metathis)
+library(ggrepel)
+library(readxl)
+library(lubridate)
+library(janitor)
+
+# Read in data sets for class
+tb_cases <- read_csv(here('data', 'tb_cases.csv'))
+milk_production <- read_csv(here('data', 'milk_production.csv'))
+fed_spend_long <- read_csv(here('data', 'fed_spend_long.csv'))
+fed_spend <- fed_spend_long
+fed_spend_wide <- read_csv(here('data', 'fed_spend_wide.csv'))
+lotr_words <- read_csv(here('data', 'lotr_words.csv'))
+pv_cells <- read_excel(
+    here('data', 'pv_cell_production.xlsx'),
+    sheet = 'Cell Prod by Country', skip = 2) %>%
+  mutate(Year = as.numeric(Year)) %>% 
+  filter(!is.na(Year)) 
 ```
 
-## Tidy Data
+> ### Learning Objectives {.unnumbered}
+>
+> * Learn the functions necessary to import various file types.
+> * Understand the basic features of ggplot.
+> * Create plots from data in a dataframe. 
+> * Make basic customizations to ggplot figures. 
+> * Create simple scatterplots and histograms.
 
-Changes here
+## "Wide" and "Long" Formatted Data
+
+### The Data:Federal R&D Spending by Department {.unnumbered}
+
+```{r, echo=FALSE}
+head(fed_spend_wide)
+```
+
+### "Wide" format {.unnumbered}
+
+```{r, echo=FALSE}
+head(fed_spend_wide)
+```
+
+Dimensions:
+
+```{r, echo=FALSE}
+dim(fed_spend_wide)
+```
+
+### "Long" format {.unnumbered}
+
+```{r, echo=FALSE}
+head(fed_spend_long)
+```
+
+Dimensions:
+
+```{r, echo=FALSE}
+dim(fed_spend_long)
+```
+
+### Tidy data = "Long" format {.unnumbered}
+
+- Each **variable** has its own **column**
+- Each **observation** has its own **row**
+
+<center>
+<img src="images/tidy-data.png" width = "1000">
+</center>
+
+### **Do the names describe the values?** {.unnumbered}
+
+#### **Yes**: "Long" format {.unnumbered}
+
+```{r, echo=FALSE}
+head(fed_spend_long)
+```
+
+#### **No**: "Wide" format {.unnumbered}
+
+```{r, echo=FALSE}
+head(select(fed_spend_wide, year:HHS))
+```
+
+### Reshaping data {.unnumbered}
+
+#### `pivot_longer()` and `pivot_wider()` {.unnumbered}
+
+<center>
+<img src="images/tidyr-pivoting.gif" width=530>
+</center>
+
+#### From "long" to "wide" with `pivot_wider()` {.unnumbered}
+
+<center>
+<img src="images/tidy-wider.png" width=600>
+</center>
+
+```{r}
+head(fed_spend_long)
+```
+
+```{r}
+fed_spend_wide <- fed_spend_long %>%
+    pivot_wider(
+        names_from = department,  #<<
+        values_from = rd_budget_mil) #<<
+
+head(fed_spend_wide)
+```
+
+#### From "wide" to "long" with `pivot_longer()`{.unnumbered}
+
+<center>
+<img src="images/tidy-longer.png" width=600>
+</center>
+
+```{r}
+head(fed_spend_wide)
+```
+
+```{r}
+fed_spend_long <- fed_spend_wide %>%
+    pivot_longer( 
+        names_to = "department", #<<
+        values_to = "rd_budget_mil", #<< 
+        cols = DOD:Other) #<<
+
+head(fed_spend_long)
+```
+
+#### Can also set `cols` by selecting which columns _not_ to use {.unnumbered}
+
+```{r}
+names(fed_spend_wide)
+```
+
+```{r}
+fed_spend_long <- fed_spend_wide %>%
+    pivot_longer(
+        names_to = "department", 
+        values_to = "rd_budget_mil",
+        cols = -year) #<<
+
+head(fed_spend_long)
+```

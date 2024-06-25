@@ -101,14 +101,86 @@ pv_cells <- read_excel(xlsxPath, sheet = 'Cell Prod by Country', skip = 2) #<<
 glimpse(pv_cells)
 ```
 
+## Basic plots in R
+
+R has a number of built-in tools for basic graph types. Let's start with two basic functions for scatter plots and histograms.
+
+### Scatter plots with `plot()`
+
+A scatter plot provides a graphical view of the relationship between two variables. Typically these are used for "continuous" variables, like _time_, _age_, _money_, etc...things that are not categorical in nature (as opposed to "discrete" variables, like _nationality_). Here's a scatterplot of the fuel efficiency (miles per gallon) of cars over their respective horsepower using the `mtcars` dataset:
+
+```{r}
+#| label: 'scatter-basic'
+#| fig.height: 5
+#| fig.width: 6
+
+plot(x = mtcars$hp, y = mtcars$mpg)
+```
+
+The basic inputs to the `plot()` function are `x` and `y`, which must be vectors of the same length. You can customize many features (fonts, colors, axes, shape, titles, etc.) through [graphic options](http://www.statmethods.net/advgraphs/parameters.html). Here's the same plot with a few customizations:
+
+```{r}
+#| label: 'scatter-basic-pretty'
+#| fig.height: 5
+#| fig.width: 6
+
+plot(x    = mtcars$hp,
+     y    = mtcars$mpg,
+     col  = 'darkblue', # "col" changes the point color
+     pch  = 19, # "pch" changes the point shape
+     main = "",
+     xlab = "Horsepower",
+     ylab = "Miles Per Gallon")
+```
+
+From this scatter plot, we can observe the relationship between a car's horsepower and its fuel efficiency. As you may have guessed, cars with more horsepower or more powerful engines have less fuel efficiency.
+
+### Histograms with `hist()`
+
+The [histogram](https://en.wikipedia.org/wiki/Histogram) is one of the most common ways to visualize the _distribution_ of a variable. The `hist()` function takes just one variable: `x`. Here's a histogram of the `waiting` variable showing the wait times between eruptions of the Old Faithful geyser:
+
+```{r}
+#| label: 'hist-basic'
+#| fig.height: 5
+#| fig.width: 6
+
+hist(x = faithful$waiting)
+```
+
+With this plot, we can see a trend where the geyser mostly erupts in roughly 50 or 80 minute intervals. As with the `plot()` function, you can customize a lot of the histogram features. One common customization is to modify the number of "bins" in the histogram by changing the `breaks` argument. Here we'll fix the number of bins to `20` to get a clearer look at the data:
+
+```{r}
+#| label: 'hist-basic-pretty'
+#| fig.height: 5
+#| fig.width: 6
+
+hist(x      = faithful$waiting,
+     breaks = 20,
+     col    = 'lightblue3',
+     main   = "Waiting Times Between Eruptions",
+     xlab   = "Waiting Time (in minutes)",
+     ylab   = "Count")
+```
+
+With our changes, the chart is cleaner and it is clearer which waiting times the were most common.
+
+## Advanced figures with `ggplot2`
+
+![](images/horst_monsters_ggplot2.png){ width=500 }
+[Art by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)]{.aside}
+
+While Base R plot functions are useful for making simple, quick plots, many R users have adopted the `ggplot2` package as their primary tool for visualizing data.
+
+
 ## Layering with ggplot
 
 #### "Grammar of Graphics" {.unnumbered}
+
+The ggplot2 library is built on the “Grammar of Graphics” concept developed by Leland Wilkinson (1999). A “grammar of graphics” (that’s what the “gg” in “ggplot2” stands for) is a framework that uses layers to describe and construct visualizations or graphics in a structured manner. Here’s a visual summary of the concept:
+
 <center>
 <img src="images/making_a_ggplot.jpeg" width=600>
 </center>
-
-Concept developed by Leland Wilkinson (1999)
 
 **ggplot2** package developed by Hadley Wickham (2005)
 
