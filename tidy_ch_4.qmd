@@ -19,7 +19,10 @@ library(readxl)
 library(lubridate)
 library(janitor)
 
-# Read in data sets for class
+# Read in data
+wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
+milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
+tb_rates <- table3
 tb_cases <- read_csv(here('data', 'tb_cases.csv'))
 milk_production <- read_csv(here('data', 'milk_production.csv'))
 fed_spend_long <- read_csv(here('data', 'fed_spend_long.csv'))
@@ -31,6 +34,87 @@ pv_cells <- read_excel(
     sheet = 'Cell Prod by Country', skip = 2) %>%
   mutate(Year = as.numeric(Year)) %>% 
   filter(!is.na(Year)) 
+
+# Add new variables
+wildlife_impacts_orig <- wildlife_impacts
+wildlife_impacts <- wildlife_impacts %>%
+    mutate(
+        weekday_name = wday(incident_date, label = TRUE),
+        phase_of_flt = str_to_lower(phase_of_flt),
+        phase_of_flt = case_when(
+            phase_of_flt %in% c('approach', 'arrival', 'descent',
+                                'landing roll') ~ 'arrival',
+            phase_of_flt %in% c('climb', 'departure',
+                                'take-off run') ~ 'departure',
+            TRUE ~ 'other'))
+
+# Abbreviations: https://www.50states.com/abbreviations.htm
+state_abbs <- tibble::tribble(
+                  ~state_name,              ~state_abb,
+                     "Alabama",             "AL",
+                      "Alaska",             "AK",
+                     "Arizona",             "AZ",
+                    "Arkansas",             "AR",
+                  "California",             "CA",
+                    "Colorado",             "CO",
+                 "Connecticut",             "CT",
+                    "Delaware",             "DE",
+                     "Florida",             "FL",
+                     "Georgia",             "GA",
+                      "Hawaii",             "HI",
+                       "Idaho",             "ID",
+                    "Illinois",             "IL",
+                     "Indiana",             "IN",
+                        "Iowa",             "IA",
+                      "Kansas",             "KS",
+                    "Kentucky",             "KY",
+                   "Louisiana",             "LA",
+                       "Maine",             "ME",
+                    "Maryland",             "MD",
+               "Massachusetts",             "MA",
+                    "Michigan",             "MI",
+                   "Minnesota",             "MN",
+                 "Mississippi",             "MS",
+                    "Missouri",             "MO",
+                     "Montana",             "MT",
+                    "Nebraska",             "NE",
+                      "Nevada",             "NV",
+               "New Hampshire",             "NH",
+                  "New Jersey",             "NJ",
+                  "New Mexico",             "NM",
+                    "New York",             "NY",
+              "North Carolina",             "NC",
+                "North Dakota",             "ND",
+                        "Ohio",             "OH",
+                    "Oklahoma",             "OK",
+                      "Oregon",             "OR",
+                "Pennsylvania",             "PA",
+                "Rhode Island",             "RI",
+              "South Carolina",             "SC",
+                "South Dakota",             "SD",
+                   "Tennessee",             "TN",
+                       "Texas",             "TX",
+                        "Utah",             "UT",
+                     "Vermont",             "VT",
+                    "Virginia",             "VA",
+                  "Washington",             "WA",
+               "West Virginia",             "WV",
+                   "Wisconsin",             "WI",
+                     "Wyoming",             "WY",
+        "District of Columbia",             "DC",
+            "Marshall Islands",             "MH",
+         "Armed Forces Africa",             "AE",
+       "Armed Forces Americas",             "AA",
+         "Armed Forces Canada",             "AE",
+         "Armed Forces Europe",             "AE",
+    "Armed Forces Middle East",             "AE",
+        "Armed Forces Pacific",             "AP"
+)
+
+bad_abbs <- c("MH", "AE", "AA", "AE", "AP")
+
+state_abbs_50 <- state_abbs %>% 
+  filter(!state_abb %in% bad_abbs)
 ```
 
 > ### Learning Objectives {.unnumbered}
@@ -43,7 +127,7 @@ pv_cells <- read_excel(
 
 ## "Wide" and "Long" Formatted Data
 
-### The Data:Federal R&D Spending by Department {.unnumbered}
+### The Data: Federal R&D Spending by Department {.unnumbered}
 
 ```{r, echo=FALSE}
 head(fed_spend_wide)
@@ -157,4 +241,431 @@ fed_spend_long <- fed_spend_wide %>%
         cols = -year) #<<
 
 head(fed_spend_long)
+```
+
+## Tidy data wrangling
+
+What is tidy data wrangling?
+(a quick explanation with cute graphics, by [Allison Horst](https://github.com/allisonhorst/stats-illustrations))
+
+<center>
+<img src="images/horst_tidydata_1.jpg" width=700>
+</center>
+
+<center>
+<img src="images/horst_tidydata_2.jpg" width=700>
+</center>
+<center>
+<img src="images/horst_tidydata_3.jpg" width=700>
+</center>
+
+Compute the total R&D spending in each year
+
+```{r}
+head(fed_spend_wide)
+```
+
+Let's compute the total R&D spending in each year
+
+**Approach 1**: Create new `total` by adding each variable
+
+```{r}
+fed_spend_wide %>%
+  mutate(total = DHS + DOC + DOD + DOE + DOT + EPA + HHS + Interior + NASA + NIH + NSF + Other + USDA + VA) %>%
+  select(year, total)
+```
+
+**Approach 2**: Reshape first, then summarise
+
+```{r}
+fed_spend_long <- fed_spend_wide %>%
+    pivot_longer(
+        names_to = "department", 
+        values_to = "rd_budget_mil",
+        cols = -year) 
+
+head(fed_spend_long)
+```
+
+```{r}
+fed_spend_long %>%
+    group_by(year) %>%
+    summarise(total = sum(rd_budget_mil))
+```
+
+**Approach 2**: Reshape first, then summarise
+
+```{r}
+total <- fed_spend_wide %>%
+    pivot_longer(
+        names_to = "department", 
+        values_to = "rd_budget_mil",
+        cols = -year) %>% 
+    group_by(year) %>%
+    summarise(total = sum(rd_budget_mil))
+```
+
+```{r}
+head(total)
+```
+
+## Merging Data Sets with Joins 
+
+To start off, let's take a look at this map. What's wrong with it?
+
+<center>
+<img src="images/join_fail.jpg" height=600>
+</center>
+
+Clearly, the abbreviations are all mixed up. The likely culprit: merging two columns
+
+```{r, echo=FALSE}
+names <- data.frame(state_name = sort(state_abbs_50$state_name))
+abbs  <- data.frame(state_abb = sort(state_abbs_50$state_abb))
+```
+```{r}
+head(names)
+head(abbs)
+```
+
+```{r}
+result <- bind_cols(names, abbs)
+head(result)
+```
+
+As shown above, simply binding or merging two data sets is not the best choice. This is where joins come into play.
+
+There are three types of joins that we can utilize to properly merge data sets.
+
+1. `inner_join()`
+2. `left_join()` / `right_join()`
+3. `full_join()`
+
+Take a look at the different joins applied to the `band_members` & `band_instruments` data sets.
+
+```{r}
+band_members
+```
+
+```{r}
+band_instruments
+```
+
+#### `inner_join()` {.unnumbered}
+
+```{r}
+band_members %>%
+    inner_join(band_instruments)
+```
+
+<center>
+<img src="images/inner_join.gif">
+</center>
+
+#### `full_join()` {.unnumbered}
+
+```{r}
+band_members %>%
+    full_join(band_instruments)
+```
+
+<center>
+<img src="images/full_join.gif">
+</center>
+
+#### `left_join()` {.unnumbered}
+
+```{r}
+band_members %>%
+    left_join(band_instruments)
+```
+
+<center>
+<img src="images/left_join.gif">
+</center>
+
+#### `right_join()` {.unnumbered}
+
+```{r}
+band_members %>%
+    right_join(band_instruments)
+```
+
+<center>
+<img src="images/right_join.gif">
+</center>
+
+#### We can also specify the joining variable name {.unnumbered}
+
+```{r, echo=TRUE, message=TRUE}
+band_members %>%
+    left_join(band_instruments)
+```
+
+```{r, echo=TRUE, message=TRUE}
+band_members %>%
+    left_join(
+        band_instruments,
+        by = 'name' #<<
+    )
+```
+
+#### If the names differ, use `by = c("left_name" = "joining_name")` {.unnumbered}
+
+```{r}
+band_members
+```
+
+```{r}
+band_instruments2
+```
+
+```{r}
+band_members %>%
+    left_join(
+        band_instruments2,
+        by = c("name" = "artist") #<<
+    ) 
+```
+
+Or, just rename the joining variable in a pipe.
+
+```{r}
+band_members
+```
+
+```{r}
+band_instruments2
+```
+
+```{r}
+band_members %>%
+    rename(artist = name) %>% #<<
+    left_join(
+        band_instruments2,
+        by = "artist"  #<<
+    )
+```
+
+## Variable Types and Names
+
+### Variable Types
+
+#### Always check variable types after reading in data! {.unnumbered}
+
+```{r}
+wind <- read_excel(here::here(
+  'data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
+
+glimpse(wind)
+```
+
+#### Be careful converting strings to numbers! {.unnumbered}
+
+##### `as.numeric()` {.unnumbered}
+
+```{r}
+as.numeric(c("2.1", "3.7", "4.50"))
+as.numeric(c("$2.1", "$3.7", "$4.50"))
+```
+
+##### `parse_number()` {.unnumbered}
+
+```{r}
+parse_number(c("2.1", "3.7", "4.50"))
+parse_number(c("$2.1", "$3.7", "$4.50"))
+parse_number(c("1-800-123-4567"))
+```
+
+Once applied we get:
+
+```{r}
+wind <- read_excel(here::here(
+  'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
+  mutate(
+    Ranking = as.numeric(Ranking),#<<
+    `Equivalent Homes Powered` = as.numeric(`Equivalent Homes Powered`),#<<
+    `Total Investment ($ Millions)` = as.numeric(`Total Investment ($ Millions)`),#<<
+    `# of Wind Turbines` = as.numeric(`# of Wind Turbines`) #<<
+  )
+    
+glimpse(wind)
+```
+
+<!--
+got the content on select() from Suzan Baert:
+https://suzan.rbind.io/2018/01/dplyr-tutorial-1/
+-->
+
+### Renaming made easy
+
+`janitor::clean_names()`
+
+The `janitor` package is a great tool to "clean" names of columns in data sets.
+
+<center>
+<img src="images/janitor_logo.png" width=200>
+</center>
+
+If we take the `wind` data ..
+```{r}
+wind <- read_excel(here::here(
+  'data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
+
+glimpse(wind)
+```
+
+.. and use janitor, we can easily "clean" the names.
+```{r}
+library(janitor) #<<
+
+wind <- read_excel(here::here(
+  'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
+  clean_names() #<<
+
+glimpse(wind)
+```
+
+We can even change the style of the names.
+```{r}
+library(janitor) #<<
+
+wind <- read_excel(here::here(
+  'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
+  clean_names(case = 'lower_camel') #<<
+
+glimpse(wind)
+```
+
+```{r}
+library(janitor) #<<
+
+wind <- read_excel(here::here(
+  'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
+  clean_names(case = 'screaming_snake') #<<
+
+glimpse(wind)
+```
+
+#### `select()` : More Powerful Than You Probably Thought {.unnumbered}
+
+Example: data on sleeping patterns of different mammals
+
+```{r}
+glimpse(msleep)
+```
+
+Use `select()` to choose which columns to **keep**
+
+```{r}
+msleep %>%
+  select(name:order, sleep_total:sleep_cycle) %>% #<<
+  glimpse()
+```
+
+Use `select()` to choose which columns to **drop**
+
+```{r}
+msleep %>%
+  select(-(name:order)) %>%
+  glimpse()
+```
+
+##### We can also select columns based on **partial column names** {.unnumbered}
+
+For example, we can select columns that start with "sleep":
+
+```{r}
+msleep %>%
+  select(name, starts_with("sleep")) %>%
+  glimpse()
+```
+
+Or we can select columns that contain "eep" and end with "wt":
+
+```{r}
+msleep %>%
+  select(contains("eep"), ends_with("wt")) %>%
+  glimpse()
+```
+
+##### Use `select()` to select columns based on their **data type** {.unnumbered}
+
+Select only numeric columns:
+
+```{r}
+msleep %>%
+    select_if(is.numeric) %>%
+    glimpse()
+```
+
+Select only character columns:
+
+```{r}
+msleep %>%
+    select_if(is.character) %>%
+    glimpse()
+```
+
+##### Use `select()` to **reorder** variables {.unnumbered}
+
+```{r}
+msleep %>%
+    select(everything()) %>%
+    glimpse()
+```
+
+```{r}
+msleep %>%
+    select(conservation, awake, everything()) %>%
+    glimpse()
+```
+
+##### Use `select()` to **rename** variables {.unnumbered}
+
+Use `rename()` to just change the name
+
+```{r}
+msleep %>%
+  rename( #<<
+    animal = name,
+    extinction_threat = conservation
+  ) %>%
+  glimpse()
+```
+
+Use `select()` to change the name **and drop everything else**
+
+```{r}
+msleep %>%
+  select( #<<
+    animal = name,
+    extinction_threat = conservation
+  ) %>%
+  glimpse()
+```
+
+##### Use `select()` to **rename** variables {.unnumbered}
+
+Use `rename()` to just change the name
+
+```{r}
+msleep %>%
+  rename( #<<
+    animal = name,
+    extinction_threat = conservation
+  ) %>%
+  glimpse()
+```
+
+Use `select()` + `everything()` to change names **and keep everything else**
+
+```{r}
+msleep %>%
+  select( #<<
+    animal = name,
+    extinction_threat = conservation,
+    everything()
+  ) %>% #<<
+  glimpse()
 ```
