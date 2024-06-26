@@ -119,11 +119,11 @@ state_abbs_50 <- state_abbs %>%
 
 > ### Learning Objectives {.unnumbered}
 >
-> * Learn the functions necessary to import various file types.
-> * Understand the basic features of ggplot.
-> * Create plots from data in a dataframe. 
-> * Make basic customizations to ggplot figures. 
-> * Create simple scatterplots and histograms.
+> * Reshape data between long and wide formats.
+> * Wrangle and format data, including dealing with messy Excel files.
+> * Merge multiple datasets effectively.
+> * Clean, organize, and recode variables.
+> * Handle and process date data.
 
 ## "Wide" and "Long" Formatted Data
 
@@ -668,4 +668,725 @@ msleep %>%
     everything()
   ) %>% #<<
   glimpse()
+```
+
+## Recoding Variables
+
+### Recoding with `ifelse()`
+
+Example: Create a variable, `cost_high`, that is `TRUE` if the repair costs were greater than the median costs and `FALSE` otherwise.
+
+```{r}
+wildlife_impacts1 <- wildlife_impacts %>%
+  rename(cost = cost_repairs_infl_adj) %>%
+  filter(!is.na(cost)) %>%
+  mutate(
+    cost_median = median(cost),
+    cost_high = ifelse(cost > cost_median, TRUE, FALSE) #<<
+  )
+
+wildlife_impacts1 %>%
+  select(cost, cost_median, cost_high) %>%
+  head()
+```
+
+### Recoding with **nested** `ifelse()`
+
+Create a variable, `season`, based on the `incident_month` variable.
+
+```{r}
+wildlife_impacts2 <- wildlife_impacts %>%
+  mutate(season = ifelse( #<<
+    incident_month %in% c(3, 4, 5), 'spring', ifelse( #<<
+    incident_month %in% c(6, 7, 8), 'summer', ifelse( #<<
+    incident_month %in% c(9, 10, 11), 'fall', 'winter'))) #<<
+  ) 
+
+wildlife_impacts2 %>%
+  distinct(incident_month, season) %>%
+  head()
+```
+
+### Recoding with `case_when()`
+
+Create a variable, `season`, based on the `incident_month` variable.
+
+**Note**: If you don't include the final `TRUE ~ 'winter'` condition, you'll get `NA` for those cases.
+
+```{r}
+wildlife_impacts2 <- wildlife_impacts %>%
+  mutate(season = case_when( #<<
+    incident_month %in% c(3, 4, 5) ~ 'spring', #<<
+    incident_month %in% c(6, 7, 8) ~ 'summer', #<<
+    incident_month %in% c(9, 10, 11) ~ 'fall', #<<
+    TRUE ~ 'winter') #<<
+  ) 
+
+wildlife_impacts2 %>%
+  distinct(incident_month, season) %>%
+  head()
+```
+
+#### Recoding with `case_when()` with `between()` {.unnumbered}
+
+Create a variable, `season`, based on the `incident_month` variable.
+
+```{r}
+wildlife_impacts2 <- wildlife_impacts %>%
+  mutate(season = case_when(
+    between(incident_month, 3, 5) ~ 'spring', #<<
+    between(incident_month, 6, 8) ~ 'summer', #<<
+    between(incident_month, 9, 11) ~ 'fall', #<<
+    TRUE ~ 'winter') 
+  )
+
+wildlife_impacts2 %>%
+    distinct(incident_month, season) %>%
+    head()
+```
+
+#### `case_when()` is "cleaner" than `ifelse()` {.unnumbered}
+
+Convert the `num_engs` variable into a word of the number.
+
+`ifelse()`
+
+```{r}
+wildlife_impacts3 <- wildlife_impacts %>%
+  mutate(num_engs = ifelse(
+    num_engs == 1, 'one', ifelse(
+    num_engs == 2, 'two', ifelse(
+    num_engs == 3, 'three', ifelse(
+    num_engs == 4, 'four',
+    as.character(num_engs)))))
+  )
+
+unique(wildlife_impacts3$num_engs)
+```
+
+`case_when()`
+
+```{r}
+wildlife_impacts3 <- wildlife_impacts %>%
+  mutate(num_engs = case_when(
+    num_engs == 1 ~ 'one',
+    num_engs == 2 ~ 'two',
+    num_engs == 3 ~ 'three',
+    num_engs == 4 ~ 'four')
+  )
+
+unique(wildlife_impacts3$num_engs)
+```
+
+### Break a single variable into two with `separate()`
+
+```{r}
+tb_rates
+```
+
+```{r}
+tb_rates %>%
+  separate(rate, into = c("cases", "population")) #<<
+```
+
+### Break a single variable into two with `separate()`
+
+```{r}
+tb_rates
+```
+
+```{r}
+tb_rates %>%
+  separate(
+      rate, #<<
+      into = c("cases", "population"), #<<
+      sep = "/" #<<
+  )
+```
+
+```{r}
+tb_rates
+```
+
+```{r}
+tb_rates %>%
+  separate(
+      rate, 
+      into = c("cases", "population"),
+      sep = "/", 
+      convert = TRUE #<<
+  )
+```
+
+You can also break up a variable by an index
+
+```{r}
+tb_rates
+```
+
+```{r}
+tb_rates %>%
+  separate(
+      year, 
+      into = c("century", "year"), #<<
+      sep = 2 #<<
+  )
+```
+
+### `unite()`: The opposite of `separate()`
+
+```{r}
+tb_rates
+```
+
+```{r}
+tb_rates %>%
+  separate(year, into = c("century", "year"),
+           sep = 2) %>%
+  unite(year_new, century, year) #<<
+```
+
+```{r}
+tb_rates
+```
+
+```{r}
+tb_rates %>%
+  separate(year, into = c("century", "year"),
+           sep = 2) %>%
+  unite(year_new, century, year,
+        sep = "") #<<
+```
+
+## Dealing with Dates Data
+
+<center>
+<img src="images/dates.png" width=600>
+</center>
+
+### Create Dates from Strings
+
+**order is the ONLY thing that matters!**
+
+#### Year-Month-Day {.unnumbered}
+
+```{r}
+ymd('2020-02-26')
+```
+
+```{r}
+ymd('2020-02-26')
+ymd('2020 Feb 26')
+```
+
+```{r}
+ymd('2020-02-26')
+ymd('2020 Feb 26')
+ymd('2020 Feb. 26')
+ymd('2020 february 26')
+```
+
+#### Month-Day-Year {.unnumbered}
+
+```{r}
+mdy('February 26, 2020')
+mdy('Feb. 26, 2020')
+mdy('Feb 26 2020')
+```
+
+#### Day-Month-Year {.unnumbered}
+
+```{r}
+dmy('26 February 2020')
+dmy('26 Feb. 2020')
+dmy('26 Feb, 2020')
+```
+
+##### Check out the `lubridate` **[cheat sheet](https://rawgit.com/rstudio/cheatsheets/master/lubridate.pdf)** {.unnumbered}
+
+### Extracting information from dates
+
+```{r}
+date <- today()
+date
+```
+
+```{r}
+# Get the year
+year(date)
+```
+
+```{r}
+date <- today()
+date
+```
+
+```{r}
+# Get the year
+year(date)
+
+# Get the month
+month(date)
+
+# Get the month name
+month(date, label = TRUE, abbr = FALSE)
+```
+
+```{r}
+# Get the day
+day(date)
+
+# Get the weekday
+wday(date)
+
+# Get the weekday name
+wday(date, label = TRUE, abbr = TRUE)
+```
+
+### Modifying date elements
+
+```{r}
+date <- today()
+date
+```
+
+```{r}
+# Change the year
+year(date) <- 2016
+date
+```
+
+```{r}
+# Change the day
+day(date) <- 30
+```
+
+```{r}
+date
+```
+
+## Strategies for Dealing with Messy Excel Files
+
+Example: When columns are repeated; like in the data for the winners of Nathan's hot dog eating contest.
+
+### Strategies {.unnumbered}
+
+#### 1. divide & conquer {.unnumbered}
+#### 2. pivot long, separate, pivot wide {.unnumbered}
+
+<center>
+<img src="images/hot_dogs.png" width=500>
+</center>
+
+### Strategy 1: divide & conquer {.unnumbered}
+
+Steps:
+
+1. Read in the data
+2. Clean the names
+3. Remove `*` note at bottom of table
+
+```{r}
+hot_dogs <- read_excel(
+    here::here('data', 'hot_dog_winners.xlsx'),
+    sheet = 'hot_dog_winners') %>%
+    clean_names() %>%
+    dplyr::filter(!is.na(mens))
+
+glimpse(hot_dogs)
+```
+
+Steps
+
+1. Read in the data
+2. Clean the names
+3. Remove `*` note at bottom of table
+4. **Split data into two competitions with the same variable names**
+5. **Create new variable in each data frame: `competition`**
+
+```{r}
+hot_dogs_m <- hot_dogs %>%
+    select(
+        year,
+        competitor = mens,
+        dogs_eaten = dogs_eaten_3,
+        country    = country_4) %>%
+    mutate(competition = 'Mens') #<<
+
+hot_dogs_w <- hot_dogs %>%
+    select(
+        year,
+        competitor = womens,
+        dogs_eaten = dogs_eaten_6,
+        country    = country_7) %>%
+    mutate(competition = 'Womens') %>% #<<
+    dplyr::filter(!is.na(competitor))
+```
+
+Steps
+
+1. Read in the data
+2. Clean the names
+3. Remove `*` note at bottom of table
+4. Split data into two competitions with the same variable names
+5. Create new variable in each data frame: `competition`
+6. **Merge data together with `bind_rows()`**
+7. **Clean up final data frame**
+
+```{r}
+hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>% #<<
+    mutate(
+        new_record = str_detect(dogs_eaten, "\\*"),
+        dogs_eaten = parse_number(dogs_eaten),
+        year       = as.numeric(year))
+
+glimpse(hot_dogs)
+```
+
+
+<img src="images/hot_dogs.png" width=500>
+
+```{r}
+head(hot_dogs)
+```
+
+### Strategy 2: pivot long, separate, pivot wide {.unnumbered}
+
+Steps:
+
+1. Read in the data
+2. Clean the names
+3. Remove `*` note at bottom of table
+
+```{r}
+hot_dogs <- read_excel(
+    here::here('data', 'hot_dog_winners.xlsx'),
+    sheet = 'hot_dog_winners') %>%
+    clean_names() %>%
+    dplyr::filter(!is.na(mens))
+
+glimpse(hot_dogs)
+```
+
+Steps:
+
+1. Read in the data
+2. Clean the names
+3. Remove `*` note at bottom of table
+4. **Rename variables**
+5. **Gather all the "joint" variables**
+
+```{r}
+hot_dogs <- hot_dogs %>%
+    select(
+        year,
+        competitor.mens   = mens,
+        competitor.womens = womens,
+        dogs_eaten.mens   = dogs_eaten_3,
+        dogs_eaten.womens = dogs_eaten_6,
+        country.mens      = country_4,
+        country.womens    = country_7) %>%
+    pivot_longer(names_to = 'variable', values_to = 'value',  #<<
+           competitor.mens:country.womens)  #<<
+
+head(hot_dogs, 3)
+```
+
+Steps:
+
+1. Read in the data
+2. Clean the names
+3. Remove `*` note at bottom of table
+4. Rename variables
+5. Gather all the "joint" variables
+6. **Separate "joint" variables into components**
+
+```{r}
+hot_dogs <- hot_dogs %>%
+    separate(variable, into = c('variable', 'competition'),  #<<
+             sep = '\\.') #<<
+
+head(hot_dogs)
+```
+
+Steps:
+
+1. Read in the data
+2. Clean the names
+3. Remove `*` note at bottom of table
+4. Rename variables
+5. Gather all the "joint" variables
+6. Separate "joint" variables into components
+7. **Spread variable and value back to columns**
+8. **Clean up final data frame**
+
+```{r}
+hot_dogs <- hot_dogs %>%
+    spread(key = variable, value = value) %>% #<<
+    mutate(
+        new_record = str_detect(dogs_eaten, "\\*"),
+        dogs_eaten = parse_number(dogs_eaten),
+        year       = as.numeric(year))
+
+glimpse(hot_dogs)
+```
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 0 0 48%; padding-right: 10px;">
+
+Divide & conquer
+
+```{r, eval=FALSE}
+hot_dogs <- read_excel(
+    here::here('data', 'hot_dog_winners.xlsx'),
+    sheet = 'hot_dog_winners') %>%
+    clean_names() %>%
+    dplyr::filter(!is.na(mens))
+
+# Divide #<<
+hot_dogs_m <- hot_dogs %>% #<<
+    select( #<<
+        year, #<<
+        competitor = mens, #<<
+        dogs_eaten = dogs_eaten_3, #<<
+        country    = country_4) %>% #<<
+    mutate(competition = 'Mens') #<<
+hot_dogs_w <- hot_dogs %>% #<<
+    select( #<<
+        year, #<<
+        competitor = womens, #<<
+        dogs_eaten = dogs_eaten_6, #<<
+        country    = country_7) %>% #<<
+    mutate(competition = 'Womens') %>%  #<<
+    dplyr::filter(!is.na(competitor)) #<<
+
+# Merge and finish cleaning
+hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>% #<<
+    mutate(
+        new_record = str_detect(dogs_eaten, "\\*"),
+        dogs_eaten = parse_number(dogs_eaten),
+        year       = as.numeric(year))
+```
+
+</div>
+<div style="flex: 0 0 48%; padding-left: 10px;">
+
+Pivot long, separate, pivot wide
+
+```{r, eval=FALSE}
+hot_dogs <- read_excel(
+    here::here('data', 'hot_dog_winners.xlsx'),
+    sheet = 'hot_dog_winners') %>%
+    clean_names() %>%
+    dplyr::filter(!is.na(mens)) %>%
+
+    # Rename variables #<<
+    select( #<<
+        year, #<<
+        competitor.mens   = mens, #<<
+        competitor.womens = womens, #<<
+        dogs_eaten.mens   = dogs_eaten_3, #<<
+        dogs_eaten.womens = dogs_eaten_6, #<<
+        country.mens      = country_4, #<<
+        country.womens    = country_7) %>% #<<
+    # Gather "joint" variables #<<
+    pivot_longer(names_to = 'variable', values_to = 'value', #<<
+           competitor.mens:country.womens) %>%  #<<
+    # Separate "joint" variables #<<
+    separate(variable, into = c('variable', 'competition'), #<<
+             sep = '\\.') %>%  #<<
+    # Spread "joint" variables #<<
+    pivot_wider(names_from = variable, values_from = value) %>% #<<
+    # Finish cleaning
+    mutate(
+        new_record = str_detect(dogs_eaten, "\\*"),
+        dogs_eaten = parse_number(dogs_eaten),
+        year       = as.numeric(year))
+```
+
+</div>
+</div>
+
+### Strategies for dealing with **sub-headers** {.unnumbered}
+
+Example: OICA passenger car sales data
+
+<center>
+<img src="images/pc_sales.png" width=800>
+</center>
+
+Steps:
+
+1. Read in the data, skipping first 5 rows
+2. Clean the names
+
+```{r}
+pc_sales <- read_excel(
+    here::here('data', 'pc_sales_2018.xlsx'),
+    sheet = 'pc_sales', skip = 5) %>% #<<
+    clean_names() %>%
+    rename(country = regions_countries)
+
+glimpse(pc_sales)
+```
+
+Steps:
+
+1. Read in the data, skipping first 5 rows
+2. Clean the names
+3. **Drop bad columns**
+4. **Filter out bad rows**
+
+Use **datapasta** to get rows to drop
+
+```{r}
+drop <- c(
+    'EUROPE', 'EU 28 countries + EFTA',
+    'EU 15 countries + EFTA', 'EUROPE NEW MEMBERS',
+    'RUSSIA, TURKEY & OTHER EUROPE', 'AMERICA',
+    'NAFTA', 'CENTRAL & SOUTH AMERICA',
+    'ASIA/OCEANIA/MIDDLE EAST', 'AFRICA', 'ALL COUNTRIES')
+
+pc_sales <- pc_sales %>%
+    select(-c(x2:x4)) %>%       # Drop bad columns
+    filter(! country %in% drop, # Drop bad rows #<<
+           ! is.na(country))
+
+head(pc_sales)
+```
+
+Steps:
+
+1. Read in the data, skipping first 5 rows
+2. Clean the names
+3. Drop bad columns
+4. Filter out bad rows
+5. **Gather the year variables**
+
+```{r}
+pc_sales <- pc_sales %>%
+    pivot_longer(names_to = 'year', values_to = 'num_cars', 
+                 cols = x2005:x2018) #<<
+
+head(pc_sales)
+```
+
+Steps:
+
+1. Read in the data, skipping first 5 rows
+2. Clean the names
+3. Drop bad columns
+4. Filter out bad rows
+5. Gather the year variables
+6. **Separate the "x" from the year**
+
+```{r}
+pc_sales <- pc_sales %>%
+    separate(year, into = c('drop', 'year'), sep = 'x', #<<
+             convert = TRUE) #<<
+
+head(pc_sales)
+```
+
+Steps:
+
+1. Read in the data, skipping first 5 rows
+2. Clean the names
+3. Drop bad columns
+4. Filter out bad rows
+5. Gather the year variables
+6. Separate the "x" from the year
+7. **Remove the `drop` column**
+8. **Finish cleaning**
+
+```{r}
+pc_sales <- pc_sales %>%
+  select(-drop) %>%  #<<
+  mutate(country  = str_to_title(country))
+
+head(pc_sales)
+```
+
+##### What if I wanted to keep the continents? {.unnumbered}
+
+### Strategy: Join a new data frame linking country -> continent {.unnumbered}
+
+```{r}
+drop <- c(
+  'EUROPE', 'EU 28 countries + EFTA',
+  'EU 15 countries + EFTA', 'EUROPE NEW MEMBERS',
+  'RUSSIA, TURKEY & OTHER EUROPE', 'AMERICA',
+  'NAFTA', 'CENTRAL & SOUTH AMERICA',
+  'ASIA/OCEANIA/MIDDLE EAST', 'AFRICA', 'ALL COUNTRIES')
+
+pc_sales <- read_excel(
+  here::here('data', 'pc_sales_2018.xlsx'),
+  sheet = 'pc_sales', skip = 5) %>%
+  clean_names() %>%
+  rename(country = regions_countries) %>% 
+  select(-c(x2:x4)) %>%       # Drop bad columns
+  filter(! country %in% drop, # Drop bad rows
+         ! is.na(country)) %>% 
+  pivot_longer(
+    names_to = 'year', values_to = 'num_cars', 
+    cols = x2005:x2018) %>%
+  separate(year, into = c('drop', 'year'), sep = 'x',
+           convert = TRUE) %>% 
+  select(-drop)
+
+head(pc_sales, 3)
+```
+
+### Strategy 1: Find another source {.unnumbered}
+
+### Strategy 2: Hand-make it {.unnumbered}
+
+```{r}
+pc_regions <- read_csv(here::here(
+  "data", "pc_regions.csv"))
+
+head(pc_regions)
+```
+
+```{r}
+pc_sales <- pc_sales %>% 
+  left_join(pc_regions) #<<
+
+head(pc_sales)
+```
+
+<img src="images/pc_sales.png" width=800>
+
+```{r}
+drop <- c(
+  'EUROPE', 'EU 28 countries + EFTA',
+  'EU 15 countries + EFTA', 'EUROPE NEW MEMBERS',
+  'RUSSIA, TURKEY & OTHER EUROPE', 'AMERICA',
+  'NAFTA', 'CENTRAL & SOUTH AMERICA',
+  'ASIA/OCEANIA/MIDDLE EAST', 'AFRICA', 'ALL COUNTRIES')
+
+pc_regions <- read_csv(here::here("data", "pc_regions.csv"))
+
+pc_sales <- read_excel(
+  here::here('data', 'pc_sales_2018.xlsx'),
+  sheet = 'pc_sales', skip = 5) %>%
+  clean_names() %>%
+  rename(country = regions_countries) %>% 
+  select(-c(x2:x4)) %>%       # Drop bad columns
+  filter(! country %in% drop, # Drop bad rows
+         ! is.na(country)) %>% 
+  pivot_longer(
+    names_to = 'year', values_to = 'num_cars', 
+    cols = x2005:x2018) %>%
+  separate(year, into = c('drop', 'year'), sep = 'x',
+           convert = TRUE) %>% 
+  select(-drop) %>% 
+  left_join(pc_regions) %>% 
+  mutate(
+    country  = str_to_title(country), 
+    region  = str_to_title(region), 
+    subregion  = str_to_title(subregion))
+
+head(pc_sales)
 ```
