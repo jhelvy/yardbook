@@ -293,8 +293,6 @@ fed_spend_long %>%
     summarise(total = sum(rd_budget_mil))
 ```
 
-**Approach 2**: Reshape first, then summarise
-
 ```{r}
 total <- fed_spend_wide %>%
     pivot_longer(
@@ -307,6 +305,57 @@ total <- fed_spend_wide %>%
 
 ```{r}
 head(total)
+```
+
+## Tidy data vizualization
+
+```{r}
+head(fed_spend_wide)
+```
+
+```{r}
+#| label: fed-spend-bars
+#| echo: false
+
+ggplot(fed_spend_long) +
+  geom_col(aes(x = rd_budget_mil, y = reorder(department, rd_budget_mil)), #<<
+           width = 0.7, alpha = 0.8) +
+  theme_bw(base_size = 15) +
+  labs(x = "R&D Spending ($Millions)",
+       y = "Federal Agency")
+```
+
+
+```{r}
+#| error: true
+#| fig-show: hide
+
+ggplot(fed_spend_wide) +
+  geom_col(aes(x = rd_budget_mil, y = department)) + #<<
+  theme_bw() +
+  labs(
+      x = "R&D Spending ($Millions)",
+      y = "Federal Agency"
+  )
+```
+
+```{r}
+#| error: true
+#| fig-show: hide
+
+fed_spend_wide %>%
+  pivot_longer( #<<
+    names_to = "department", #<<
+    values_to = "rd_budget_mil", #<<
+    cols = -year  #<<
+  ) %>%
+  ggplot() +
+  geom_col(aes(x = rd_budget_mil, y = department)) +
+  theme_bw() +
+  labs(
+    x = "R&D Spending ($Millions)",
+    y = "Federal Agency"
+  )
 ```
 
 ## Merging Data Sets with Joins 

@@ -3,9 +3,56 @@
 ```{r}
 #| echo: false
 #| message: false
+#| include: false
 source("_common.R")
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+
+library(knitr)
+library(tidyverse)
+library(cowplot)
+library(fontawesome)
+library(kableExtra)
+library(countdown)
+library(metathis)
+library(ggrepel)
+library(readxl)
+library(lubridate)
+library(janitor)
+library(here)
+library(fontawesome)
 ```
 
-## Good Data Practices
+## Data Provenance 
 
-Changes here
+It matters where you are getting your data. Think about:
+
+- **Validity**:
+
+     - Is this data trustworthy? Is it authentic?
+     - Where did the data come from?
+     - How has the data been changed / managed over time?
+     - Is the data complete?
+
+- **Comprehension**:
+
+     - Is this data accurate?
+     - Can you explain your results?
+     - Is this the right data to answer your question?
+
+- **Reproducibility**:
+
+     - People should be able to fully replicate your results from your raw data and code.
+
+## Documenting Data Sources
+
+**Document your data source like a museum curator** `r fa("magnifying-glass")`
+
+Whenever you download data, you should **at a minimum** record the following:
+
+- The name of the file you are describing.
+- The date you downloaded it.
+- The original name of the downloaded file (in case you renamed it).
+- The url to the site you downloaded it from.
+- The source of the _original_ data (sometimes different from the site you downloaded it from).
+- A short description of the data, maybe how they were collected (if available).
+- A dictionary for the data (e.g. a simple markdown table describing each variable).
