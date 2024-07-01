@@ -11,15 +11,19 @@ Depends: R (>= 4.0.2)
 License: CC-BY-SA
 Encoding: UTF-8
 Imports:
+    countdown,
     cowplot,
     fontawesome,
     here,
     ggrepel,
     gsheet,
+    janitor,
     kableExtra,
     knitr,
+    lubridate,
     palmerpenguins,
     quarto,
+    readxl,
     rmarkdown,
     rvest,
     tidyverse,

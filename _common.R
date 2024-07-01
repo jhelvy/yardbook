@@ -1,4 +1,14 @@
-set.seed(5678)
+library(knitr)
+library(tidyverse)
+library(cowplot)
+library(fontawesome)
+library(kableExtra)
+library(countdown)
+library(ggrepel)
+library(readxl)
+library(lubridate)
+library(janitor)
+library(here)
 
 options(
     dplyr.print_min = 6,
@@ -15,5 +25,7 @@ knitr::opts_chunk$set(
     fig.height = 4,
     fig.show = "hold",
     fig.align  = "center",
-    fig.path   = "figs/"
+    fig.path   = "figs/",
+    warning = FALSE,
+    message = FALSE
 )

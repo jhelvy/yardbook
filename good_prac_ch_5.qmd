@@ -5,21 +5,6 @@
 #| message: false
 #| include: false
 source("_common.R")
-knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
-
-library(knitr)
-library(tidyverse)
-library(cowplot)
-library(fontawesome)
-library(kableExtra)
-library(countdown)
-library(metathis)
-library(ggrepel)
-library(readxl)
-library(lubridate)
-library(janitor)
-library(here)
-library(fontawesome)
 ```
 
 ## Data Provenance 
