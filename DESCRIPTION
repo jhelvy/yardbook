@@ -18,6 +18,7 @@ Imports:
     gsheet,
     kableExtra,
     knitr,
+    palmerpenguins,
     quarto,
     rmarkdown,
     rvest,
