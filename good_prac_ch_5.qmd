@@ -7,6 +7,12 @@
 source("_common.R")
 ```
 
+> ### Learning Objectives {.unnumbered}
+>
+> * Assess and document the validity, accuracy, and origin of data sources.
+> * Ensure the reproducibility of results using detailed data documentation.
+> * Understand the importance of data provenance and its impact on data quality and reliability.
+
 ## Data Provenance 
 
 It matters where you are getting your data. Think about:

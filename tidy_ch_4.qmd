@@ -301,19 +301,6 @@ head(fed_spend_wide)
 ```
 
 ```{r}
-#| label: fed-spend-bars
-#| echo: false
-
-ggplot(fed_spend_long) +
-  geom_col(aes(x = rd_budget_mil, y = reorder(department, rd_budget_mil)), #<<
-           width = 0.7, alpha = 0.8) +
-  theme_bw(base_size = 15) +
-  labs(x = "R&D Spending ($Millions)",
-       y = "Federal Agency")
-```
-
-
-```{r}
 #| error: true
 #| fig-show: hide
 
@@ -343,6 +330,18 @@ fed_spend_wide %>%
     x = "R&D Spending ($Millions)",
     y = "Federal Agency"
   )
+```
+
+```{r}
+#| label: fed-spend-bars
+#| echo: false
+
+ggplot(fed_spend_long) +
+  geom_col(aes(x = rd_budget_mil, y = reorder(department, rd_budget_mil)), #<<
+           width = 0.7, alpha = 0.8) +
+  theme_bw(base_size = 15) +
+  labs(x = "R&D Spending ($Millions)",
+       y = "Federal Agency")
 ```
 
 ## Merging Data Sets with Joins 

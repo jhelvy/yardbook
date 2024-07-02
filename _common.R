@@ -9,6 +9,7 @@ library(readxl)
 library(lubridate)
 library(janitor)
 library(here)
+library(HistData)
 
 options(
     dplyr.print_min = 6,

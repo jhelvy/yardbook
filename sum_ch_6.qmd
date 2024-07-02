@@ -3,9 +3,129 @@
 ```{r}
 #| echo: false
 #| message: false
+#| include: false
 source("_common.R")
+
+# Read in data sets
+milk_production <- read_csv(here::here('data', 'milk_production.csv'))
+lotr_words <- read_csv(here::here('data', 'lotr_words.csv'))
+marathon <- read_csv(here::here('data', 'marathon.csv'))
+tb_cases <- read_csv(here::here('data', 'tb_cases.csv'))
+wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
+daysToShip <- data.frame(
+    order = seq(12),
+    warehouseA = c(3,3,3,4,4,4,5,5,5,5,5,5),
+    warehouseB = c(1,1,1,3,3,4,5,5,5,6,7,10)
+)
 ```
 
-## Summarizing
 
-Changes here
+## Types of Data
+
+**Categorical**
+
+Subdivide things into _groups_
+
+- What type?
+- Which category?
+
+**Numerical**
+
+Measure things with numbers
+
+- How many?
+- How much?
+
+#### Categorical (discrete) variables: {.unnumbered}
+
+**Nominal**
+
+- Order doesn't matter
+- Differ in "name" (nominal) only
+
+e.g. `country` in TB case data:
+
+```{r, echo=FALSE}
+tb_cases
+```
+
+**Ordinal**
+
+- Order matters
+- Distance between units not equal
+
+e.g.: `Placement` 2017 Boston marathon:
+
+```{r, echo=FALSE}
+marathon %>%
+  dplyr::select(Placement = Overall, `Official Time`, Name) %>%
+  head()
+```
+
+#### Numerical data: {.unnumbered}
+
+**Interval**
+
+- Numerical scale with arbitrary starting point
+- No "0" point
+- Can't say "x" is double "y"
+
+e.g.: `temp` in Beaver data
+
+```{r, echo=FALSE}
+beaver1 %>%
+    arrange(day) %>%
+    head()
+```
+
+**Ratio**
+
+- Has a "0" point
+- Can be described as percentages
+- Can say "x" is double "y"
+
+e.g.: `height` & `speed` in wildlife impacts
+
+```{r, echo=FALSE}
+wildlife_impacts %>%
+    filter(!is.na(height), ! is.na(speed)) %>%
+    dplyr::select(incident_date, height, speed) %>%
+    head()
+```
+
+### Key Questions
+
+**Categorical**
+
+<span style="color:blue;">Does this work? Does the order matter?</span>
+
+Yes: **Ordinal**
+
+No: **Nominal**
+
+## Numerical
+
+<span style="color:blue;">Is there a "baseline"?</span>
+
+Yes: **Ratio** 
+
+No: **Interval**
+
+### Variable Encoding
+**Be careful of how variables are encoded!**
+
+When numbers are categories
+
+- "Dummy coding": e.g., `passedTest` = `1` or `0`)
+- "North", "South", "East", "West" = `1`, `2`, `3`, `4`
+
+When ratio data are discrete (i.e. counts)
+
+- Number of eggs in a carton, heart beats per minute, etc.
+- Continuous variables measured discretely (e.g. age)
+
+### Time
+
+- As _ordinal_ categories: "Jan.", "Feb.", "Mar.", etc.
+- As _interval_ scale: "Jan. 1", "Jan. 2", "Jan. 3", etc.
+- As _ratio_ scale: "30 sec", "60 sec", "70 sec", etc.
