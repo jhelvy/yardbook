@@ -99,17 +99,17 @@ wildlife_impacts %>%
 
 <span style="color:blue;">Does this work? Does the order matter?</span>
 
-Yes: **Ordinal**
+Yes: Ordinal
 
-No: **Nominal**
+No: Nominal
 
-## Numerical
+**Numerical**
 
 <span style="color:blue;">Is there a "baseline"?</span>
 
-Yes: **Ratio** 
+Yes: Ratio 
 
-No: **Interval**
+No: Interval
 
 ### Variable Encoding
 **Be careful of how variables are encoded!**
@@ -129,3 +129,141 @@ When ratio data are discrete (i.e. counts)
 - As _ordinal_ categories: "Jan.", "Feb.", "Mar.", etc.
 - As _interval_ scale: "Jan. 1", "Jan. 2", "Jan. 3", etc.
 - As _ratio_ scale: "30 sec", "60 sec", "70 sec", etc.
+
+## Summary Measures
+
+**Single variables: <span style="color:red;">Centrality</span> &  <span style="color:blue;">Variability</span>**
+
+**Two variables: <span style="color:green;">Correlation</span>**
+
+### <span style="color:red;">Centrality (a.k.a. The "Average" Value)</span>
+
+**A single number representing the _middle_ of a set of numbers]**
+
+**Mean**: $\frac{\text{Sum of values}}{\text{\# of values}}$
+
+**Median**: "Middle" value (50% of data above & below)
+
+***Mean isn't always the "best" choice***
+
+```{r}
+wildlife_impacts %>%
+    filter(! is.na(height)) %>%
+    summarise(
+      mean = mean(height),
+      median = median(height)
+    )
+```
+
+Percent of data below mean:
+
+```{r, echo=FALSE}
+percentiles <- ecdf(wildlife_impacts$height)
+meanP <- percentiles(mean(wildlife_impacts$height, na.rm = TRUE))
+paste0(round(100*meanP, 1), '%')
+```
+
+**On average, at what height do planes hit birds?**
+
+<img src="figs/wildlife-hist.png" width = 700>
+
+On average, where do planes hit birds? Saying ~1000 ft is misleading. It's much more likely to be under 100 ft.
+
+**Beware the "flaw of averages"**
+
+*What happened to the statistician that crossed a river with an average depth of 3 feet?*
+
+*...he drowned*
+
+<img src="images/foa.jpg" width=600>
+
+### <span style="color:blue;">Variability ("Spread")</span>
+
+**Standard deviation**: distribution of values relative to the mean
+$s = \sqrt{\frac{\sum_{i=1}^{N}(x_i - \bar{x})^2}{N - 1}}$
+
+**Interquartile range (IQR)**: $Q_3 - Q_1$ (middle 50% of data)
+
+**Range**: max - min
+
+Example: Days to ship
+
+Complaints are coming in about orders shipped from warehouse B, so you collect some data:
+
+```{r}
+daysToShip
+```
+
+Here, **averages** are misleading:
+
+```{r}
+daysToShip %>%
+    gather(warehouse, days, warehouseA:warehouseB) %>%
+    group_by(warehouse) %>%
+    summarise(
+        mean   = mean(days), #<<
+        median = median(days)) #<<
+```
+
+**Variability** reveals difference in days to ship:
+
+```{r}
+daysToShip %>%
+    gather(warehouse, days, warehouseA:warehouseB) %>%
+    group_by(warehouse) %>%
+    summarise(
+        mean   = mean(days),
+        median = median(days),
+        range = max(days) - min(days), #<<
+        sd    = sd(days)) #<<
+```
+
+<center>
+<img src="figs/days-to-ship.png" width=960>
+</center>
+
+**Interpreting the standard deviation**
+
+$s = \sqrt{\frac{\sum_{i=1}^{N}(x_i - \bar{x})^2}{N - 1}}$
+
+<center>
+<img src="figs/days-to-ship-sd.png" width=380>
+</center>
+
+<img src="images/sd.png">
+
+**Outliers**
+
+<center>
+<img src = "images/outliers.jpeg" width = "730">
+</center>
+
+**Mean** & **Standard Deviation** are sensitive to outliers
+
+**Outliers**: $Q_1 - 1.5 IQR$ or $Q_3 + 1.5 IQR$
+
+**Extreme values**: $Q_1 - 3 IQR$ or $Q_3 + 3 IQR$
+
+```{r}
+data1 <- c(3,3,4,5,5,6,6,7,8,9)
+```
+
+- Mean: `r mean(data1)`
+- Standard Deviation: `r round(sd(data1), 2)`
+- Median: `r median(data1)`
+- IQR: `r IQR(data1)`
+
+```{r}
+data2 <- c(3,3,4,5,5,6,6,7,8,20)
+```
+
+- <span style="color:red;">Mean: `r mean(data2)`</span>
+- <span style="color:red;">Standard Deviation: `r round(sd(data2), 2)`</span>
+- <span style="color:blue;">Median: `r median(data2)`</span>
+- <span style="color:blue;">IQR: `r IQR(data2)`</span>
+
+Robust statistics for continuous data (less sensitive to outliers):
+
+<span style="color:red;">Centrality</span>: Use _median_ rather than _mean_
+
+<span style="color:blue;">Variability</span>: Use _IQR_ rather than _standard deviation_
