@@ -165,7 +165,7 @@ paste0(round(100*meanP, 1), '%')
 
 **On average, at what height do planes hit birds?**
 
-<img src="figs/wildlife-hist.png" width = 700>
+<img src="figs/wildlife-hist.png" width=700>
 
 On average, where do planes hit birds? Saying ~1000 ft is misleading. It's much more likely to be under 100 ft.
 
@@ -175,7 +175,7 @@ On average, where do planes hit birds? Saying ~1000 ft is misleading. It's much 
 
 *...he drowned*
 
-<img src="images/foa.jpg" width=600>
+<img src="images/foa.jpg" width=700>
 
 ### <span style="color:blue;">Variability ("Spread")</span>
 
@@ -232,12 +232,6 @@ $s = \sqrt{\frac{\sum_{i=1}^{N}(x_i - \bar{x})^2}{N - 1}}$
 
 <img src="images/sd.png">
 
-**Outliers**
-
-<center>
-<img src = "images/outliers.jpeg" width = "730">
-</center>
-
 **Mean** & **Standard Deviation** are sensitive to outliers
 
 **Outliers**: $Q_1 - 1.5 IQR$ or $Q_3 + 1.5 IQR$
@@ -267,3 +261,550 @@ Robust statistics for continuous data (less sensitive to outliers):
 <span style="color:red;">Centrality</span>: Use _median_ rather than _mean_
 
 <span style="color:blue;">Variability</span>: Use _IQR_ rather than _standard deviation_
+
+## Summarizing and Visualizing Data
+**"Visualizing data helps us think"**
+
+One great example of the importance of visualizing data would be Anscombe's Quartet. Anscombe's quartet is comprised of the four datasets shown below. Although these four datasets have identical summary statistics, their graphs reveal their varying data points. Similarly, the Datasaurus dataset seems like an ordinary dataset when looking at the summary statistics. However, plotting the dataset reveals a dinosaur. Inspired by the Anscombe's Quartet and Datasaurus datasets, the Datasaurus Dozon has 12 datasets with identical summary statistics and differing imagery in their graphs.
+
+**Anscombe's Quartet**
+
+<img src = "images/anscombe_data.png" width = "740">
+<span class="footer-small">Stephen Few (2009, pg. 6)</span>
+
+<img src="figs/anscombe-quartet.png" width=740>
+
+<span class="footer-small">Stephen Few (2009, pg. 6)</span>
+
+**The Datasaurus and the Datasaurus Dozon**
+
+### (More [here](https://www.autodeskresearch.com/publications/samestats))
+
+<img src="images/datasaurus.png">
+
+### The data _type_ determines how to summarize and visualize it. {.unnumbered}
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+  <h3><strong>Nominal<br>(Categorical)</strong></h3>
+  <p><strong>Measures:</strong></p>
+  <ul>
+    <li>Frequency counts /<br>Proportions</li>
+  </ul>
+  <br><br><br><br>
+  <p><strong>Charts:</strong></p>
+  <ul>
+    <li>Bars</li>
+  </ul>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+  <h3><strong>Ordinal<br>(Categorical)</strong></h3>
+  <p><strong>Measures:</strong></p>
+  <ul>
+    <li>Frequency counts /<br>Proportions</li>
+    <li><span style="color: red;">Centrality</span>:<br>Median, Mode</li>
+    <li><span style="color: blue;">Variability</span>: IQR</li>
+  </ul>
+  <br>
+  <p><strong>Charts:</strong></p>
+  <ul>
+    <li>Bars</li>
+  </ul>
+</div>
+
+<div style="flex: 1;">
+  <h3><strong>Numerical<br>(Continuous)</strong></h3>
+  <p><strong>Measures:</strong></p>
+  <ul>
+    <li><span style="color: red;">Centrality</span>:<br>Mean, median</li>
+    <li><span style="color: blue;">Variability</span>: Range, standard deviation, IQR</li>
+  </ul>
+  <br><br>
+  <p><strong>Charts:</strong></p>
+  <ul>
+    <li>Histogram</li>
+    <li>Boxplot</li>
+  </ul>
+</div>
+
+</div>
+
+### Summarizing **Nominal** data
+
+**Summarize**: Counts / percentages
+
+```{r}
+wildlife_impacts %>%
+    count(operator, sort = TRUE) %>% #<<
+    mutate(p = n / sum(n)) #<<
+```
+
+**Visualize**: (usually sorted) Bars 
+
+```{r wildlife-operator-bars, fig.width=7, fig.height=3}
+wildlife_impacts %>%
+    count(operator, sort = TRUE) %>%
+    ggplot() + #<<
+    geom_col(aes(x = n, y = reorder(operator, n)), #<<
+             width = 0.7) + #<<
+    labs(x = "Count", y = "Operator")
+```
+
+### Summarizing **Ordinal** data
+
+**Summarize**: Counts / percentages
+
+```{r}
+wildlife_impacts %>%
+    count(incident_month, sort = TRUE) %>% #<<
+    mutate(p = n / sum(n)) #<<
+```
+
+**Visualize**: Bars
+
+```{r wildlife-months-bar, fig.width=7, fig.height=3.7}
+wildlife_impacts %>%
+    count(incident_month, sort = TRUE) %>%
+    ggplot() + #<<
+    geom_col(aes(x = as.factor(incident_month), #<<
+                 y = n), width = 0.7) + #<<
+    labs(x = "Incident month")
+```
+
+### Summarizing **continuous** variables
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+  <strong>Histograms:</strong>
+  <ul>
+    <li>Skewness</li>
+    <li>Number of modes</li>
+  </ul>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+  <strong>Boxplots:</strong>
+  <ul>
+    <li>Outliers</li>
+    <li>Comparing variables</li>
+  </ul>
+</div>
+
+</div>
+
+<img src = 'images/eda-boxplot.png' width = 800>
+
+#### **Histogram**: Identify Skewness & # of Modes {.unnumbered}
+
+**Summarise**: Mean, median, sd, range, & IQR:
+
+```{r}
+summary(wildlife_impacts$height)
+```
+
+**Visualize**: Histogram (identify skewness & modes)
+
+```{r wildlife-height-hist, fig.width=7, fig.height=3.7, fig.align='center'}
+ggplot(wildlife_impacts) +
+  geom_histogram(aes(x = height), bins = 50) + #<<
+  labs(x = 'Height (ft)', y = 'Count')
+```
+
+**Height**
+
+```{r, ref.label="wildlife-height-hist", fig.width=7, fig.height=3.7, fig.align='center'}
+```
+
+**Speed**
+
+```{r wildlife-speed-hist, fig.width=7, fig.height=3.7, fig.align='center'}
+ggplot(wildlife_impacts) +
+  geom_histogram(aes(x = speed), bins = 50) + #<<
+  labs(x = 'speed (mph)', y = 'Count')
+```
+
+#### **Boxplot**: Identify outliers {.unnumbered}
+
+**Height**
+
+```{r wildlife-height-boxplot, fig.width=7, fig.height=3, fig.align='center'}
+ggplot(wildlife_impacts) +
+    geom_boxplot(aes(x = height)) + #<<
+    labs(x = 'Height (ft)', y = NULL)
+```
+
+**Speed**
+
+```{r wildlife-speed-boxplot, fig.width=7, fig.height=3, fig.align='center'}
+ggplot(wildlife_impacts) +
+    geom_boxplot(aes(x = speed)) + #<<
+    labs(x = 'Speed (mph)', y = NULL)
+```
+
+## Correlation
+
+There are some pretty racist origins in [eugenics](https://en.wikipedia.org/wiki/Eugenics). This included the notion of being 'well born' and possessing 'superior' genetics, frequently associated with race. The beautiful irony is that human genetics was also the field that conclusively demonstrated the biological falsity of race. It also advanced our understanding of correlation with the works of these two people:
+
+**[Sir Francis Galton](https://en.wikipedia.org/wiki/Francis_Galton) (1822 - 1911)**
+
+- Charles Darwin's cousin.
+- "Father" of [eugenics](https://en.wikipedia.org/wiki/Eugenics).
+- Interested in heredity.
+
+<img src="images/Francis_Galton_1850s.jpg" width=400>
+
+**[Karl Pearson](https://en.wikipedia.org/wiki/Karl_Pearson) (1857 - 1936)**
+
+- Galton's ([hero-worshiping](https://en.wikipedia.org/wiki/Apotheosis)) protégé.
+- Defined correlation equation.
+- "Father" of mathematical statistics.
+
+<img src="images/Karl_Pearson.jpg" width=400>
+
+**Galton's family data**
+
+Galton, F. (1886). ["Regression towards mediocrity in hereditary stature"](http://www.stat.ucla.edu/~nchristo/statistics100C/history_regression.pdf). _The Journal of the Anthropological Institute of Great Britain and Ireland_ 15: 246-263.
+
+**Galton's question**: Does marriage selection indicate a relationship between the heights of husbands and wives?<br>(He called this "assortative mating")
+
+"midparent height" is just a scaled mean:
+```{r, eval=FALSE}
+midparentHeight =  (father + 1.08*mother)/2
+```
+
+```{r, eval=FALSE}
+library(HistData)
+
+galtonScatterplot <- ggplot(GaltonFamilies) +
+    geom_point(aes(x = midparentHeight,
+                   y = childHeight),
+               size = 0.5, alpha = 0.7) +
+    theme_classic() +
+    labs(x = 'Midparent height (inches)',
+         y = 'Child height (inches)')
+```
+
+<img src="figs/galtonScatterplot.png" width=700>
+</center>
+ 
+### How do you measure correlation? (**Pearson**)
+Pearson came up with this:
+
+##### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$ {.unnumbered}
+
+Assumptions: <br/>
+1. Variables must be interval or ratio <br/>
+2. Linear relationship <br/>
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+  <img src="figs/cor_vstrong_p.png" width=350>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+  <img src="figs/cor_quad.png" width=350>
+</div>
+
+</div>
+
+### How do you _interpret_ $r$?
+
+##### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$ {.unnumbered}
+
+Interpretation:
+- $-1 \le r \le 1$
+- Closer to 1 is stronger correlation
+- Closer to 0 is weaker correlation
+
+```{r}
+cor(x = GaltonFamilies$midparentHeight,
+    y = GaltonFamilies$childHeight,
+    method = 'pearson')
+```
+
+<img src="figs/galtonScatterplot.png" width=700>
+
+### What does $r$ mean?
+
+- $\pm 0.1 - 0.3$: Weak
+- $\pm 0.3 - 0.5$: Moderate
+- $\pm 0.5 - 0.8$: Strong
+- $\pm 0.8 - 1.0$: Very strong
+
+<img src="figs/cor_p.png" width=700>
+
+Test your understanding of $r$ here:
+[guessthecorrelation.com](http://guessthecorrelation.com/)
+
+**Coefficient of determination: $r^2$**
+Percent of variance in one variable that is explained by the other variable
+
+<img src="images/rsquared_venn.png" width = 700>
+
+$r$ | $r^2$
+----|------
+0.1 | 0.01
+0.2 | 0.04
+0.3 | 0.09
+0.4 | 0.16
+0.5 | 0.25
+0.6 | 0.36
+0.7 | 0.49
+0.8 | 0.64
+0.9 | 0.81
+1.0 | 1.00
+
+**You should report both $r$ and $r^2$**
+If correlation between parent and child height is 0.32, then 10% of the variance in the child height is explained by the parent height.
+
+### Correlation != Causation
+
+**X causes Y**
+
+- Training causes improved performance
+
+**Y causes X**
+
+- Good (bad) performance causes people to train harder (less hard).
+
+--
+
+**Z causes both X & Y**
+
+- Commitment and motivation cause increased training and better performance.
+
+**Be weary of dual axes!**
+
+([They can cause spurious correlations](https://www.tylervigen.com/spurious-correlations))
+
+Dual Axes:
+<img src="images/hbr_two_axes1.png" width=700>
+</center>
+
+Single Axis:
+<img src="images/hbr_two_axes2.png" width=700>
+
+### Outliers
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+  <img src="figs/pearson_base.png" width=260>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+  <img src="figs/pearson1.png" width=260>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+  <img src="figs/pearson2.png" width=260>
+</div>
+
+</div>
+
+**Pearson** correlation is highly sensitive to outliers
+
+<img src="figs/pearson_grid.png" width=700>
+
+### **Spearman**'s rank-order correlation
+
+#### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$ {.unnumbered}
+
+- Separately rank the values of X & Y.
+- Use Pearson's correlation on the _ranks_ instead of the $x$ & $y$ values.
+
+Assumptions:
+
+- Variables can be ordinal, interval or ratio
+- Relationship must be monotonic (i.e. does not require linearity)
+
+**Spearman correlation more robust to outliers**
+
+<img src="figs/spearman_grid.png" width=700>
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+  <img src="figs/pearson_grid.png" width=300>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, echo=FALSE}
+tribble(
+    ~Pearson, ~Spearman,
+    -0.56,    0.53,
+    0.39,     0.69,
+    0.94,     0.81,
+    0.38,     0.76,
+    0.81,     0.79,
+    0.31,     0.70,
+    0.95,     0.81,
+    0.51,     0.75,
+    -0.56,    0.53) %>%
+    kable()
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+  <img src="figs/outlier_compare.png" width=300>
+</div>
+
+</div>
+
+
+### Summary of correlation
+
+- **Pearson's correlation**: Described the strength of a **linear** relationship between two variables that are interval or ratio in nature.
+- **Spearman's rank-order correlation**: Describes the strength of a **monotonic** relationship between two variables that are ordinal, interval, or ratio. **It is more robust to outliers**.
+- The **coefficient of determination** ( $r^2$ ) describes the amount of variance in one variable that is explained by the other variable.
+- **Correlation != Causation**
+
+R command (hint: add `use = "complete.obs"` to drop NA values)
+
+```{r, eval=FALSE}
+pearson  <- cor(x, y, method = "pearson", use = "complete.obs")
+spearman <- cor(x, y, method = "spearman", use = "complete.obs")
+```
+
+### **Scatterplots**: The correlation workhorse
+
+```{r, eval=FALSE}
+scatterplot <- mtcars %>% 
+  ggplot() +
+  geom_point( #<<
+    aes(x = mpg, y = hp), #<<
+    size = 2, alpha = 0.7 #<<
+  ) + #<<
+  theme_classic(base_size = 20) +
+  labs(
+    x = 'Fuel economy (mpg)',
+    y = 'Engine power (hp)'
+  )
+
+scatterplot
+```
+
+<center>
+<img src="figs/mtcarsScatterplotBase.png" width=700>
+</center>
+
+### Adding a correlation label to a chart
+
+Make the correlation label
+
+```{r, eval=FALSE}
+corr <- cor(
+    mtcars$mpg, mtcars$hp,
+    method = 'pearson')
+
+corrLabel <- paste('r = ', round(corr, 2)) #<<
+```
+
+Add label to the chart with `annotate()`
+
+```{r, eval=FALSE}
+scatterplot +
+  annotate( #<<
+    geom = 'text', #<<
+    x = 25, y = 310, #<<
+    label = corrLabel, #<<
+    hjust = 0, size = 7 #<<
+  ) #<<
+```
+
+<img src="figs/mtcarsScatterplot.png" width=700>
+
+### Visualize all the correlations: `ggcorr()`
+
+```{r, eval=FALSE}
+library('GGally')
+```
+
+```{r, eval=FALSE}
+mtcars %>%
+    ggcorr() #<<
+```
+
+<img src="figs/ggcor_mtcars.png" width=700>
+</center>
+
+```{r, eval=FALSE}
+library('GGally')
+```
+
+```{r, eval=FALSE}
+mtcars %>%
+    ggcorr(label = TRUE, #<<
+           label_size = 3, #<<
+           label_round = 2) #<<
+```
+
+<img src="figs/ggcor_mtcars_labels.png" width=700>
+
+```{r, eval=FALSE}
+ggcor_mtcars_final <- mtcars %>%
+    ggcorr(label = TRUE,
+           label_size = 3,
+           label_round = 2,
+           label_color = 'white', #<<
+           nbreaks = 5,  #<<
+           palette = "RdBu") #<<
+```
+
+<img src="figs/ggcor_mtcars_final.png" width=700>
+
+**Pearson**
+
+```{r, eval=FALSE}
+mtcars %>%
+    ggcorr(label = TRUE,
+           label_size = 3,
+           label_round = 2,
+           method = c("pairwise", "pearson")) #<<
+```
+
+<img src="figs/ggcor_mtcars_pearson.png" width=700>
+
+**Spearman**
+
+```{r, eval=FALSE}
+mtcars %>%
+    ggcorr(label = TRUE,
+           label_size = 3,
+           label_round = 2,
+           method = c("pairwise", "spearman")) #<<
+```
+
+<img src="figs/ggcor_mtcars_spearman.png" width=700>
+
+### Correlograms: `ggpairs()`
+
+```{r, eval=FALSE}
+library('GGally')
+```
+```{r, eval=FALSE}
+mtcars %>%
+    select(mpg, cyl, disp, hp, wt) %>%
+    ggpairs() #<<
+```
+
+- Look for linear relationships
+- View distribution of each variable
+
+<img src="figs/ggpairs_mtcars.png" width=700>
+
+### **Simpson's Paradox**: when correlation betrays you
+
+At first glance, it seems that body mass and bill depth are negatively correlated. However, if we measure the correlation by species, we find that body mass and bill depth are positively correlated.
+
+**Body mass vs. Bill depth**
+
+<img src="figs/simpson_penguins.png" width=700>
+
+**Body mass vs. Bill depth**
+
+<img src="figs/simpson_penguins_good.png" width=700>
