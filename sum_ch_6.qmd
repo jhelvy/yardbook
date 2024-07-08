@@ -219,7 +219,7 @@ daysToShip %>%
 ```
 
 <center>
-<img src="figs/days-to-ship.png" width=960>
+<img src="figs/days-to-ship.png" width=700>
 </center>
 
 **Interpreting the standard deviation**
@@ -269,18 +269,18 @@ One great example of the importance of visualizing data would be Anscombe's Quar
 
 **Anscombe's Quartet**
 
-<img src = "images/anscombe_data.png" width = "740">
+<img src = "images/anscombe_data.png" width = "700">
 <span class="footer-small">Stephen Few (2009, pg. 6)</span>
 
-<img src="figs/anscombe-quartet.png" width=740>
+<img src="figs/anscombe-quartet.png" width=700>
 
 <span class="footer-small">Stephen Few (2009, pg. 6)</span>
 
 **The Datasaurus and the Datasaurus Dozon**
 
-### (More [here](https://www.autodeskresearch.com/publications/samestats))
+(More [here](https://www.autodeskresearch.com/publications/samestats))
 
-<img src="images/datasaurus.png">
+<img src="images/datasaurus.png" width=700>
 
 ### The data _type_ determines how to summarize and visualize it. {.unnumbered}
 
@@ -395,7 +395,7 @@ wildlife_impacts %>%
 
 </div>
 
-<img src = 'images/eda-boxplot.png' width = 800>
+<img src = 'images/eda-boxplot.png' width = 700>
 
 #### **Histogram**: Identify Skewness & # of Modes {.unnumbered}
 
