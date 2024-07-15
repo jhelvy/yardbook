@@ -262,7 +262,7 @@ Robust statistics for continuous data (less sensitive to outliers):
 
 <span style="color:blue;">Variability</span>: Use _IQR_ rather than _standard deviation_
 
-## Summarizing and Visualizing Data
+## Summarizing/Visualizing Data by Type
 **"Visualizing data helps us think"**
 
 One great example of the importance of visualizing data would be Anscombe's Quartet. Anscombe's quartet is comprised of the four datasets shown below. Although these four datasets have identical summary statistics, their graphs reveal their varying data points. Similarly, the Datasaurus dataset seems like an ordinary dataset when looking at the summary statistics. However, plotting the dataset reveals a dinosaur. Inspired by the Anscombe's Quartet and Datasaurus datasets, the Datasaurus Dozon has 12 datasets with identical summary statistics and differing imagery in their graphs.
@@ -373,7 +373,7 @@ wildlife_impacts %>%
     labs(x = "Incident month")
 ```
 
-### Summarizing **continuous** variables
+### Summarizing **Numerical (continuous)** variables
 
 <div style="display: flex; justify-content: space-between;">
 
@@ -442,6 +442,90 @@ ggplot(wildlife_impacts) +
 ggplot(wildlife_impacts) +
     geom_boxplot(aes(x = speed)) + #<<
     labs(x = 'Speed (mph)', y = NULL)
+```
+
+## Visualizing Variation
+
+Ask yourself:
+
+- What type of **variation** occurs within my variables?
+- What type of **covariation** occurs between my variables?
+
+Check out [these guides](https://eda.seas.gwu.edu/2023-Fall/references.html#choosing-the-right-chart)
+
+<center>
+<img src = "images/plots-table.png" width = "800">
+</center>
+
+### Two **Categorical** Variables
+
+Summarize with a table of counts
+
+```{r}
+wildlife_impacts %>%
+    count(operator, time_of_day) #<<
+```
+
+Convert to "wide" format with `pivot_wider()` to make it easier to compare values
+
+```{r}
+wildlife_impacts %>%
+    count(operator, time_of_day) %>%
+    pivot_wider(names_from = time_of_day, values_from = n) #<<
+```
+
+Visualize with bars:<br>map **fill** to denote 2nd categorical var
+
+```{r wildlife-two-var-bars, fig.width=9, fig.height=6, fig.align='center'}
+wildlife_impacts %>%
+  count(operator, time_of_day) %>%
+  ggplot() +
+  geom_col(
+    aes(
+      x = n,
+      y = reorder(operator, n),
+      fill = reorder(time_of_day, n) #<<
+    ), 
+    width = 0.7,
+    position = 'dodge') + #<<
+  theme(legend.position = "bottom") +
+  labs(
+    fill = "Time of day", 
+    y = "Airline"
+  )
+```
+
+Visualize with scatterplot - looking for _clustering_ and/or _correlational_ relationship
+
+```{r wildlife-scatterplot, fig.width=7, fig.height=4, fig.align='center'}
+ggplot(wildlife_impacts) +
+  geom_point(
+    aes(
+      x = speed, 
+      y = height  
+    ),
+    size = 0.5) +
+  labs(
+    x = 'Speed (mph)',
+    y = 'Height (f)'
+  )
+```
+
+### One **Continuous**, One **Categorical**
+
+Visualize with **boxplot**
+
+```{r wildlife-two-var-boxplot, fig.width=7, fig.height=4, fig.align='center'}
+ggplot(wildlife_impacts) +
+  geom_boxplot(
+    aes(
+      x = speed, 
+      y = operator)
+    ) + 
+  labs(
+    x = 'Speed (mph)',
+    y = 'Airline'
+  )
 ```
 
 ## Correlation
@@ -590,6 +674,12 @@ Single Axis:
 
 ### Outliers
 
+<center>
+<img src = "images/outliers.jpeg" width = "680">
+</center>
+
+**Pearson** correlation is highly sensitive to outliers
+
 <div style="display: flex; justify-content: space-between;">
 
 <div style="flex: 1; margin-right: 10px;">
@@ -605,8 +695,6 @@ Single Axis:
 </div>
 
 </div>
-
-**Pearson** correlation is highly sensitive to outliers
 
 <img src="figs/pearson_grid.png" width=700>
 
@@ -719,6 +807,10 @@ scatterplot +
 <img src="figs/mtcarsScatterplot.png" width=700>
 
 ### Visualize all the correlations: `ggcorr()`
+
+<center>
+<img src="images/all-the-correlations.jpeg" width=700>
+</center>
 
 ```{r, eval=FALSE}
 library('GGally')

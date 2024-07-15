@@ -10,6 +10,7 @@ library(lubridate)
 library(janitor)
 library(here)
 library(HistData)
+library(metathis)
 
 options(
     dplyr.print_min = 6,
