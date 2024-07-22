@@ -22,7 +22,7 @@ From [here](https://psyteachr.github.io/msc-data-skills/ggplot.html)
 
 ## The Human Visual-Memory System
 
-We don't write paragraphs like this:
+We don't write paragraphs *like this:
 
 <center>
 <img src="images/bad_text.png" width = 750>

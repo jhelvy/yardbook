@@ -11,6 +11,10 @@ library(janitor)
 library(here)
 library(HistData)
 library(metathis)
+library(viridis)
+library(gganimate)
+library(magick)
+library(waffle)
 
 options(
     dplyr.print_min = 6,
