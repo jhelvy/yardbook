@@ -15,6 +15,8 @@ library(viridis)
 library(gganimate)
 library(magick)
 library(waffle)
+library(ggplot2)
+library(forcats)
 
 options(
     dplyr.print_min = 6,

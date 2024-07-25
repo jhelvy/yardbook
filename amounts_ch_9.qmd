@@ -5,12 +5,22 @@
 #| message: false
 source("_common.R")
 
+# Set main plot theme
+theme_set(theme_cowplot(font_size = 20))
+
+# Read in data
+milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
+global_temps     <- read_csv(here::here('data', 'nasa_global_temps.csv'))
+hotdogs          <- read_csv(here::here('data', 'hot_dog_winners.csv'))
+internet_country <- read_csv(here::here('data', 'internet_users_country.csv'))
+internet_region  <- read_csv(here::here('data', 'internet_users_region.csv'))
+us_diseases      <- read_csv(here::here('data', 'us_contagious_diseases.csv'))
+us_covid         <- read_csv(here::here('data', 'us_covid.csv'))
 avengers         <- read_csv(here::here('data', 'avengers.csv'))
 bears            <- read_csv(here::here('data', 'north_america_bear_killings.csv'))
 federal_spending <- read_csv(here::here('data', 'fed_spending_long.csv'))
 gapminder        <- read_csv(here::here('data', 'gapminder.csv'))
-lotr_words       <- read_csv(here::here('data', 'lotr_words.csv'))
-milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
+lotr_words       <- read_csv(here::here('data', 'lotr_words_temp.csv'))
 wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
 milk_summary_2017 <- milk_production %>%
   filter(year == 2017) %>%
@@ -851,6 +861,7 @@ milk_production %>%
   group_by(state) %>%
   summarise(milk_produced = sum(milk_produced)) %>%
   mutate(milk_produced = milk_produced / 10^9) %>%
+  
 
 # Make the chart
   ggplot() +
@@ -864,6 +875,7 @@ milk_production %>%
        x = NULL, y = NULL,
        title = '2017 Milk Production by State',
        subtitle = '(1 square = 1 billion lbs)')
+
 ```
 
 **Use values between 100 - 1,000**
