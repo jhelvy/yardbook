@@ -1,7 +1,7 @@
 {
-  "hash": "3348e541feb3496325a5944e4b9a1cc0",
+  "hash": "e664da49f463c27b223cd1a2399b5edf",
   "result": {
-    "markdown": "# Amounts {#sec-chapter}\n\n\n::: {.cell}\n\n:::\n\n\n## Amounts\n\nChanges here",
+    "markdown": "# Proportions {#sec-chapter}\n\n\n::: {.cell}\n\n:::\n\n\n## Proportions\n\nChanges here",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"

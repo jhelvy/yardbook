@@ -3,9 +3,495 @@
 ```{r}
 #| echo: false
 #| message: false
+#| include: false
 source("_common.R")
+
+# Set main plot theme
+theme_set(theme_cowplot(font_size = 20))
+
+# Read in data
+milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
+global_temps     <- read_csv(here::here('data', 'nasa_global_temps.csv'))
+hotdogs          <- read_csv(here::here('data', 'hot_dog_winners.csv'))
+internet_country <- read_csv(here::here('data', 'internet_users_country.csv'))
+internet_region  <- read_csv(here::here('data', 'internet_users_region.csv'))
+us_diseases      <- read_csv(here::here('data', 'us_contagious_diseases.csv'))
+us_covid         <- read_csv(here::here('data', 'us_covid.csv'))
+avengers         <- read_csv(here::here('data', 'avengers.csv'))
+bears            <- read_csv(here::here('data', 'north_america_bear_killings.csv'))
+federal_spending <- read_csv(here::here('data', 'fed_spending_long.csv'))
+gapminder        <- read_csv(here::here('data', 'gapminder.csv'))
+lotr_words       <- read_csv(here::here('data', 'lotr_words_temp.csv'))
+wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
+milk_summary_2017 <- milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+  mutate(milk_produced = milk_produced / 10^9)
 ```
 
-## Proportions
+## Graphing Proportions
 
-Changes here
+**Show proportions with:**
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/bar.png" width=350>
+**Bar charts**
+<img src="figs/milk_2017_bars_stacked_rotated.png" width=350>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/pie.png" width=350>
+**Pie charts**
+<img src="figs/milk_2017_pie-1.png" width=350>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/waffles.png" width=330>
+**Waffle charts**
+<img src="figs/milk_waffle_2017.png" width=350>
+</div>
+
+</div>
+
+### Stacked bars
+
+```{r, eval=FALSE}
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state, 
+    keep = c('California', 'Wisconsin'))) %>% 
+  group_by(state) %>% 
+  summarise(milk_produced = sum(milk_produced)) %>%  
+
+# Make the chart
+  ggplot() +
+  geom_col( #<<
+    aes(x = "", y = milk_produced, fill = state), #<<
+    width = 0.7, alpha = 0.8) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.05))) +
+  theme_minimal_hgrid() +
+  labs(x = NULL,
+       y = 'Milk produced (lbs)',
+       fill = 'State',
+       title = '2017 Milk Production\nby State')
+```
+
+<center>
+<img src="figs/milk_2017_bars_stacked.png" width=700>
+</center>
+
+**Rotated also looks good:**
+
+```{r, eval=FALSE}
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(state) %>% 
+  summarise(milk_produced = sum(milk_produced)) %>% 
+
+# Make the chart
+  ggplot() +
+  geom_col( #<< 
+    aes(x = milk_produced, y = "", fill = state), #<<
+    width = 0.7, alpha = 0.8) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.05))) +
+  theme_minimal_hgrid() +
+  labs(y = NULL,
+       x = 'Milk produced (lbs)',
+       fill = 'State',
+       title = '2017 Milk Production by State')
+```
+
+<center>
+<img src="figs/milk_2017_bars_stacked_rotated.png">
+</center>
+
+**Stacked bars - not great for more than a few categories:**
+
+```{r, eval=FALSE}
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin', #<<
+             'New York', 'Idaho'))) %>% #<<
+  group_by(state) %>%
+  summarise(milk_produced = sum(milk_produced))
+
+# Make the chart
+  ggplot() +
+  geom_col(
+    aes(x = "", y = milk_produced, fill = state),
+    width = 0.7, alpha = 0.8) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.05))) +
+  theme_minimal_vgrid() +
+  labs(x = NULL,
+       y = 'Milk produced (lbs)',
+       fill = 'State',
+       title = '2017 Milk Production\nby State')
+```
+
+<center>
+<img src="figs/milk_2017_bars_stacked_toomany.png" width=700>
+</center>
+
+### Dodged bars
+
+Better for **part-to-whole comparison**
+
+**Okay:**
+<center>
+<img src="figs/milk_2017_bars_stacked_rotated.png" width=700>
+</center>
+
+**Better:**
+
+```{r, eval=FALSE}
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+  mutate(state = fct_reorder(state, milk_produced)) %>%
+
+# Make the chart
+  ggplot() +
+  geom_col(
+    aes(x = milk_produced, y = state),
+    width = 0.7, alpha = 0.8) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.05))) +
+  theme_minimal_vgrid() +
+  labs(x = 'Milk produced (lbs)',
+       y = 'State',
+       title = '2017 Milk Production by State')
+```
+
+<center>
+<img src="figs/milk_2017_bars_dodged.png" width=700>
+</center>
+
+**Better for comparing *total*: **
+
+<center>
+<img src="figs/milk_compare_bars_stacked.png">
+</center>
+
+**Better for comparing *parts*: **
+
+```{r, eval=FALSE}
+milk_production %>%
+  filter(year %in% c(1970, 2017)) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(year, state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+
+# Make the chart
+  ggplot() +
+  geom_col(
+    aes(x = milk_produced, 
+        y = as.factor(year),
+        fill = state),
+    position = 'dodge', #<<
+    width = 0.7, alpha = 0.8) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.05))) +
+  theme_minimal_vgrid() +
+  labs(x = 'Milk produced (lbs)',
+       y = 'Year',
+       fill = 'State',
+       title = '1970 & 2017 Milk Production by State')
+```
+
+<center>
+<img src="figs/milk_compare_bars_dodged.png">
+</center>
+
+**Where stacking is useful:**
+
+<center>
+<img src="images/bechdel-stacked.png" width="700">
+</center>
+https://fivethirtyeight.com/features/the-dollar-and-cents-case-against-hollywoods-exclusion-of-women/
+
+- **2 to 3 groups**
+- Proportions over time
+
+<center>
+<img src="images/Coles-Graph.png" width="700">
+</center>
+
+https://www.perceptualedge.com/blog/?p=2239
+
+- 2 to 3 groups
+- **Proportions over time**
+
+### The Notorious P-I-E
+
+Start with a bar chart
+
+```{r ref.label='milk_2017_bars_simple', fig.height=6, fig.width=4, fig.align='center'}
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+
+# Make the chart
+  ggplot() +
+  geom_col( #<<
+    aes(x = "", y = milk_produced, fill = state), #<<
+    width = 0.7, alpha = 0.8) +
+  theme_minimal_hgrid() +
+  labs(x = NULL,
+       y = 'Milk produced (lbs)',
+       fill = 'State',
+       title = '2017 Milk Production\nby State')
+```
+
+Convert bar to pie with `coord_polar()`
+
+```{r ref.label='milk_2017_pie', fig.height=5, fig.width=7, fig.align='center'}
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+
+# Make the chart
+  ggplot() +
+  geom_col(
+    aes(x = "", y = milk_produced, fill = state),
+    width = 0.7, alpha = 0.8) +
+  coord_polar(theta = "y") + #<<
+  theme_minimal_hgrid() +
+  labs(x = NULL,
+       y = 'Milk produced (lbs)',
+       fill = 'State',
+       title = '2017 Milk Production by State')
+```
+
+Final chart with labels & `theme_map()`:
+
+```{r ref.label='milk_2017_pie_good', fig.height=5, fig.width=7, fig.align='center'}
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+  arrange(desc(state)) %>% #<<
+  mutate(p = 100*(milk_produced / sum(milk_produced)), #<<
+         label = str_c(round(p), '%')) %>% #<<
+
+# Make the chart
+  ggplot() +
+  geom_col(
+    aes(x = "", y = milk_produced, fill = state),
+    width = 0.7, alpha = 0.8) +
+  geom_text( #<<
+    aes(x = "", y = milk_produced, label = label), #<<
+    color = "white", size = 6, #<<
+    position = position_stack(vjust = 0.5)) + #<<
+  coord_polar(theta = "y") +
+  theme_map() + #<<
+  labs(x = NULL,
+       y = NULL,
+       fill = 'State',
+       title = '2017 Milk Production by State')
+```
+
+
+**Pies are still useful if the sum of components matters**
+
+<center>
+<img src="images/bundestag-bars-stacked.png" width=700>
+<center>
+
+<center>
+<img src="images/bundestag-bars-dodged.png"width=700>
+<center>
+
+<center>
+<img src="images/bundestag-pie.png"width=700>
+<center>
+
+
+**The best pies are *square pies* **
+
+<center>
+<img src="images/square-pies-rule.png" width="700">
+</center>
+https://eagereyes.org/blog/2016/a-reanalysis-of-a-study-about-square-pie-charts-from-2009
+
+### Waffle plots
+
+```{r waffle_2017, fig.show='hide'}
+library(waffle) #<<
+
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+  mutate(milk_produced = milk_produced / 10^9) %>%
+  
+
+# Make the chart
+  ggplot() +
+  geom_waffle( #<<
+    aes(fill = state, values = milk_produced), #<<
+    color = "white", size = 1, n_rows = 15) + #<<
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  theme_minimal() +
+  labs(fill = 'State',
+       x = NULL, y = NULL,
+       title = '2017 Milk Production by State',
+       subtitle = '(1 square = 1 billion lbs)')
+
+```
+
+**Use values between 100 - 1,000**
+(You don't want 1,000,000,000 boxes!)
+
+```{r, echo=FALSE}
+milk_summary_2017
+```
+
+```{r ref.label='waffle_2017', echo=FALSE, fig.height=4, fig.width=5, fig.align='center'}
+```
+
+**If you flip it...**
+
+```{r waffle_2017_flip, fig.show='hide'}
+library(waffle) #<<
+
+# Format the data
+milk_production %>%
+  filter(year == 2017) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+  mutate(milk_produced = milk_produced / 10^9) %>%
+
+# Make the chart
+  ggplot() +
+  geom_waffle(
+    aes(fill = state, values = milk_produced),
+    color = "white", size = 1, n_rows = 15,
+    flip = TRUE) + #<<
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  theme_minimal() +
+  labs(fill = 'State',
+       x = NULL, y = NULL,
+       title = '2017 Milk Production by State',
+       subtitle = '(1 square = 1 billion lbs)')
+```
+
+```{r ref.label='waffle_2017_flip', echo=FALSE, fig.height=4, fig.width=5, fig.align='center'}
+```
+
+**Waffle Comparison**
+
+```{r waffle_compare, fig.show='hide'}
+library(waffle)
+
+# Format the data
+milk_production %>%
+  filter(year %in% c(1970, 2017)) %>% #<<
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(year, state) %>% #<<
+  summarise(milk_produced = sum(milk_produced)) %>%
+  mutate(milk_produced = milk_produced / 10^9) %>%
+
+# Make the chart
+  ggplot() +
+  geom_waffle(
+    aes(fill = state, values = milk_produced),
+    color = "white", size = 1, n_rows = 10,
+    flip = TRUE) +
+  facet_wrap(vars(year), strip.position = 'bottom') + #<<
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  theme_minimal() +
+  labs(fill = 'State',
+       x = NULL, y = NULL,
+       title = '1970 & 2017 Milk Production by State',
+       subtitle = '(1 square = 1 billion lbs)')
+```
+
+```{r ref.label='waffle_compare', echo=FALSE, fig.height=4.5, fig.width=5, fig.align='center'}
+```
+
+### Comparison
+
+**Stacked bars:**
+
+<center>
+<img src="figs/milk_compare_bars_stacked.png" width = 450>
+</center>
+
+**Dodged bars:**
+
+<center>
+<img src="figs/milk_compare_bars_dodged.png" width = 450>
+</center>
+
+**Pie chart:**
+
+```{r milk_compare_pie, echo=FALSE, fig.height=2.5, fig.width=4.5, fig.align='center'}
+milk_production %>%
+  filter(year %in% c(1970, 2017)) %>%
+  mutate(state = fct_other(state,
+    keep = c('California', 'Wisconsin'))) %>%
+  group_by(year, state) %>%
+  summarise(milk_produced = sum(milk_produced)) %>%
+  mutate(p = 100 * milk_produced / sum(milk_produced)) %>%
+  arrange(desc(state), year) %>%
+  mutate(
+    ppos = p,
+    label = str_c(round(p), '%')) %>%
+  ggplot() +
+  geom_col(aes(x = "", y = p, fill = state),
+           width = 0.7, alpha = 0.8) +
+  facet_wrap(~year, strip.position = 'bottom') +
+  coord_polar(theta = "y") +
+  geom_text(aes(x = 1.1, y = ppos, label = label),
+            color = "white", size = 5,
+            position = position_stack(vjust = 0.5)) +
+  theme_map() +
+  labs(x = NULL,
+       y = NULL,
+       fill = 'State',
+       title = '1970 & 2017 Milk Production by State')
+```
+
+**Waffle chart:**
+
+```{r ref.label='waffle_compare', echo=FALSE, fig.height=4, fig.width=4.5, fig.align='center'}
+```

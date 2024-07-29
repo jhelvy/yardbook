@@ -17,6 +17,10 @@ library(magick)
 library(waffle)
 library(ggplot2)
 library(forcats)
+# install.packages("devtools")
+# devtools::install_github("hadley/emo")
+library(emo)
+library(ggridges)
 
 options(
     dplyr.print_min = 6,
