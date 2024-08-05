@@ -144,7 +144,7 @@ lotr_words %>%
   theme_minimal_vgrid()
 ```
 <center>
-<img src="figs/lotr_bars.png">
+<img src="figs/lotr_bars.png" width = 700>
 <center>
 
 #### 2. Reorder factors **manually** with `fct_relevel()`{.unnumbered}

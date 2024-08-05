@@ -3,9 +3,983 @@
 ```{r}
 #| echo: false
 #| message: false
+#| include: false
 source("_common.R")
+
 ```
 
-## Maps
+## How to Make a Map
 
-Changes here
+### The `maps` package
+
+Includes data on:<br/>
+- World: world, world.cities, lakes<br/>
+- US: states, county, state, usa<br/>
+- France: france<br/>
+- Italy: italy<br/>
+- New zealand: nz
+
+Example:
+
+```{r, eval=FALSE}
+library(maps)
+
+us_counties <- st_as_sf( #<<
+    map("county", plot = FALSE, fill = TRUE)) #<<
+
+ggplot(data = us_counties) +
+    geom_sf(fill = 'grey90', color = 'grey60') #<<
+```
+
+<center>
+<img src="images/plots/sf_us_counties.png" width = 700>
+</center>
+
+
+### Step 1: Load a shape file
+
+This can be done through two ways:<br/>
+a. Use a library<br/>
+b. Read in a shape file
+
+### Step 2: Plot the shape file
+
+We shall discuss how to plot the following data types with their corresponding functions as seen below:<br/>
+a. Polygon data: `geom_polygon()`<br/>
+b. Simple Features data: `geom_sf()`
+
+#### Polygon maps
+
+Generally, polygon maps are plotted with two steps.
+
+**Example: Plotting the World**
+
+1. Get the "World" shape file
+
+```{r}
+library(ggplot2)
+
+world <- map_data("world") #<<
+head(world)
+```
+
+2. Make the plot with `geom_polygon()`
+```{r, eval=FALSE}
+ggplot(world) +
+  geom_polygon( #<<
+    aes(x = long, y = lat, group = group), #<<
+    fill = "grey90", color = "grey60"
+  )
+```
+
+<center>
+<img src="images/plots/polygon_world.png" width = 700>
+<center>
+
+**Example: Plotting the USA**
+
+1. Get the "US States" shape file
+```{r}
+library(ggplot2)
+
+us_states <- map_data("state") #<<
+```
+
+2. Make the plot with `geom_polygon()`
+
+```{r, eval=FALSE}
+ggplot(us_states) +
+  geom_polygon( #<<
+    aes(x = long, y = lat, group = group), #<<
+    fill = "grey90", color = "grey60"
+  )
+```
+
+<center>
+<img src="images/plots/polygon_us.png" width = 700>
+</center>
+
+#### Simple Features (sf) maps
+
+**Simple Features package: {sf}**
+
+<center>
+<img src="images/monsters-sf.jpg" width=700>
+</center>
+Art by<br>[Allison Horst](https://allisonhorst.com/)
+
+
+To show an example of a simple features map, we shall use the library data from [Natural Earth](http://www.naturalearthdata.com/downloads/50m-cultural-vectors/)
+
+```{r, eval=FALSE}
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+world <- ne_countries( #<<
+  scale = "medium", #<<
+  returnclass = "sf"  #<<
+) #<<
+
+world %>%
+    select(name, geometry) %>%
+    head()
+```
+
+```{r, echo=FALSE}
+library(rnaturalearth) #<<
+library(rnaturalearthdata) #<<
+
+world <- ne_countries(
+  scale = "medium", #<<
+  returnclass = "sf"  #<<
+) #<<
+
+world %>%
+    select(name, geometry) %>%
+    head()
+```
+
+Once again, we use two steps to plot our maps.
+
+**Example: Plotting the World**
+
+1. Get the "World" shape file
+
+```{r}
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+world <- ne_countries(
+  scale = "medium",
+  returnclass = "sf"
+)
+```
+
+2. Make the plot with `geom_sf()`
+
+```{r, eval=FALSE}
+library(sf)
+
+ggplot(data = world) +
+  geom_sf(fill = "grey90", color = "grey60") #<<
+```
+
+<center>
+<img src="images/plots/sf_world.png" width = 700>
+</center>
+
+**Example: Plotting the USA**
+
+1. Get the "US States" shape file
+
+```{r}
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+us_states <- ne_states( 
+  country = 'united states of america', 
+  returnclass = 'sf'
+)
+```
+
+2. Make the plot with `geom_sf()`
+
+```{r, eval=FALSE}
+library(sf)
+
+ggplot(data = us_states) +
+    geom_sf(fill = "grey90", color = "grey60") #<<
+```
+
+<center>
+<img src="images/plots/sf_us.png" width = 700>
+</center>
+
+**Example: Plotting the USA (again, but better)**
+
+1. Get the **Continental** "US States" shape file
+
+```{r}
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+us_states_cont <- ne_states(
+      country = 'united states of america',
+      returnclass = 'sf'
+    ) %>%
+    filter(! name %in% c('Alaska', 'Hawaii')) #<<
+```
+
+2. Make the plot with `geom_sf()`
+
+```{r, eval=FALSE}
+library(sf)
+
+ggplot(data = us_states_cont) +
+  geom_sf(fill = "grey90", color = "grey60") #<<
+```
+
+<center>
+<img src="images/plots/sf_us_cont.png" width = 700>
+</center>
+
+**Example: Plotting the USA (with Hawaii and Alaska)**
+
+To inset Hawaii and Alaska...<br/>
+1. Get the shape file from {tigris} package
+
+```{r}
+library(tigris)
+
+us_sf <- tigris::states(class = "sf", cb = TRUE) %>%
+    shift_geometry() %>%
+    filter(GEOID < 60)
+```
+
+2. Make the plot with `geom_sf()`
+
+```{r, eval=FALSE}
+us_sf %>%
+    ggplot() +
+    geom_sf()
+```
+
+<center>
+<img src="images/plots/sf_us_alhi.png" width = 700>
+</center>
+
+#### Simple Features (sf) maps: `st_read()`
+
+**Example: Plotting the World**
+
+1. This time, use `st_read()` to read in the "World" shape file from [Natural Earth](http://www.naturalearthdata.com/downloads/50m-cultural-vectors/)
+
+```{r, message=FALSE}
+library(sf)
+
+world <- st_read(here::here( #<<
+    'data', 'natural_earth_countries',
+    'ne_50m_admin_0_countries.shp')) %>%
+    clean_names()
+```
+
+2. Then, all you need to do is use ggplot
+
+```{r, eval=FALSE}
+ggplot(data = world) +
+  geom_sf(fill = "grey90", color = "grey60") #<<
+```
+
+<center>
+<img src="images/plots/sf_world.png" width = 700>
+</center>
+
+**Example: Plotting Central Park**
+
+1. Read in the "Central Park" shape file [[source]](https://github.com/malcolmbarrett/designing_ggplots)
+
+```{r, message=FALSE}
+library(sf)
+
+central_park <- st_read(here::here(
+  'data', 'central_park', 'CentralPark.shp'))
+```
+
+```{r, eval=FALSE}
+ggplot(data = central_park) +
+  geom_sf(color = 'grey75')
+```
+
+<center>
+<img src="images/plots/sf_central_park.png" width = 700>
+</center>
+
+## Adding Data to Maps
+
+<!--
+Squirrels and dogs plots:
+https://designing-ggplots.netlify.com/#71
+
+Hexmaps:
+- Use https://www.r-graph-gallery.com/hexbin-map.html
+- https://www.r-graph-gallery.com/328-hexbin-map-of-the-usa.html
+- Practice with wind data?
+-->
+
+#### **First rule of adding data to maps:**<br/> {.unnumbered}
+#### **Do you need to make a map?** {.unnumbered}
+
+**Not all maps are useful...**
+<center>
+<img src="images/xkcd_heatmap.png" width=700>
+</center>
+[https://xkcd.com/1138/]
+
+**...but some maps are**
+<center>
+<img src="images/tea-map.jpeg" width=700>
+</center>
+
+There are two ways to map data:<br/>
+1. Choropleth maps<br/>
+2. Point maps
+
+### Chloropleth Maps
+
+The word [choropleth](https://en.wikipedia.org/wiki/Choropleth_map) comes from Greek:
+
+- χῶρος "choros" (area/region)<br/>
+- πλῆθος "plethos" (multitude)
+
+An example of a chloropleth map:
+<center>
+<img src="images/state_abbreviations.png" width=700>
+</center>
+From reddit: [r/dataisbeautiful by u/GaudyAudi](https://www.reddit.com/r/dataisbeautiful/comments/fgq3d3/oc_us_state_abbreviation_conventions/)
+
+**Choropleth maps are easily misleading**<br/>
+Number of events != Number of events **per capita**
+<center>
+<img src="images/choropleth_ca.png" width=700>
+</center>
+
+Manipulating fill scale produces wildly different maps, such as this:
+<center>
+<img src="images/choropleth_hispanic.png" width = 700>
+</center>
+Versus this:
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/nyt_covid_travel1.jpeg" width=350>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/nyt_covid_travel2.jpeg" width=350>
+</div>
+
+</div>
+Source: [New York Times](https://www.nytimes.com/interactive/2020/04/02/us/coronavirus-social-distancing.html)
+
+**Below are some maps that show how land doesn't vote - people vote**
+
+<center>
+<img src="images/swiss_vote.gif" width=700>
+</center>
+By [David Zumbach](https://twitter.com/DavidZumbach/status/1344547411985911808?s=19)
+
+Election maps from: http://www-personal.umich.edu/~mejn/election/2016/
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/election_2016_ec.png" width = 220>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/election_2016_county.png" width = 220>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/election_2016_proportion.png" width = 220>
+</div>
+
+</div>
+---
+
+<center>
+<img src="https://imgs.xkcd.com/comics/solar_system_cartogram_2x.png" width=700>
+</center>
+https://xkcd.com/2439/
+
+**Chloropleth maps are also easy to use to lie with fake news**
+
+<center>
+<img src="images/election_map_fakenews.png" width=700>
+</center>
+
+Bottom map is actually [this map](http://www-personal.umich.edu/~mejn/election/2012/countymaprb1024.png) of the 2012 election
+
+(here is what actual crime rates look like)<br/>
+2016 Election map [[source]](http://www-personal.umich.edu/~mejn/election/2016/)
+<center>
+<img src="images/election_2016_county.png" width = 700>
+</center>
+
+2014 Crime map [[source]](https://www.washingtonpost.com/graphics/national/crime-rates-by-county/)
+<center>
+<img src="images/crime_map.jpeg" width = 700>
+</center>
+
+**A choropleth alternative: hex maps**
+
+1994 Simpson Diversity Index in US Schools
+<center>
+<img src="images/Hexagons_SchoolDiversity_hex_1994.png" width = 700>
+</center>
+.font80[https://github.com/malcolmbarrett/designing_ggplots]
+
+2016 Electoral College
+<center>
+<img src="images/election_2016_chartograph.png" width=700>
+</center>
+https://fivethirtyeight.com/
+
+#### How to make a choropleth map
+
+<center>
+<img src="images/plots/sf_us_milk_2017.png" width=700>
+</center>
+
+Get the "fill" data
+
+```{r}
+milk_2017 <- milk_production %>%
+    filter(year == 2017) %>%
+    select(name = state, milk_produced) %>%
+    mutate(milk_produced = milk_produced / 10^9)
+```
+
+Get the "map" data
+
+```{r}
+us_states <- ne_states(
+    country = 'united states of america',
+    returnclass = 'sf') %>%
+    filter(! name %in% c('Alaska', 'Hawaii')) %>%
+    left_join(milk_2017, by = 'name') #<<
+```
+
+```{r}
+us_states %>%
+    select(name, milk_produced) %>%
+    head()
+```
+
+Plot the map
+
+```{r, eval=FALSE}
+ggplot(us_states) +
+  geom_sf(aes(fill = milk_produced)) + #<<
+  scale_fill_viridis(
+    option = "plasma",
+    limits = c(0, 40)) +
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  labs(
+    fill = 'Milk produced\n(billions lbs)',
+    title = 'Milk Production by State in 2017'
+  )
+```
+
+<center>
+<img src="images/plots/sf_us_milk_2017.png" width = 700>
+</center>
+
+Non-linear scale:
+
+```{r, eval=FALSE}
+ggplot(us_states) +
+  geom_sf(aes(fill = milk_produced)) +
+  scale_fill_viridis(
+    trans = 'sqrt', #<<
+    option = "plasma",
+    limits = c(0, 40)) +
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  labs(
+    fill = 'Milk produced\n(billions lbs)',
+    title = 'Milk Production by State in 2017'
+  )
+```
+
+<center>
+<img src="images/plots/sf_us_milk_2017_quad.png" width = 700>
+</center>
+
+### Point Maps
+
+Point maps can be made with...
+
+Points as locations:
+<center>
+<img src="images/plots/uk_cities_plot.png" width=700>
+</center>
+
+Points encoding a variable
+<center>
+<img src="images/plots/uk_pop_area.png" width=700>
+</center>
+
+For point size, use **area**, not radius <br/>
+**$Area = \pi r^2$**
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+Radius:
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Area:
+</div>
+
+</div>
+<center>
+<img src="images/area.png" width = 700>
+</center>
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+Using radius:
+<img src="images/plots/uk_pop_radius.png" width = 350>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Using area:
+<img src="images/plots/uk_pop_area.png" width = 350>
+</div>
+
+</div>
+
+#### How to add points to a map
+
+<center>
+<img src="images/plots/sf_us_coffee.png" width=700>
+</center>
+
+Load the continental US shape file
+
+```{r, eval=FALSE}
+us_states_cont <- ne_states(
+    country = 'united states of america',
+    returnclass = 'sf') %>%
+    filter(! name %in% c('Alaska', 'Hawaii'))
+```
+
+Read in the coffee shop data
+
+```{r}
+us_coffee_shops  <- read_csv(here::here(
+    'data', 'us_coffee_shops.csv'))
+
+# Only keep data in continental US
+us_coffee_shops <- us_coffee_shops %>%
+    filter(
+      lat > 22,    lat < 50,
+      long > -150, long < -66
+    )
+```
+
+```{r}
+head(us_coffee_shops)
+```
+
+Plot coffee shop locations over map
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(data = us_states_cont) +
+  geom_point( #<<
+    data = us_coffee_shops, #<<
+    aes(x = long, y = lat, color = name), #<<
+    size = 0.3   #<<
+  ) +  #<<
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  guides(color = guide_legend(
+    # Move legend title to top
+    title.position = "top",
+    # Increase legend point size
+    override.aes = list(size = 3))) +
+  labs(
+    color = 'Coffee shop',
+    title = 'Coffee Shops in the US'
+  )
+```
+
+<center>
+<img src="images/plots/sf_us_coffee.png" width = 700>
+</center>
+
+**Just for fun:**
+<center>
+<img src="images/state_borders.png" width=700>
+</center>
+
+<!--
+Content from Andrew's slides:
+https://datavizf17.classes.andrewheiss.com/class/07-class/
+
+Centroids with labels:
+https://www.r-spatial.org/r/2018/10/25/ggplot2-sf-2.html
+-->
+
+## Projections
+
+**What's a map projection?**
+
+Watch this video to learn more:
+
+<center>
+<iframe width="700" height="394" src="https://www.youtube.com/embed/kIID5FDi2JQ?start=52" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+**What is the best projection?...it depends**
+
+1. [Compare projections](http://metrocosm.com/compare-map-projections.html)<br/>
+2. [Compare country sizes](https://thetruesize.com/)
+
+### Using projections
+
+To modify the projection of a map, use `coord_sf(crs = st_crs(XXXX))`
+
+```{r, eval=FALSE}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+```
+
+```{r, eval=FALSE}
+ggplot(data = world) +
+    geom_sf()
+```
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+Default (long-lat)
+
+```{r, eval=FALSE}
+ggplot(data = world) +
+    geom_sf()
+```
+<img src="images/plots/sf_world.png" width = 220>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Robinson projection
+
+```{r, eval=FALSE}
+ggplot(data = world) +
+    geom_sf() +
+    coord_sf(crs = "ESRI:54030") #<<
+```
+<img src="images/plots/sf_world_robinson.png" width = 220>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Mollweide projection
+
+```{r, eval=FALSE}
+ggplot(data = world) +
+    geom_sf() +
+    coord_sf(crs = "ESRI:54009") #<<
+```
+<img src="images/plots/sf_world_mollweide.png" width = 220 >
+</div>
+
+</div>
+
+### Common Projections
+
+ggplot layer:
+
+```{r, eval=FALSE}
+coord_sf(crs = "ESRI:XXXX")
+```
+
+**World**
+
+Code  | Projection
+------|---------------------------------------------------
+**`"ESRI:54030"`** | **Robinson**
+`"ESRI:54002"` | Equidistant cylindrical
+`"ESRI:54004"` | Mercator
+`"ESRI:54008"` | Sinusoidal
+`"ESRI:54009"` | Mollweide
+
+**United States**
+
+Code   | Projection
+-------|---------------------------------------------------
+**`"ESRI:102003"`** | **Albers**
+`"ESRI:102004"` | Lambert Conformal Conic
+`4269`          | NAD 83
+
+### US projections
+
+```{r, eval=FALSE}
+us_states_cont <- ne_states(country = 'united states of america',
+    returnclass = 'sf') %>%
+    filter(! name %in% c('Alaska', 'Hawaii'))
+```
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+NAD 83 projection
+
+```{r, eval=FALSE}
+ggplot(data = world) +
+    geom_sf() +
+    coord_sf(crs = 4269) #<<
+```
+<img src="images/plots/sf_us_cont_nad83.png" width = 220>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Mercator
+
+```{r, eval=FALSE}
+ggplot(data = world) +
+    geom_sf() +
+    coord_sf(crs = "ESRI:54004") #<<
+```
+<img src="images/plots/sf_us_cont_merc.png" width = 220>
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Albers
+
+```{r, eval=FALSE}
+ggplot(data = us_states_cont) +
+    geom_sf() +
+    coord_sf(crs = "ESRI:102003") #<<
+```
+<img src="images/plots/sf_us_cont_albers.png" width = 220>
+</div>
+
+</div>
+
+### Mapping data to projections - choropleth map
+
+```{r, eval=FALSE}
+milk_2017 <- milk_production %>%
+  filter(year == 2017) %>%
+  select(name = state, milk_produced) %>%
+  mutate(milk_produced = milk_produced / 10^9)
+
+us_states <- ne_states(
+  country = 'united states of america',
+  returnclass = 'sf') %>%
+  filter(! name %in% c('Alaska', 'Hawaii')) %>%
+  left_join(milk_2017, by = 'name') #<<
+
+ggplot(us_states) +
+  geom_sf(aes(fill = milk_produced)) + #<<
+  scale_fill_viridis(
+    option = "plasma",
+    limits = c(0, 40)) +
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  labs(
+    fill = 'Milk produced\n(billions lbs)',
+    title = 'Milk Production by State in 2017'
+  )
+```
+
+<center>
+<img src="images/plots/sf_us_milk_2017.png" width = 700>
+</center>
+
+Albers Projection:
+
+```{r, eval=FALSE}
+milk_2017 <- milk_production %>%
+  filter(year == 2017) %>%
+  select(name = state, milk_produced) %>%
+  mutate(milk_produced = milk_produced / 10^9)
+
+us_states <- ne_states(
+  country = 'united states of america',
+  returnclass = 'sf') %>%
+  filter(! name %in% c('Alaska', 'Hawaii')) %>%
+  left_join(milk_2017, by = 'name')
+
+ggplot(us_states) +
+  geom_sf(aes(fill = milk_produced)) +
+  scale_fill_viridis(
+    option = "plasma",
+    limits = c(0, 40)) +
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  labs(
+    fill = 'Milk produced\n(billions lbs)',
+    title = 'Milk Production by State in 2017'
+  ) +
+  coord_sf(crs = "ESRI:102003") #<<
+```
+
+<center>
+<img src="images/plots/sf_us_milk_2017_albers.png" width = 700>
+</center>
+
+### Mapping data to projections - points
+
+```{r, eval=FALSE}
+us_states_cont <- ne_states(
+  country = 'united states of america',
+  returnclass = 'sf') %>%
+  filter(! name %in% c('Alaska', 'Hawaii'))
+
+us_coffee_shops <- us_coffee_shops %>%
+  filter(lat > 22,    lat < 50,
+         long > -150, long < -66)
+
+ggplot() +
+  geom_sf(data = us_states_cont) +
+  geom_point( #<<
+    data = us_coffee_shops, #<<
+    aes(x = long, y = lat, color = name), #<<
+    size = 0.3) + #<<
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  guides(color = guide_legend(
+    # Move legend title to top
+    title.position = "top",
+    # Increase legend point size
+    override.aes = list(size = 3))) +
+  labs(
+    color = 'Coffee shop',
+    title = 'Coffee Shops in the US'
+  )
+```
+
+<center>
+<img src="images/plots/sf_us_coffee.png" width = 700>
+</center>
+
+```{r, eval=FALSE}
+us_states_cont <- ne_states(
+  country = 'united states of america',
+  returnclass = 'sf') %>%
+  filter(! name %in% c('Alaska', 'Hawaii'))
+
+us_coffee_shops <- us_coffee_shops %>%
+  filter(lat > 22,    lat < 50,
+         long > -150, long < -66)
+
+ggplot() +
+  geom_sf(data = us_states_cont) +
+  geom_point(
+    data = us_coffee_shops,
+    aes(x = long, y = lat, color = name),
+    size = 0.3) +
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  guides(color = guide_legend(
+    # Move legend title to top
+    title.position = "top",
+    # Increase legend point size
+    override.aes = list(size = 3))) +
+  labs(
+    color = 'Coffee shop',
+    title = 'Coffee Shops in the US'
+  ) +
+  coord_sf(crs = "ESRI:102003") #<<
+```
+
+**Fail!**
+<center>
+<img src="images/plots/sf_us_coffee_albers_bad.png" width = 700>
+</center>
+
+First match `us_coffee_shops` crs to `us_states_cont`
+
+```{r}
+us_states_cont <- ne_states(
+    country = 'united states of america',
+    returnclass = 'sf') %>%
+    filter(! name %in% c('Alaska', 'Hawaii'))
+
+us_coffee_shops <- us_coffee_shops %>%
+    filter(lat > 22,    lat < 50,
+           long > -150, long < -66)
+
+us_coffee_shops_sf <- st_as_sf(us_coffee_shops, #<<
+    coords = c("long", "lat"), #<<
+    crs = st_crs(us_states_cont)) #<<
+```
+
+```{r}
+head(us_coffee_shops_sf)
+```
+
+Plot coffee shop locations over map with `geom_sf()`
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(data = us_states_cont) +
+  geom_sf( #<<
+    data = us_coffee_shops_sf, #<<
+    aes(color = name), #<<
+    size = 0.3) + #<<
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  guides(color = guide_legend(
+    # Move legend title to top
+    title.position = "top",
+    # Increase legend point size
+    override.aes = list(size = 3))) +
+  labs(
+    fill = 'Coffee shop',
+    title = 'Coffee Shops in the US'
+  )
+```
+
+<center>
+<img src="images/plots/sf_us_coffee_base.png" width = 700>
+</center>
+
+Albers Projection:
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(data = us_states_cont) +
+  geom_sf(
+    data = us_coffee_shops_sf,
+    aes(color = name),
+    size = 0.3) +
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  guides(color = guide_legend(
+    # Move legend title to top
+    title.position = "top",
+    # Increase legend point size
+    override.aes = list(size = 3))) +
+  labs(
+    fill = 'Coffee shop',
+    title = 'Coffee Shops in the US'
+  ) +
+  coord_sf(crs = "ESRI:102003") #<<
+```
+
+<center>
+<img src="images/plots/sf_us_coffee_albers.png" width = 700>
+</center>
+
+LCC Projection:
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(data = us_states_cont) +
+  geom_sf(
+    data = us_coffee_shops_sf,
+    aes(color = name),
+    size = 0.3) +
+  theme_void(base_size = 15) +
+  theme(legend.position = 'bottom') +
+  guides(color = guide_legend(
+    # Move legend title to top
+    title.position = "top",
+    # Increase legend point size
+    override.aes = list(size = 3))) +
+  labs(
+    fill = 'Coffee shop',
+    title = 'Coffee Shops in the US'
+  ) +
+  coord_sf(crs = "ESRI:102004") #<<
+```
+
+<center>
+<img src="images/plots/sf_us_coffee_lcc.png" width = 700>
+</center>
