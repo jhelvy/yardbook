@@ -33,18 +33,19 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-    - part: part1.qmd
+    - part: part1-getting-started.qmd
       chapters:
         - quarto.qmd
         - ggplot.qmd
-    - part: part2.qmd
+    - part: part2-exploring.qmd
       chapters:
-        - tidy.qmd
-        - good_prac.qmd
-    - part: part3.qmd
+        - tidy-data.qmd
+        - cleaning-.qmd
+        - good-practices.qmd
+        - summarizing-data.qmd
+    - part: part3-data-viz.qmd
       chapters:
-        - sum.qmd
-        - effective.qmd
+        - effective-data-viz.qmd
         - trends.qmd
         - amounts.qmd
         - prop.qmd

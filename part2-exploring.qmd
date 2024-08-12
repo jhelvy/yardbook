@@ -1,4 +1,4 @@
-# Data Preparation {#sec-part}
+# Exploring Data {#sec-part}
 
 ```{r}
 #| echo: false
@@ -6,6 +6,6 @@
 source("_common.R")
 ```
 
-## Data Preparation
+## Exploring Data
 
 text
