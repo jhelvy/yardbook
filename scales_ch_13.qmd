@@ -9,7 +9,7 @@ source("_common.R")
 # Read in data
 wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
 federal_spending <- read_csv(here::here('data', 'federal_spending_long.csv'))
-lotr_words       <- read_csv(here::here('data', 'lotr_words.csv'))
+lotr_words       <- read_csv(here::here('data', 'lotr_words_temp.csv'))
 milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
 msleep           <- read_csv(here::here('data', 'msleep.csv'))
 us_gdp <- read_csv(here::here('data', 'total_gdp_us_inflation_adjusted.csv'))
@@ -91,3 +91,532 @@ milk_summary_dumbbell <- milk_production %>%
     milk_produced = milk_produced / 10^9)
 ```
 
+<!--
+Much of the content on adjusting the y axis came from Andrew Heiss's
+course slides: https://datavizf17.classes.andrewheiss.com/class/06-class/
+-->
+
+## Truncating Axes
+#### When is it okay to to truncate an axis? {.unnumbered}
+
+- **When small movements matter**
+
+```{r, echo=FALSE}
+us_gdp_plot <- ggplot(us_gdp %>% filter(year >= 2007, year <= 2010)) +
+    geom_line(aes(x = year, y = gdp),
+              size = 1) +
+    scale_y_continuous(
+        limits = c(0, 16),
+        labels = scales::dollar,
+        expand = expand_scale(mult = c(0, 0.05))) +
+    theme_minimal_hgrid(font_family = 'Roboto Condensed') +
+    labs(x = NULL, y = 'GDP ($ Trillion)',
+         title = 'U.S. GDP During 2008 Financial Crisis')
+```
+
+```{r us_gdp, echo=FALSE, fig.height=3.3, fig.width=5, fig.align='center'}
+us_gdp_plot
+```
+
+```{r us_gdp_trimmed, echo=FALSE,  fig.height=3.3, fig.width=5, fig.align='center'}
+us_gdp_plot +
+    scale_y_continuous(
+        limits = c(14.5, 15.5),
+        labels = scales::dollar,
+        expand = expand_scale(mult = c(0, 0.05)))
+```
+
+- **When zero values are impossible**
+
+```{r, echo=FALSE}
+mpg_plot <- ggplot(mtcars) +
+    geom_point(aes(x = mpg, y = hp)) +
+    theme_minimal_grid(font_family = 'Source Sans Pro', #<<
+                       font_size = 15) +
+    theme(plot.title = element_text(family = "Roboto Condensed", #<<
+                                    size = 20)) +
+    labs(x = "Fuel efficiency (mpg)",
+         y = "Power (hp)",
+         title = "Vehicle fuel efficiency vs. power",
+         caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+```{r us_mpg0, echo=FALSE, fig.height=3.3, fig.width=5, fig.align='center'}
+mpg_plot +
+    scale_x_continuous(limits = c(0, 35)) +
+    scale_y_continuous(limits = c(0, 325))
+```
+
+```{r us_mpg, echo=FALSE, fig.height=3.3, fig.width=5, fig.align='center'}
+mpg_plot
+```
+
+- **When it's normal / a convention**
+
+<center>
+<img src="images/linkedin_stocks.png" width = 700>
+</center>
+
+- **Never on a bar chart**
+
+<center>
+<img src="images/fox_news_bars.jpeg" width = 700>
+</center>
+--- 
+
+#### You are most sensitive to changes in angles close to 45 degrees {.unnumbered}
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+Good scaling:
+
+```{r, fig.height=5, fig.width=6, fig.align='center', echo=FALSE}
+df <- data.frame(
+    ct = c(980, 1000, 1020),
+    dt = as.Date(c("2016-06-01","2016-06-02", "2016-06-03")))
+
+aspect45 <- ggplot(df, aes(dt, ct)) +
+    geom_line(group = 1) +
+    geom_point() +
+    scale_x_date(date_labels = "%b-%d") +
+    theme_minimal_grid(font_size = 20) +
+    labs(y = NULL)
+
+aspect45
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Y scale too large:
+
+```{r, fig.height=5, fig.width=6, fig.align='center', echo=FALSE}
+aspect45 +
+    expand_limits(y = c(800, 1200))
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+X scale too large:
+
+```{r, fig.height=5, fig.width=6, fig.align='center', echo=FALSE}
+aspect45 +
+    expand_limits(x = as.Date(c("2016-05-01", "2016-07-01")))
+```
+</div>
+
+</div>
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+**Here is another bad chart:**
+
+```{r, echo=FALSE, fig.height=4, fig.width=4}
+delta <- wildlife_impacts %>%
+    filter(
+        incident_year == 2016,
+        operator == 'DELTA AIR LINES') %>%
+    count(operator, incident_date) %>%
+    mutate(incident_date = as.Date(incident_date)) %>%
+    ggplot() +
+    geom_line(aes(x = incident_date, y = n)) +
+    scale_x_date(
+        date_breaks = '1 month',
+        date_labels = '%b') +
+    scale_y_continuous(
+        limits = c(0, 12),
+        breaks = seq(0, 12, 4)) +
+    theme_minimal_grid(font_size = 16) +
+    panel_border() +
+    theme(legend.position = 'none') +
+    labs(x = 'Incident date',
+         y = 'Number of incidents',
+         title = 'Delta Airlines wildlife impacts, 2016')
+
+delta
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+To make it better...
+
+```{r, echo=FALSE, fig.height=2.5, fig.width=10.5}
+delta
+```
+
+Set image dimensions in R chunk header:
+
+````markdown
+`r ''````{r}
+#| fig.width: 5
+#| fig.height: 3.1
+
+plot
+```
+````
+
+</div>
+
+</div>
+
+
+## Consider setting dimensions to "Golden Ratio" (1 : 1.618) {.unnumbered}
+
+<center>
+<img src="images/golden_ratio.jpg" width = 700>
+</center>
+
+**Approx. to golden ratio:**
+
+width  |  height
+-------|---------
+5      | 3.1 or 3
+6      | 3.7 or 4
+7      | 4.3
+
+<br>
+
+[Also check out Donald Duck in Mathemagic Land](https://youtu.be/U_ZHsk0-eF0?t=512)
+
+## Adjusting Scales
+
+### Adjust axes with `scale_*` functions 
+
+Continous variables:
+
+```{r, eval=FALSE}
+scale_x_continuous()
+scale_y_continuous()
+```
+
+Discrete variables:
+
+```{r, eval=FALSE}
+scale_x_discrete()
+scale_y_discrete()
+```
+
+Others:
+
+```{r, eval=FALSE}
+scale_x_log10()
+scale_y_log10()
+scale_x_date()
+```
+
+Common arguments for **continuous** variables:
+
+```{r, eval=FALSE}
+scale_y_continuous(
+  # Set the lower & upper boundaries
+  limits = c(lower, upper),
+
+  # Explicitly set the break points
+  breaks = c(break1, break2, etc.)
+
+  # Adjust the axis so bars start at 0
+  expand = expand_scale(mult = c(0, 0.05))
+)
+```
+
+### Adjusting **continuous** scales
+
+```{r milk_top10, fig.height=5, fig.width=6, fig.align='center'}
+milk_bars <- milk_production %>%
+  filter(year == 2017) %>%
+  arrange(desc(milk_produced)) %>%
+  slice(1:10) %>%
+  mutate(
+      milk_produced = milk_produced / 10^9,
+      state = fct_reorder(state, milk_produced)) %>%
+  ggplot() +
+  geom_col(aes(x = milk_produced, y = state)) +
+  theme_minimal_vgrid(font_size = 18) +
+  labs(x = 'Milk produced (billions of lbs)',
+       y = 'State')
+
+milk_bars
+```
+
+
+```{r milk_top10_y, fig.height=5, fig.width=6, fig.align='center'}
+milk_bars +
+  scale_x_continuous( #<<
+    breaks = c(0, 15, 30, 45), #<<
+    limits = c(0 , 45), #<<
+    expand = expand_scale(mult = c(0, 0.05))) #<<
+```
+
+### Adjusting **discrete** scales
+
+```{r milk_top10_discrete, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+milk_bars +
+  scale_y_discrete( #<<
+    breaks = c('California', 'Wisconsin', 'Idaho')) #<<
+```
+
+### Adjusting **log** scales
+
+Regular scaling
+
+```{r msleep, fig.height=4, fig.width=5, fig.align='center'}
+plot <- ggplot(msleep) +
+  geom_point(aes(x = brainwt, y = bodywt)) +
+  theme_half_open(font_size = 20) +
+  labs(x = 'Brain weight (kg)',
+       y = 'Body weight (kg)')
+
+plot
+```
+
+Log scaling
+
+```{r msleep_log, fig.height=4, fig.width=5, fig.align='center'}
+plot +
+  scale_x_log10() + #<<
+  scale_y_log10() + #<<
+  labs(x = 'Log brain weight (kg)',
+       y = 'Log body weight (kg)')
+```
+
+Log-log relationship:
+
+$$y = x^n$$
+
+$$\log(y) = n\log(x)$$
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, ref.label='msleep', echo=FALSE, fig.height=4, fig.width=5, fig.align='center'}
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, ref.label='msleep_log', echo=FALSE, fig.height=4, fig.width=5, fig.align='center'}
+```
+</div>
+
+</div>
+
+
+
+**Example from Mini Project 2**
+
+Regular scaling
+
+```{r transit_cost, fig.height=4, fig.width=5, fig.align='center'}
+plot <- transit_cost %>%
+  filter(!is.na(length)) %>%
+  filter(length < 2500) %>%
+  mutate(cost = as.numeric(real_cost)) %>%
+  ggplot(aes(x = length, y = cost)) + #<<
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+  theme_half_open(font_size = 20) +
+  labs(x = "Length of Proposed Line",
+       y = "Real Cost in Millions USD")
+
+plot
+```
+
+Log scaling
+
+```{r transit_cost_log, fig.height=4, fig.width=5, fig.align='center'}
+plot +
+  scale_x_log10() + #<<
+  scale_y_log10() + #<<
+  labs(x = 'Log length of proposed line',
+       y = 'Log cost')
+```
+
+Log-log relationship:
+
+$$y = x^n$$
+
+$$\log(y) = n\log(x)$$
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, ref.label='transit_cost', echo=FALSE, fig.height=4, fig.width=5, fig.align='center'}
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, ref.label='transit_cost_log', echo=FALSE, fig.height=4, fig.width=5, fig.align='center'}
+```
+</div>
+
+</div>
+
+## Date Scales
+
+#### Date scales can be confusing {.unnumbered}
+
+**What's wrong with this chart?**
+
+<center>
+<img src="images/utility_bill_1.png" width=700>
+</center>
+
+**1st Fix**
+
+<center>
+<img src="images/utility_bill_3.png" width=700>
+</center>
+
+**2nd Fix**
+
+<center>
+<img src="images/utility_bill_4.png" width=700>
+</center>
+
+**Final Fix**
+
+<center>
+<img src="images/utility_bill_5.png" width=700>
+</center>
+
+
+### Adjusting **date** scales
+
+Summarise the data
+
+```{r wildlife, fig.height=8, fig.width=7, fig.align='center'}
+library(lubridate) #<<
+
+plot <- wildlife_impacts %>%
+  filter(incident_year == 2016) %>%
+  count(operator, incident_date) %>%
+  mutate(incident_date = ymd(incident_date)) %>% #<<
+  ggplot() +
+  geom_col(
+    aes(x = incident_date, y = n,
+        color = operator)) +
+  facet_wrap(~operator, ncol = 1) +
+  theme_minimal_grid(font_size = 16) +
+  panel_border() +
+  theme(legend.position = 'none') +
+  labs(x = 'Incident date (2016)',
+       y = 'Number of incidents')
+
+plot
+```
+
+
+```{r wildlife_date, fig.height=8, fig.width=7, fig.align='center'}
+plot +
+  scale_x_date( #<<
+    date_breaks = '1 month', #<<
+    date_labels = '%b') #<<
+```
+
+Let's explore other variations of the last step:
+
+```{r, eval=FALSE}
+scale_x_date(
+  date_breaks = '1 month',
+  date_labels = '%b')
+```
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, eval=FALSE}
+date_breaks = '1 month'
+```
+
+- '1 day'
+- '10 days'
+- '1 month'
+- '3 months'
+- '1 year'
+- '3 years'
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, eval=FALSE}
+date_labels = '%b'
+```
+
+Example date: March 04, 2020
+
+- `%Y` = 2020
+- `%y` = 20
+- `%B` = March
+- `%b` = Mar
+- `%D` = 03/04/2020
+- `%d` = 03
+</div>
+
+</div>
+
+
+### Use **scales** library to modify scale **text**
+
+**`scales` converts numbers to formatted characters**
+
+```{r}
+scales::comma(200000)
+scales::dollar(200000)
+scales::percent(0.5)
+```
+
+**Example: scale_x_continuous()**
+
+```{r fed_spending_2017, fig.height=5, fig.width=6, fig.align='center'}
+federal_spending %>%
+  filter(year == 2017) %>%
+  mutate(
+    department = fct_reorder(
+      department, rd_budget)) %>%
+  ggplot() +
+  geom_col(aes(x = rd_budget, y = department)) +
+  scale_x_continuous(
+    expand = expand_scale(mult = c(0, 0.05))) +
+  theme_minimal_vgrid(font_size = 16) +
+  labs(x = 'Department',
+       y = 'R&D spending ($ Millions)')
+```
+
+## Use **scales** library to modify scale text
+
+**Example: scale::comma()**
+
+```{r fed_spending_2017_comma, fig.height=5, fig.width=6, fig.align='center'}
+federal_spending %>%
+  filter(year == 2017) %>%
+  mutate(
+    department = fct_reorder(
+      department, rd_budget)) %>%
+  ggplot() +
+  geom_col(aes(x = rd_budget, y = department)) +
+  scale_x_continuous(
+    labels = scales::comma, #<<
+    expand = expand_scale(mult = c(0, 0.05))) +
+  theme_minimal_vgrid(font_size = 16) +
+  labs(x = 'Department',
+       y = 'R&D spending ($ Millions)')
+```
+
+**Example: scale::dollar()**
+
+```{r fed_spending_2017_dollar, ig.height=5, fig.width=6, fig.align='center'}
+federal_spending %>%
+  filter(year == 2017) %>%
+  mutate(
+    department = fct_reorder(
+      department, rd_budget)) %>%
+  ggplot() +
+  geom_col(aes(x = rd_budget, y = department)) +
+  scale_x_continuous(
+    labels = scales::dollar, #<<
+    expand = expand_scale(mult = c(0, 0.05))) +
+  theme_minimal_vgrid(font_size = 16) +
+  labs(x = 'Department',
+       y = 'R&D spending ($ Millions)')
+```
+
+*Check out this guide to scales: https://ggplot2tor.com/scales*

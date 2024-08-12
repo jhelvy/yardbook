@@ -3,9 +3,946 @@
 ```{r}
 #| echo: false
 #| message: false
+#| include: false
 source("_common.R")
+
 ```
 
-## Plot Aesthetics
+## Annotations
 
-Changes here
+**Text is usually the single most important component on your chart**
+
+As seen below, text is what catches your attention first.
+
+<center>
+<img src="images/eye_tracking.gif" width=700>
+</center>
+Michelle Borkin, et al. (2015) [Beyond Memorability: Visualization Recognition and Recall](https://ieeexplore.ieee.org/document/7192646)
+
+**Titles matter**
+
+Below is an example of a chart with an incorrect title.
+
+<center>
+<img src="images/titles_matter.jpg" width = 700>
+</center>
+Source: https://www.reddit.com/r/dataisugly/comments/odk65x/this_was_not_the_right_headline_to_go_along_with
+
+**Good annotations should tell a story**
+
+<center>
+<img src="images/protein.png" width = 700>
+</center>
+Source: https://ourworldindata.org/less-meat-or-sustainable-meat
+
+**Use captions as a way to annotate**
+
+```{r, eval=FALSE}
+labs(
+  x = 'Year',
+  y = 'Cost of incident repairs ($ millions)',
+  title = 'Repair costs of aircraft impacts with wildlife',
+  subtitle = 'Top 4 airlines',
+  caption = 'Source: https://wildlife.faa.gov/home')
+```
+
+```{r, ref.label='wildlife_costs', echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
+```
+
+**Use mapped variables in `aes()` in `labs()`**
+
+```{r milk_bars, fig.height=5, fig.width=7, fig.align='center'}
+milk_production %>%
+  filter(year %in% c(1970, 2017)) %>%
+  group_by(year, region) %>%
+  summarise(milk_produced = sum(milk_produced) / 10^9) %>%
+  ungroup() %>%
+  mutate(
+    region = fct_reorder2(region, year, desc(milk_produced))) %>%
+  ggplot() +
+  geom_col(
+    aes(x = milk_produced, #<<
+        y = region, #<<
+        fill = as.factor(year)),
+    position = "dodge") +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  theme_minimal_vgrid() +
+  labs(
+    x = 'Milk produced (billions lbs)', #<<
+    y = 'Region', #<<
+    title = 'Milk production by region',
+    subtitle = '1970 & 2017')
+```
+
+Use `labs()` to label everything.
+
+```{r milk_bars2, fig.height=5, fig.width=7, fig.align='center'}
+milk_production %>%
+  filter(year %in% c(1970, 2017)) %>%
+  group_by(year, region) %>%
+  summarise(milk_produced = sum(milk_produced) / 10^9) %>%
+  ungroup() %>%
+  mutate(
+    region = fct_reorder2(region, year, desc(milk_produced))) %>%
+  ggplot() +
+  geom_col(
+    aes(x = milk_produced,
+        y = region,
+        fill = as.factor(year)),  #<<
+    position = "dodge") +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  theme_minimal_vgrid() +
+  labs(
+    x = 'Milk produced (billions lbs)',
+    y = 'Region',
+    title = 'Milk production by region',
+    subtitle = '1970 & 2017',
+    fill = "Year") #<<
+```
+
+**Legends suck**
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+Legends require look-up task
+
+```{r milk_region_line, echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+ggplot(milk_region,
+    aes(x = year, y = milk_produced,
+        color = region)) +
+    geom_line(size = 1) +
+    scale_color_manual(values = c(
+        'sienna', 'forestgreen', 'dodgerblue', 'orange')) +
+    theme_half_open(font_size = 18) +
+    labs(x = 'Year',
+         y = 'Milk produced (lbs)',
+         color = 'Region',
+         title = 'Milk production in four US regions')
+```
+
+```{r fed_spending_legend, echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
+ggplot(federal_spending_summary) +
+  geom_area(
+    aes(x = year, y = rd_budget, fill = department)) +
+  scale_y_continuous(
+    expand = expand_scale(mult = c(0, 0.05))) +
+  scale_fill_manual(values = c('grey', 'sienna')) +
+  theme_minimal_hgrid() +
+  labs(
+    x = NULL,
+    y = 'R&D Budget ($ Billions)',
+    fill = 'Department',
+    title = 'Federal R&D spending, 1976 - 2017',
+    subtitle = 'Source: AAAS Historical Trends')
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Direct labeling is much better
+
+```{r milk_region_line_label, echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
+ggplot(milk_region,
+    aes(x = year, y = milk_produced,
+        color = region)) +
+    geom_line(size = 1) +
+    geom_text(aes(label = label),
+              hjust = 0, nudge_x = 1,
+              size = 6) +
+    scale_color_manual(values = c(
+        'sienna', 'forestgreen', 'dodgerblue', 'orange')) +
+    coord_cartesian(clip = 'off') +
+    theme_half_open(font_size = 18) +
+    theme(legend.position = 'none',
+          plot.margin = margin(0.1, 2.7, 0.1, 0.1, "cm")) +
+    labs(x = 'Year',
+         y = 'Milk produced (lbs)',
+         title = 'Milk production in four US regions')
+```
+
+```{r, fed_spending_annotate, echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
+dod_spending <- ggplot(federal_spending_summary) +
+    geom_area(aes(x = year, y = rd_budget,
+                  fill = department)) +
+    annotate(geom = 'text', x = 1995, y = 85,  #<<
+             label = 'Other', size = 6, color = 'black') + #<<
+    annotate(geom = 'text', x = 1995, y = 25, #<<
+             label = 'DOD', size = 6, color = 'white') + #<<
+    scale_y_continuous(
+        expand = expand_scale(mult = c(0, 0.05))) +
+    scale_fill_manual(values = c('grey', 'sienna')) +
+    theme_minimal_hgrid() +
+    theme(legend.position = 'none') +
+    labs(x = NULL,
+         y = 'R&D Budget ($ Billions)',
+         title = 'Federal R&D spending, 1976 - 2017',
+         subtitle = 'Source: AAAS Historical Trends')
+
+dod_spending
+```
+</div>
+
+</div>
+
+**Use `annotate()` to add text to chart**
+
+```{r, fig.height=5, fig.width=7, fig.align='center'}
+dod_spending <- ggplot(federal_spending_summary) +
+    geom_area(aes(x = year, y = rd_budget,
+                  fill = department)) +
+    annotate(geom = 'text', x = 1995, y = 85,  #<<
+             label = 'Other', size = 6, color = 'black') + #<<
+    annotate(geom = 'text', x = 1995, y = 25, #<<
+             label = 'DOD', size = 6, color = 'white') + #<<
+    scale_y_continuous(
+        expand = expand_scale(mult = c(0, 0.05))) +
+    scale_fill_manual(values = c('grey', 'sienna')) +
+    theme_minimal_hgrid() +
+    theme(legend.position = 'none') +  #<<
+    labs(x = NULL,
+         y = 'R&D Budget ($ Billions)',
+         title = 'Federal R&D spending, 1976 - 2017',
+         subtitle = 'Source: AAAS Historical Trends')
+
+dod_spending
+```
+
+**Use `geom_text()` to add text to chart**
+
+```{r, fed_spending_geom_text, fig.height=5, fig.width=7, fig.align='center'}
+dod_spending <- ggplot(federal_spending_summary) +
+    geom_area(aes(x = year, y = rd_budget,
+                  fill = department)) +
+    geom_text( #<<
+      data = data.frame(x = 1995, y = 85, label = 'Other'), #<<
+      aes(x = x, y = y, label = label), #<<
+      size = 6, color = 'black') + #<<
+    geom_text( #<<
+      data = data.frame(x = 1995, y = 25, label = 'DOD'), #<<
+      aes(x = x, y = y, label = label), #<<
+      size = 6, color = 'white') + #<<
+    scale_y_continuous(
+        expand = expand_scale(mult = c(0, 0.05))) +
+    scale_fill_manual(values = c('grey', 'sienna')) +
+    theme_minimal_hgrid() +
+    theme(legend.position = 'none') +
+    labs(x = NULL,
+         y = 'R&D Budget ($ Billions)',
+         title = 'Federal R&D spending, 1976 - 2017',
+         subtitle = 'Source: AAAS Historical Trends')
+
+dod_spending
+```
+
+**Use `geom_label()` to add text to chart *with a background* **
+
+```{r, fed_spending_geom_label, fig.height=5, fig.width=7, fig.align='center'}
+dod_spending <- ggplot(federal_spending_summary) +
+    geom_area(aes(x = year, y = rd_budget,
+                  fill = department)) +
+    geom_label( #<<
+      data = data.frame(x = 1995, y = 85, label = 'Other'),
+      aes(x = x, y = y, label = label),
+      size = 6) +
+    geom_label( #<<
+      data = data.frame(x = 1995, y = 25, label = 'DOD'),
+      aes(x = x, y = y, label = label),
+      size = 6, fill = "black", color = "white") + #<<
+    scale_y_continuous(
+        expand = expand_scale(mult = c(0, 0.05))) +
+    scale_fill_manual(values = c('grey', 'sienna')) +
+    theme_minimal_hgrid() +
+    theme(legend.position = 'none') +
+    labs(x = NULL,
+         y = 'R&D Budget ($ Billions)',
+         title = 'Federal R&D spending, 1976 - 2017',
+         subtitle = 'Source: AAAS Historical Trends')
+
+dod_spending
+```
+
+**Use `geom_curve()` + `geom_label()` to direct attention**
+
+```{r fed_spending_curve, fig.height=5, fig.width=7, fig.align='center'}
+label <- "The Dept. of Defense R&D Budget
+has made up nearly half of all
+federal R&D spending"
+
+dod_spending +
+  geom_curve( #<<
+    data = data.frame( #<<
+      x = 1981, xend = 1987, y = 160, yend = 25), #<<
+    mapping = aes(x = x, xend = xend, y = y, yend = yend), #<<
+    color = 'grey75', size = 0.5, curvature = 0.1, #<<
+    arrow = arrow(length = unit(0.01, "npc"), #<<
+                  type = "closed")) + #<<
+  geom_label(
+    data = data.frame(x = 1977, y = 160, label = label),
+    mapping = aes(x = x, y = y, label = label),
+    hjust = 0, lineheight = 0.8)
+```
+
+**Use `annotate()` to direct attention**
+
+Use `geom = "rect"` for box, `geom = "text"` for label
+
+```{r mpg_box, fig.height=6, fig.width=7, fig.align='center'}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point(
+    aes(fill = as.factor(cyl)),
+    color = 'white', alpha = 0.8,
+    size = 3.5, shape = 21) +
+  annotate(geom = "rect", #<<
+    xmin = 5, xmax = 7.5,
+    ymin = 21, ymax = 28,
+    fill = "grey55", alpha = 0.2) +
+  annotate(geom = "text", #<<
+    x = 5, y = 29, label = "Hybrid vehicles",
+    hjust = 0, size = 5) +
+  theme_half_open(font_size = 15) +
+  labs(x = "Engine displacement",
+       y = "Fuel efficiency (mpg)",
+       fill = '# cylinders',
+       title = "Vehicle fuel efficiency vs. engine displacement",
+       caption = "Source: U.S. EPA.")
+```
+
+**Find where to put annotations with [`ggannotate`](https://github.com/MattCowgill/ggannotate)**
+
+Install:
+
+```{r, eval=FALSE}
+remotes::install_github("mattcowgill/ggannotate")
+```
+
+Use:
+
+```{r, eval=FALSE}
+library(ggannotate)
+
+plot <- ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy, color = as.factor(cyl))) +
+  theme_half_open()
+
+ggannotate(plot) #<<
+```
+
+## Colors
+
+<!--
+Source of a lot of the content:
+https://resources.rstudio.com/rstudio-conf-2020/the-glamour-of-graphics-william-chase
+-->
+
+**Color is hard**
+
+*How do I know what colors look good together?*
+
+**Use the color wheel**
+
+<center>
+<img src="images/color_wheel.png" width = 700>
+</center>
+Image from [this color wheel tool](https://www.sessions.edu/color-calculator/)
+
+1. Complementary: High contrast
+
+<center>
+<img src="images/color_wheel_complementary.png" width = 700>
+</center>
+
+2. Analogous: Calm, harmonious
+
+<center>
+<img src="images/color_wheel_analogous.png" width = 700>
+</center>
+
+3. Triadic: Vibrant, contrast
+
+<center>
+<img src="images/color_wheel_triadic.png" width = 700>
+</center>
+
+<!--
+Not sure how to add these two sentences cohesively. The twitter link is also not working.
+-->
+[Artists use color theory too!](https://twitter.com/emeldraws/status/1151835561415495681?s=19)
+Steal colors with the [eye dropper tool](https://chrome.google.com/webstore/detail/eye-dropper/hmdcmlfkchdmnmnmheododdhjedfccka?hl=en)
+<center>
+<img src="images/eye_dropper.png" width=300>
+</center>
+
+**Using your own colors**
+
+Map color to variable
+
+```{r, fig.show='hide'}
+mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
+  geom_point(
+    aes(color = as.factor(cyl)), #<<
+    alpha = 0.8, size = 3) +
+  theme_half_open(font_size = 16) +
+  labs(x = "Fuel efficiency (mpg)",
+       y = "Power (hp)",
+       color = '# cylinders',
+       title = "Vehicle fuel efficiency vs. power",
+       caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot
+```
+
+Manually change colors
+```{r, mpg_colors_manual, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_manual(values = c( #<<
+        '#a0522d', '#522da0', '#2da052')) #<<
+```
+
+**Consider color blind friendly colors**
+
+Manually change colors
+
+```{r}
+mpg_plot_mycolors <- mpg_plot +
+    theme_half_open(font_size = 10) +
+    scale_color_manual(values = c( #<<
+        '#a0522d', '#522da0', '#2da052')) #<<
+```
+
+Simulate color blindness with [colorblindr](https://github.com/clauswilke/colorblindr)
+
+```{r, mpg_plot_mycolors, fig.height=7, fig.width=8, fig.align='center'}
+# remotes::install_github("clauswilke/colorblindr")
+library(colorblindr)
+
+cvd_grid(mpg_plot_mycolors)
+```
+
+**Use palettes**
+
+[Viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
+
+<center>
+<img src="images/viridis.png" width = 700>
+</center>
+
+[ColorBrewer](https://www.datanovia.com/en/blog/the-a-z-of-rcolorbrewer-palette/)
+
+<center>
+<img src="images/colorbrewer.png" width=700>
+</center>
+
+**3 types of palettes**
+
+1. Sequential
+
+<img src="images/palette_sequential.png" width=700>
+<img src="images/palette_sequential_example.png" width=700>
+
+Image from [betterfigures.org](https://betterfigures.org/2015/06/23/picking-a-colour-scale-for-scientific-graphics/)
+
+2. Diverging
+
+<img src="images/palette_diverging.png" width=700>
+<img src="images/palette_diverging_example.png" width=700>
+
+Image from [betterfigures.org](https://betterfigures.org/2015/06/23/picking-a-colour-scale-for-scientific-graphics/)
+
+3. Categorical
+
+<img src="images/palette_categorical.png" width=700>
+<img src="images/palette_categorical_example.png" width=700>
+
+Image from [betterfigures.org](https://betterfigures.org/2015/06/23/picking-a-colour-scale-for-scientific-graphics/)
+
+**ColorBrewer palettes**
+
+Map color to variable
+
+```{r, eval=FALSE}
+mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
+    geom_point(aes(color = as.factor(cyl)), #<<
+               alpha = 0.8, size = 3) +
+    theme_half_open(font_size = 16) +
+    labs(x = "Fuel efficiency (mpg)",
+         y = "Power (hp)",
+         color = '# cylinders',
+         title = "Vehicle fuel efficiency vs. power",
+         caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+Use "Dark2" palette
+
+```{r, mpg_colors_dark2, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_brewer(palette = 'Dark2') #<<
+```
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+Set1 
+
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_brewer(
+        palette = 'Set1') #<<
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Set2 
+
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_brewer(
+        palette = 'Set2') #<<
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+Accent
+
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_brewer(
+        palette = 'Accent') #<<
+```
+</div>
+
+</div>
+
+
+**viridis palettes**
+
+Map color to variable
+
+```{r, eval=FALSE}
+mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
+    geom_point(aes(color = as.factor(cyl)), #<<
+               alpha = 0.8, size = 3) +
+    theme_half_open(font_size = 16) +
+    labs(x = "Fuel efficiency (mpg)",
+         y = "Power (hp)",
+         color = '# cylinders',
+         title = "Vehicle fuel efficiency vs. power",
+         caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+Use viridis colors
+
+```{r, mpg_colors_viridis, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_viridis(discrete = TRUE) #<<
+```
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+virdis
+
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_viridis(
+        discrete = TRUE,
+        option = 'viridis') #<<
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+inferno
+
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_viridis(
+        discrete = TRUE,
+        option = 'inferno') #<<
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+plasma
+
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+    scale_color_viridis(
+        discrete = TRUE,
+        option = 'plasma') #<<
+```
+</div>
+
+</div>
+
+**Fun custom palettes:**
+
+[Inauguration palette](https://github.com/ciannabp/inauguration)
+
+<center>
+<img src="images/inauguration.png" width=700>
+<br>
+<img src="images/inauguration_palette.png" width=700>
+</center>
+
+[PNWColors](https://github.com/jakelawlor/PNWColors)
+<center>
+<img src="images/PNWColors.jpg" width=500>
+</center>
+
+**Consider using `color` + `fill` for points**
+
+```{r, mpg_colors_polished, fig.height=5, fig.width=6, fig.align='center'}
+ggplot(mtcars, aes(x = mpg, y = hp)) +
+  geom_point(
+    aes(fill = as.factor(cyl)), #<<
+    color = 'white', shape = 21, #<<
+    size = 3.5, alpha = 0.8) +
+  scale_fill_brewer(palette = 'Dark2') + #<<
+  theme_half_open(font_size = 15) +
+  labs(
+    x = "Fuel efficiency (mpg)",
+    y = "Power (hp)",
+    fill = '# cylinders',
+    title = "Vehicle fuel efficiency vs. power",
+    caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+**Use `grey` for "Other"**
+
+```{r dod_spending_grey, fig.height=4, fig.width=6, fig.align='center'}
+dod_spending_plot <- federal_spending %>%
+  mutate(department = fct_other(
+    department, keep = 'DOD')) %>%
+  group_by(department, year) %>%
+  summarise(rd_budget = sum(rd_budget) / 10^3) %>%
+  ungroup() %>%
+  mutate(department = fct_relevel(
+  department, c('Other', 'DOD'))) %>%
+  ggplot() +
+  geom_area(aes(x = year, y = rd_budget,
+                fill = department)) +
+  scale_y_continuous(
+      expand = expand_scale(mult = c(0, 0.05))) +
+  scale_fill_manual( #<<
+    values = c('grey', 'sienna')) + #<<
+  theme_minimal_hgrid() +
+  labs(x = NULL,
+       y = 'R&D Budget ($ Billions)',
+       fill = 'Department',
+       caption = 'Source: AAAS')
+
+dod_spending_plot
+```
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+dod_spending_plot +
+    scale_fill_manual(
+        values = c('grey40', 'sienna')) #<<
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+dod_spending_plot +
+    scale_fill_manual(
+        values = c('grey60', 'sienna')) #<<
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+dod_spending_plot +
+    scale_fill_manual(
+        values = c('grey80', 'sienna')) #<<
+```
+</div>
+
+</div>
+
+## Fonts
+<!--
+Source of the content on how to change fonts in ggplot2:
+
+https://www.andrewheiss.com/blog/2017/09/27/working-with-r-cairo-graphics-custom-fonts-and-ggplot/
+
+Source of a lot of the slide content on choosing good fonts:
+https://resources.rstudio.com/rstudio-conf-2020/the-glamour-of-graphics-william-chase
+-->
+
+**Fonts matter**
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+<center>
+<img src="images/fonts_matter_fast_taco.jpg" width=250>
+</center>
+
+"Fast Taco"
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<center>
+<img src="images/fonts_matter_megaflicks.jpg" width=250>
+</center>
+
+"Mega Flicks"
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<center>
+<img src="images/fonts_matter.jpg" width=250>
+</center>
+</div>
+
+</div>
+
+**The best resource on fonts:**
+
+[practicaltypography.com](https://practicaltypography.com/)
+
+**Some font families you should consider using:**
+
+<p style="font-family: Roboto;">Roboto</p>
+
+<p style="font-family: Source Code Pro;">Source</p>
+
+<p style="font-family: Fira Sans;">Fira</p>
+
+<p style="font-family: Alegreya;">Alegreya</p>
+
+<p style="font-family: Lato;">Lato</p>
+
+Download:
+
+- Individually from https://fonts.google.com/
+- All of these with [this zip file](https://github.com/emse-eda-gwu/2022-Fall/raw/main/content/fonts.zip)
+
+**Use fonts to create *hierarchy* **
+
+```
+# Hierarchy
+
+## Hierarchy
+
+### Hierarchy
+
+#### Hierarchy
+```
+
+# Hierarchy
+
+## Hierarchy
+
+### Hierarchy
+
+#### Hierarchy
+
+**Use fonts with *same-height* numbers**
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+"Oldstyle" (bad)
+
+<br>
+
+Lining (good)
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/font_oldstyle1.jpg" width=500>
+</div>
+
+</div>
+
+**Use fonts with *same-width* numbers**
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+"Proportional" (bad)
+
+<br>
+
+"Tabular" (good)
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+<img src="images/font_oldstyle2.jpg" width=500>
+</div>
+
+</div>
+
+### How to customize fonts in **ggplot**
+
+**1. Change the whole theme**
+
+For "Base R" themes, use `base_family`:
+
+```{r, eval=FALSE}
+theme_minimal(base_family = "Roboto Condensed")
+```
+```{r, eval=FALSE}
+theme_bw(base_family = "Roboto Condensed")
+```
+
+For "cowplot" themes, use `font_family`:
+
+```{r, eval=FALSE}
+theme_half_open(font_family = "Roboto Condensed")
+```
+```{r, eval=FALSE}
+theme_minimal_grid(font_family = "Roboto Condensed")
+```
+
+First, make the base plot
+
+```{r mpg}
+mpg_plot <- ggplot(mtcars) +
+  geom_point(aes(x = mpg, y = hp)) +
+  theme_minimal(base_size = 15) + #<<
+  labs(
+    x = "Fuel efficiency (mpg)",
+    y = "Power (hp)",
+    title = "Vehicle fuel efficiency vs. power",
+    subtitle = "Select makes and models",
+    caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot
+```
+
+Use `base_family` with base themes
+
+```{r mpg_base}
+mpg_plot <- ggplot(mtcars) +
+  geom_point(aes(x = mpg, y = hp)) +
+  theme_minimal( #<<
+    base_family = 'Source Sans Pro', #<<
+    base_size = 15) +
+  labs(
+    x = "Fuel efficiency (mpg)",
+    y = "Power (hp)",
+    title = "Vehicle fuel efficiency vs. power",
+    subtitle = "Select makes and models",
+    caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot
+```
+
+Use `font_family` with cowplot themes
+
+```{r mpg_cowplot}
+mpg_plot <- ggplot(mtcars) +
+  geom_point(aes(x = mpg, y = hp)) +
+  theme_minimal_grid( #<<
+    font_family = 'Source Sans Pro', #<<
+    font_size = 15) +
+  labs(
+    x = "Fuel efficiency (mpg)",
+    y = "Power (hp)",
+    title = "Vehicle fuel efficiency vs. power",
+    subtitle = "Select makes and models",
+    caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot
+```
+
+**2. Adjust theme elements with `element_text()`**
+
+```{r mpg_cowplot_title, fig.show='hide'}
+mpg_plot <- ggplot(mtcars) +
+  geom_point(aes(x = mpg, y = hp)) +
+  theme_minimal_grid(
+    font_family = 'Source Sans Pro',
+    font_size = 15) +
+  theme(
+    plot.title = element_text( #<<
+      family = "Roboto Condensed", #<<
+      size = 20)) + #<<
+  labs(
+    x = "Fuel efficiency (mpg)",
+    y = "Power (hp)",
+    title = "Vehicle fuel efficiency vs. power",
+    subtitle = "Select makes and models",
+    caption = "Source: 1974 Motor Trend U.S. magazine.")
+```
+
+```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot
+```
+
+See theme components [here](https://ggplot2.tidyverse.org/reference/theme.html)
+
+**3. Adjust annotations:**
+
+(Using `geom_text()`, `geom_label()`, and/or `annotate()`)
+
+```{r mpg_cowplot_annotate, fig.height=5, fig.width=6, fig.align='center'}
+label <- "Higher power engines,
+often come at the expense,
+of fuel economy."
+
+mpg_plot +
+    geom_label(
+      data = data.frame(
+        x = 17, y = 270, label = label),
+      aes(x = x, y = y, label = label),
+      lineheight = .8, hjust = 0,
+      family = 'Roboto Condensed') #<<
+```
+
+**The [hrbrthemes](https://github.com/hrbrmstr/hrbrthemes) package:**
+
+Great themes + great fonts
+
+```{r mpg_ipsum, fig.height=5, fig.width=6, fig.align='center'}
+library(hrbrthemes) #<<
+
+mpg_plot <- ggplot(mtcars) +
+  geom_point(aes(x = mpg, y = hp)) +
+  labs(
+    x = "Fuel efficiency (mpg)",
+    y = "Power (hp)",
+    title = "Vehicle fuel efficiency vs. power",
+    subtitle = "Select makes and models",
+    caption = "Source: 1974 Motor Trend U.S. magazine.")
+
+mpg_plot +
+  theme_ipsum() #<<
+```
+
+<div style="display: flex; justify-content: space-between;">
+
+<div style="flex: 1; margin-right: 10px;">
+```{r, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+  theme_ipsum()
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+```{r mpg_ipsum_rc, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+  theme_ipsum_rc()
+```
+</div>
+
+<div style="flex: 1; margin-right: 10px;">
+```{r mpg_ft_rc, fig.height=5, fig.width=6, fig.align='center'}
+mpg_plot +
+  theme_ft_rc()
+```
+</div>
+
+</div>
