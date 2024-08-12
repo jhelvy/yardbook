@@ -6,6 +6,8 @@
 #| include: false
 
 source("_common.R")
+
+library(fontawesome)
 ```
 
 > ### Learning Objectives {.unnumbered}
