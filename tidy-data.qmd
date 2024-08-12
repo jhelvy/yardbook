@@ -6,6 +6,12 @@
 #| include: false
 source("_common.R")
 
+# Load packages
+library(tidyverse)
+library(here)
+library(cowplot)
+library(readxl)
+
 # Read in data
 wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
 milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
@@ -48,31 +54,41 @@ wildlife_impacts <- wildlife_impacts %>%
 
 ### The Data: Federal R&D Spending by Department
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 head(fed_spend_wide)
 ```
 
 ### "Wide" format
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 head(fed_spend_wide)
 ```
 
 Dimensions:
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 dim(fed_spend_wide)
 ```
 
 ### "Long" format
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 head(fed_spend_long)
 ```
 
 Dimensions:
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 dim(fed_spend_long)
 ```
 
@@ -89,13 +105,17 @@ dim(fed_spend_long)
 
 #### **Yes**: "Long" format
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 head(fed_spend_long)
 ```
 
 #### **No**: "Wide" format
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 head(select(fed_spend_wide, year:HHS))
 ```
 
@@ -119,9 +139,9 @@ head(fed_spend_long)
 
 ```{r}
 fed_spend_wide <- fed_spend_long %>%
-    pivot_wider(
-        names_from = department,
-        values_from = rd_budget_mil)
+  pivot_wider(
+    names_from = department,
+    values_from = rd_budget_mil)
 
 head(fed_spend_wide)
 ```
@@ -138,10 +158,11 @@ head(fed_spend_wide)
 
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
-    pivot_longer( 
-        names_to = "department",
-        values_to = "rd_budget_mil",
-        cols = DOD:Other)
+  pivot_longer( 
+    names_to = "department",
+    values_to = "rd_budget_mil",
+    cols = DOD:Other
+  )
 
 head(fed_spend_long)
 ```
@@ -154,10 +175,11 @@ names(fed_spend_wide)
 
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
-    pivot_longer(
-        names_to = "department", 
-        values_to = "rd_budget_mil",
-        cols = -year)
+  pivot_longer(
+    names_to = "department", 
+    values_to = "rd_budget_mil",
+    cols = -year
+  )
 
 head(fed_spend_long)
 ```
@@ -198,28 +220,30 @@ fed_spend_wide %>%
 
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
-    pivot_longer(
-        names_to = "department", 
-        values_to = "rd_budget_mil",
-        cols = -year) 
+  pivot_longer(
+    names_to = "department", 
+    values_to = "rd_budget_mil",
+    cols = -year
+  ) 
 
 head(fed_spend_long)
 ```
 
 ```{r}
 fed_spend_long %>%
-    group_by(year) %>%
-    summarise(total = sum(rd_budget_mil))
+  group_by(year) %>%
+  summarise(total = sum(rd_budget_mil))
 ```
 
 ```{r}
 total <- fed_spend_wide %>%
-    pivot_longer(
-        names_to = "department", 
-        values_to = "rd_budget_mil",
-        cols = -year) %>% 
-    group_by(year) %>%
-    summarise(total = sum(rd_budget_mil))
+  pivot_longer(
+    names_to = "department", 
+    values_to = "rd_budget_mil",
+    cols = -year
+  ) %>% 
+  group_by(year) %>%
+  summarise(total = sum(rd_budget_mil))
 ```
 
 ```{r}
@@ -234,7 +258,6 @@ head(fed_spend_wide)
 
 ```{r}
 #| error: true
-#| fig-show: hide
 
 ggplot(fed_spend_wide) +
   geom_col(aes(x = rd_budget_mil, y = department)) +
@@ -246,8 +269,9 @@ ggplot(fed_spend_wide) +
 ```
 
 ```{r}
-#| error: true
-#| fig-show: hide
+#| label: fed-spend-bars-long
+#| fig-width: 6
+#| fig-height: 4
 
 fed_spend_wide %>%
   pivot_longer(
@@ -262,16 +286,4 @@ fed_spend_wide %>%
     x = "R&D Spending ($Millions)",
     y = "Federal Agency"
   )
-```
-
-```{r}
-#| label: fed-spend-bars-ch4
-#| echo: false
-
-ggplot(fed_spend_long) +
-  geom_col(aes(x = rd_budget_mil, y = reorder(department, rd_budget_mil)),
-           width = 0.7, alpha = 0.8) +
-  theme_bw(base_size = 15) +
-  labs(x = "R&D Spending ($Millions)",
-       y = "Federal Agency")
 ```
