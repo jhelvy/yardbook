@@ -8,12 +8,12 @@ source("_common.R")
 
 # Read in data
 wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
-federal_spending <- read_csv(here::here('data', 'federal_spending_long.csv'))
-lotr_words       <- read_csv(here::here('data', 'lotr_words_temp.csv'))
+federal_spending <- read_csv(here::here('data', 'fed_spend_long.csv'))
+lotr_words       <- read_csv(here::here('data', 'lotr_words.csv'))
 milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
 msleep           <- read_csv(here::here('data', 'msleep.csv'))
 us_gdp <- read_csv(here::here('data', 'total_gdp_us_inflation_adjusted.csv'))
-transit_cost <- read_csv('http://eda.seas.gwu.edu/2022-Fall/data/transit_cost.csv')
+transit_cost <- read_csv(here::here('data', 'transit_cost.csv'))
 
 # Make data summaries
 lotr_summary <- lotr_words %>%
@@ -31,15 +31,15 @@ us_gdp <- us_gdp %>%
 
 federal_spending_2017 <- federal_spending %>%
     filter(year == 2017) %>%
-    mutate(rd_budget = rd_budget / 10^3) %>%
+    mutate(rd_budget_mil = rd_budget_mil / 10^3) %>%
     mutate(department = fct_reorder(
-        department, rd_budget))
+        department, rd_budget_mil))
 
 federal_spending_summary <- federal_spending %>%
     mutate(department = fct_other(
         department, keep = 'DOD')) %>%
     group_by(department, year) %>%
-    summarise(rd_budget = sum(rd_budget) / 10^3) %>%
+    summarise(rd_budget_mil = sum(rd_budget_mil) / 10^3) %>%
     ungroup() %>%
     mutate(department = fct_relevel(
         department, c('Other', 'DOD')))
@@ -162,7 +162,7 @@ mpg_plot
 <center>
 <img src="images/fox_news_bars.jpeg" width = 700>
 </center>
---- 
+---
 
 #### You are most sensitive to changes in angles close to 45 degrees {.unnumbered}
 
@@ -281,7 +281,7 @@ width  |  height
 
 ## Adjusting Scales
 
-### Adjust axes with `scale_*` functions 
+### Adjust axes with `scale_*` functions
 
 Continous variables:
 
