@@ -42,7 +42,7 @@ wildlife_impacts <- wildlife_impacts %>%
             TRUE ~ 'other'))
 ```
 
-> ### Learning Objectives
+> ### Learning Objectives {.unnumbered}
 >
 > * Reshape data between long and wide formats.
 > * Wrangle and format data, including dealing with messy Excel files.

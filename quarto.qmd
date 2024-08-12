@@ -7,7 +7,7 @@
 source("_common.R")
 ```
 
-> ### Learning Objectives
+> ### Learning Objectives {.unnumbered}
 >
 > * Get familiar with the workflow of using Quarto in RStudio.
 > * Understand the anatomy of a Quarto Markdown Document.

@@ -4,7 +4,14 @@
 #| echo: false
 #| message: false
 #| include: false
+
 source("_common.R")
+
+# Load packages
+library(tidyverse)
+library(here)
+library(cowplot)
+library(readxl)
 
 # Read in data
 wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
@@ -44,7 +51,7 @@ state_abbs_50 <- state_abbs %>%
   filter(!state_abb %in% bad_abbs)
 ```
 
-> ### Learning Objectives
+> ### Learning Objectives {.unnumbered}
 >
 > * Reshape data between long and wide formats.
 > * Wrangle and format data, including dealing with messy Excel files.
@@ -62,7 +69,9 @@ To start off, let's take a look at this map. What's wrong with it?
 
 Clearly, the abbreviations are all mixed up. The likely culprit: merging two columns
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 names <- data.frame(state_name = sort(state_abbs_50$state_name))
 abbs  <- data.frame(state_abb = sort(state_abbs_50$state_abb))
 ```
@@ -165,10 +174,10 @@ band_instruments2
 
 ```{r}
 band_members %>%
-    left_join(
-        band_instruments2,
-        by = c("name" = "artist")
-    ) 
+  left_join(
+    band_instruments2,
+    by = c("name" = "artist")
+  ) 
 ```
 
 Or, just rename the joining variable in a pipe.
@@ -183,11 +192,11 @@ band_instruments2
 
 ```{r}
 band_members %>%
-    rename(artist = name) %>%
-    left_join(
-        band_instruments2,
-        by = "artist"
-    )
+  rename(artist = name) %>%
+  left_join(
+    band_instruments2,
+    by = "artist"
+  )
 ```
 
 ## Variable Types and Names
@@ -197,8 +206,7 @@ band_members %>%
 #### Always check variable types after reading in data!
 
 ```{r}
-wind <- read_excel(here::here(
-  'data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
+wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
 
 glimpse(wind)
 ```
@@ -223,8 +231,7 @@ parse_number(c("1-800-123-4567"))
 Once applied we get:
 
 ```{r}
-wind <- read_excel(here::here(
-  'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
+wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
   mutate(
     Ranking = as.numeric(Ranking),
     `Equivalent Homes Powered` = as.numeric(`Equivalent Homes Powered`),
@@ -252,8 +259,7 @@ The `janitor` package is a great tool to "clean" names of columns in data sets.
 
 If we take the `wind` data ..
 ```{r}
-wind <- read_excel(here::here(
-  'data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
+wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
 
 glimpse(wind)
 ```
@@ -262,8 +268,7 @@ glimpse(wind)
 ```{r}
 library(janitor)
 
-wind <- read_excel(here::here(
-  'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
+wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
   clean_names()
 
 glimpse(wind)
@@ -273,8 +278,7 @@ We can even change the style of the names.
 ```{r}
 library(janitor)
 
-wind <- read_excel(here::here(
-  'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
+wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
   clean_names(case = 'lower_camel')
 
 glimpse(wind)
@@ -283,8 +287,7 @@ glimpse(wind)
 ```{r}
 library(janitor)
 
-wind <- read_excel(here::here(
-  'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
+wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
   clean_names(case = 'screaming_snake')
 
 glimpse(wind)
@@ -554,10 +557,10 @@ tb_rates
 ```{r}
 tb_rates %>%
   separate(
-      rate, 
-      into = c("cases", "population"),
-      sep = "/", 
-      convert = TRUE
+    rate, 
+    into = c("cases", "population"),
+    sep = "/", 
+    convert = TRUE
   )
 ```
 
@@ -570,9 +573,9 @@ tb_rates
 ```{r}
 tb_rates %>%
   separate(
-      year, 
-      into = c("century", "year"),
-      sep = 2
+    year, 
+    into = c("century", "year"),
+    sep = 2
   )
 ```
 
@@ -584,8 +587,11 @@ tb_rates
 
 ```{r}
 tb_rates %>%
-  separate(year, into = c("century", "year"),
-           sep = 2) %>%
+  separate(
+    year, 
+    into = c("century", "year"),
+    sep = 2
+  ) %>%
   unite(year_new, century, year)
 ```
 
@@ -595,10 +601,12 @@ tb_rates
 
 ```{r}
 tb_rates %>%
-  separate(year, into = c("century", "year"),
-           sep = 2) %>%
-  unite(year_new, century, year,
-        sep = "")
+  separate(
+    year, 
+    into = c("century", "year"),
+    sep = 2
+  ) %>%
+  unite(year_new, century, year, sep = "")
 ```
 
 ## Dealing with Dates Data
@@ -730,11 +738,10 @@ Steps:
 3. Remove `*` note at bottom of table
 
 ```{r}
-hot_dogs <- read_excel(
-    here::here('data', 'hot_dog_winners.xlsx'),
-    sheet = 'hot_dog_winners') %>%
-    clean_names() %>%
-    dplyr::filter(!is.na(mens))
+hot_dogs <- read_excel(here::here('data', 'hot_dog_winners.xlsx'),
+  sheet = 'hot_dog_winners') %>%
+  clean_names() %>%
+  dplyr::filter(!is.na(mens))
 
 glimpse(hot_dogs)
 ```
@@ -749,21 +756,21 @@ Steps
 
 ```{r}
 hot_dogs_m <- hot_dogs %>%
-    select(
-        year,
-        competitor = mens,
-        dogs_eaten = dogs_eaten_3,
-        country    = country_4) %>%
-    mutate(competition = 'Mens')
+  select(
+    year,
+    competitor = mens,
+    dogs_eaten = dogs_eaten_3,
+    country    = country_4) %>%
+  mutate(competition = 'Mens')
 
 hot_dogs_w <- hot_dogs %>%
-    select(
-        year,
-        competitor = womens,
-        dogs_eaten = dogs_eaten_6,
-        country    = country_7) %>%
-    mutate(competition = 'Womens') %>%
-    dplyr::filter(!is.na(competitor))
+  select(
+      year,
+      competitor = womens,
+      dogs_eaten = dogs_eaten_6,
+      country    = country_7) %>%
+  mutate(competition = 'Womens') %>%
+  dplyr::filter(!is.na(competitor))
 ```
 
 Steps
@@ -778,10 +785,11 @@ Steps
 
 ```{r}
 hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>%
-    mutate(
-        new_record = str_detect(dogs_eaten, "\\*"),
-        dogs_eaten = parse_number(dogs_eaten),
-        year       = as.numeric(year))
+  mutate(
+    new_record = str_detect(dogs_eaten, "\\*"),
+    dogs_eaten = parse_number(dogs_eaten),
+    year       = as.numeric(year)
+  )
 
 glimpse(hot_dogs)
 ```
@@ -802,11 +810,10 @@ Steps:
 3. Remove `*` note at bottom of table
 
 ```{r}
-hot_dogs <- read_excel(
-    here::here('data', 'hot_dog_winners.xlsx'),
-    sheet = 'hot_dog_winners') %>%
-    clean_names() %>%
-    dplyr::filter(!is.na(mens))
+hot_dogs <- read_excel(here::here('data', 'hot_dog_winners.xlsx'),
+  sheet = 'hot_dog_winners') %>%
+  clean_names() %>%
+  dplyr::filter(!is.na(mens))
 
 glimpse(hot_dogs)
 ```
@@ -821,16 +828,20 @@ Steps:
 
 ```{r}
 hot_dogs <- hot_dogs %>%
-    select(
-        year,
-        competitor.mens   = mens,
-        competitor.womens = womens,
-        dogs_eaten.mens   = dogs_eaten_3,
-        dogs_eaten.womens = dogs_eaten_6,
-        country.mens      = country_4,
-        country.womens    = country_7) %>%
-    pivot_longer(names_to = 'variable', values_to = 'value',
-           competitor.mens:country.womens)
+  select(
+    year,
+    competitor.mens   = mens,
+    competitor.womens = womens,
+    dogs_eaten.mens   = dogs_eaten_3,
+    dogs_eaten.womens = dogs_eaten_6,
+    country.mens      = country_4,
+    country.womens    = country_7
+  ) %>%
+  pivot_longer(
+    names_to = 'variable', 
+    values_to = 'value',
+    competitor.mens:country.womens
+  )
 
 head(hot_dogs, 3)
 ```
@@ -846,8 +857,11 @@ Steps:
 
 ```{r}
 hot_dogs <- hot_dogs %>%
-    separate(variable, into = c('variable', 'competition'),
-             sep = '\\.')
+  separate(
+    variable, 
+    into = c('variable', 'competition'),
+    sep = '\\.'
+  )
 
 head(hot_dogs)
 ```
@@ -865,11 +879,12 @@ Steps:
 
 ```{r}
 hot_dogs <- hot_dogs %>%
-    spread(key = variable, value = value) %>%
-    mutate(
-        new_record = str_detect(dogs_eaten, "\\*"),
-        dogs_eaten = parse_number(dogs_eaten),
-        year       = as.numeric(year))
+  spread(key = variable, value = value) %>%
+  mutate(
+    new_record = str_detect(dogs_eaten, "\\*"),
+    dogs_eaten = parse_number(dogs_eaten),
+    year       = as.numeric(year)
+  )
 
 glimpse(hot_dogs)
 ```
@@ -881,35 +896,35 @@ glimpse(hot_dogs)
 Divide & conquer
 
 ```{r, eval=FALSE}
-hot_dogs <- read_excel(
-    here::here('data', 'hot_dog_winners.xlsx'),
-    sheet = 'hot_dog_winners') %>%
-    clean_names() %>%
-    dplyr::filter(!is.na(mens))
+hot_dogs <- read_excel(here::here('data', 'hot_dog_winners.xlsx'),
+  sheet = 'hot_dog_winners') %>%
+  clean_names() %>%
+  dplyr::filter(!is.na(mens))
 
 # Divide
 hot_dogs_m <- hot_dogs %>%
-    select(
-        year,
-        competitor = mens,
-        dogs_eaten = dogs_eaten_3,
-        country    = country_4) %>%
-    mutate(competition = 'Mens')
+  select(
+    year,
+    competitor = mens,
+    dogs_eaten = dogs_eaten_3,
+    country    = country_4) %>%
+  mutate(competition = 'Mens')
 hot_dogs_w <- hot_dogs %>%
-    select(
-        year,
-        competitor = womens,
-        dogs_eaten = dogs_eaten_6,
-        country    = country_7) %>%
-    mutate(competition = 'Womens') %>%
-    dplyr::filter(!is.na(competitor))
+  select(
+    year,
+    competitor = womens,
+    dogs_eaten = dogs_eaten_6,
+    country    = country_7) %>%
+  mutate(competition = 'Womens') %>%
+  dplyr::filter(!is.na(competitor))
 
 # Merge and finish cleaning
 hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>%
-    mutate(
-        new_record = str_detect(dogs_eaten, "\\*"),
-        dogs_eaten = parse_number(dogs_eaten),
-        year       = as.numeric(year))
+  mutate(
+    new_record = str_detect(dogs_eaten, "\\*"),
+    dogs_eaten = parse_number(dogs_eaten),
+    year       = as.numeric(year)
+  )
 ```
 
 </div>
@@ -919,33 +934,44 @@ Pivot long, separate, pivot wide
 
 ```{r, eval=FALSE}
 hot_dogs <- read_excel(
-    here::here('data', 'hot_dog_winners.xlsx'),
-    sheet = 'hot_dog_winners') %>%
-    clean_names() %>%
-    dplyr::filter(!is.na(mens)) %>%
+  here::here('data', 'hot_dog_winners.xlsx'),
+  sheet = 'hot_dog_winners') %>%
+  clean_names() %>%
+  dplyr::filter(!is.na(mens)) %>%
 
-    # Rename variables
-    select(
-        year,
-        competitor.mens   = mens,
-        competitor.womens = womens,
-        dogs_eaten.mens   = dogs_eaten_3,
-        dogs_eaten.womens = dogs_eaten_6,
-        country.mens      = country_4,
-        country.womens    = country_7) %>%
-    # Gather "joint" variables
-    pivot_longer(names_to = 'variable', values_to = 'value',
-           competitor.mens:country.womens) %>%
-    # Separate "joint" variables
-    separate(variable, into = c('variable', 'competition'),
-             sep = '\\.') %>%
-    # Spread "joint" variables
-    pivot_wider(names_from = variable, values_from = value) %>%
-    # Finish cleaning
-    mutate(
-        new_record = str_detect(dogs_eaten, "\\*"),
-        dogs_eaten = parse_number(dogs_eaten),
-        year       = as.numeric(year))
+  # Rename variables
+  select(
+    year,
+    competitor.mens   = mens,
+    competitor.womens = womens,
+    dogs_eaten.mens   = dogs_eaten_3,
+    dogs_eaten.womens = dogs_eaten_6,
+    country.mens      = country_4,
+    country.womens    = country_7
+  ) %>%
+  # Gather "joint" variables
+  pivot_longer(
+    names_to = 'variable', 
+    values_to = 'value',
+    competitor.mens:country.womens
+  ) %>%
+  # Separate "joint" variables
+  separate(
+    variable, 
+    into = c('variable', 'competition'),
+    sep = '\\.'
+  ) %>%
+  # Spread "joint" variables
+  pivot_wider(
+    names_from = variable, 
+    values_from = value
+  ) %>%
+  # Finish cleaning
+  mutate(
+    new_record = str_detect(dogs_eaten, "\\*"),
+    dogs_eaten = parse_number(dogs_eaten),
+    year       = as.numeric(year)
+  )
 ```
 
 </div>
@@ -965,11 +991,10 @@ Steps:
 2. Clean the names
 
 ```{r}
-pc_sales <- read_excel(
-    here::here('data', 'pc_sales_2018.xlsx'),
-    sheet = 'pc_sales', skip = 5) %>%
-    clean_names() %>%
-    rename(country = regions_countries)
+pc_sales <- read_excel(here::here('data', 'pc_sales_2018.xlsx'),
+  sheet = 'pc_sales', skip = 5) %>%
+  clean_names() %>%
+  rename(country = regions_countries)
 
 glimpse(pc_sales)
 ```
@@ -985,16 +1010,20 @@ Use **datapasta** to get rows to drop
 
 ```{r}
 drop <- c(
-    'EUROPE', 'EU 28 countries + EFTA',
-    'EU 15 countries + EFTA', 'EUROPE NEW MEMBERS',
-    'RUSSIA, TURKEY & OTHER EUROPE', 'AMERICA',
-    'NAFTA', 'CENTRAL & SOUTH AMERICA',
-    'ASIA/OCEANIA/MIDDLE EAST', 'AFRICA', 'ALL COUNTRIES')
+  'EUROPE', 'EU 28 countries + EFTA',
+  'EU 15 countries + EFTA', 'EUROPE NEW MEMBERS',
+  'RUSSIA, TURKEY & OTHER EUROPE', 'AMERICA',
+  'NAFTA', 'CENTRAL & SOUTH AMERICA',
+  'ASIA/OCEANIA/MIDDLE EAST', 'AFRICA', 'ALL COUNTRIES')
 
 pc_sales <- pc_sales %>%
-    select(-c(x2:x4)) %>%       # Drop bad columns
-    filter(! country %in% drop, # Drop bad rows
-           ! is.na(country))
+  # Drop bad columns
+  select(-c(x2:x4)) %>%  
+  # Filter out bad rows
+  filter(
+    ! country %in% drop,
+    ! is.na(country)
+  )
 
 head(pc_sales)
 ```
@@ -1009,8 +1038,11 @@ Steps:
 
 ```{r}
 pc_sales <- pc_sales %>%
-    pivot_longer(names_to = 'year', values_to = 'num_cars', 
-                 cols = x2005:x2018)
+  pivot_longer(
+    names_to = 'year', 
+    values_to = 'num_cars', 
+    cols = x2005:x2018
+  )
 
 head(pc_sales)
 ```
@@ -1026,8 +1058,12 @@ Steps:
 
 ```{r}
 pc_sales <- pc_sales %>%
-    separate(year, into = c('drop', 'year'), sep = 'x',
-             convert = TRUE)
+  separate(
+    year, 
+    into = c('drop', 'year'), 
+    sep = 'x',
+    convert = TRUE
+  )
 
 head(pc_sales)
 ```
@@ -1068,14 +1104,23 @@ pc_sales <- read_excel(
   sheet = 'pc_sales', skip = 5) %>%
   clean_names() %>%
   rename(country = regions_countries) %>% 
-  select(-c(x2:x4)) %>%       # Drop bad columns
-  filter(! country %in% drop, # Drop bad rows
-         ! is.na(country)) %>% 
+  # Drop bad columns
+  select(-c(x2:x4)) %>%  
+  # Filter out bad rows
+  filter(
+    ! country %in% drop,
+    ! is.na(country)
+  ) %>% 
   pivot_longer(
     names_to = 'year', values_to = 'num_cars', 
-    cols = x2005:x2018) %>%
-  separate(year, into = c('drop', 'year'), sep = 'x',
-           convert = TRUE) %>% 
+    cols = x2005:x2018
+  ) %>%
+  separate(
+    year, 
+    into = c('drop', 'year'), 
+    sep = 'x',
+    convert = TRUE
+  ) %>% 
   select(-drop)
 
 head(pc_sales, 3)
@@ -1086,8 +1131,7 @@ head(pc_sales, 3)
 ### Strategy 2: Hand-make it
 
 ```{r}
-pc_regions <- read_csv(here::here(
-  "data", "pc_regions.csv"))
+pc_regions <- read_csv(here::here("data", "pc_regions.csv"))
 
 head(pc_regions)
 ```
@@ -1116,20 +1160,28 @@ pc_sales <- read_excel(
   sheet = 'pc_sales', skip = 5) %>%
   clean_names() %>%
   rename(country = regions_countries) %>% 
-  select(-c(x2:x4)) %>%       # Drop bad columns
-  filter(! country %in% drop, # Drop bad rows
-         ! is.na(country)) %>% 
+  # Drop bad columns
+  select(-c(x2:x4)) %>%       
+  # Filter out bad rows
+  filter(
+    ! country %in% drop,
+    ! is.na(country)
+  ) %>% 
   pivot_longer(
     names_to = 'year', values_to = 'num_cars', 
-    cols = x2005:x2018) %>%
-  separate(year, into = c('drop', 'year'), sep = 'x',
-           convert = TRUE) %>% 
+    cols = x2005:x2018
+  ) %>%
+  separate(
+    year, into = c('drop', 'year'), sep = 'x',
+    convert = TRUE
+  ) %>% 
   select(-drop) %>% 
   left_join(pc_regions) %>% 
   mutate(
     country  = str_to_title(country), 
     region  = str_to_title(region), 
-    subregion  = str_to_title(subregion))
+    subregion  = str_to_title(subregion)
+  )
 
 head(pc_sales)
 ```

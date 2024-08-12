@@ -4,10 +4,11 @@
 #| echo: false
 #| message: false
 #| include: false
+
 source("_common.R")
 ```
 
-> ### Learning Objectives
+> ### Learning Objectives {.unnumbered}
 >
 > * Assess and document the validity, accuracy, and origin of data sources.
 > * Ensure the reproducibility of results using detailed data documentation.

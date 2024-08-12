@@ -17,7 +17,7 @@ wildlife_impacts <- read_csv(here('data', 'wildlife_impacts.csv'))
 gapminder <- read_csv(here('data', 'gapminder.csv'))
 ```
 
-> ### Learning Objectives
+> ### Learning Objectives {.unnumbered}
 >
 > * Learn the functions necessary to import various file types.
 > * Understand the basic features of ggplot.

@@ -4,7 +4,13 @@
 #| echo: false
 #| message: false
 #| include: false
+
 source("_common.R")
+
+# Load packages
+library(tidyverse)
+library(HistData)
+library(kableExtra)
 
 # Read in data sets
 milk_production <- read_csv(here::here('data', 'milk_production.csv'))
@@ -44,7 +50,9 @@ Measure things with numbers
 
 e.g. `country` in TB case data:
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 tb_cases
 ```
 
@@ -55,7 +63,9 @@ tb_cases
 
 e.g.: `Placement` 2017 Boston marathon:
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 marathon %>%
   dplyr::select(Placement = Overall, `Official Time`, Name) %>%
   head()
@@ -71,7 +81,9 @@ marathon %>%
 
 e.g.: `temp` in Beaver data
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 beaver1 %>%
     arrange(day) %>%
     head()
@@ -85,7 +97,9 @@ beaver1 %>%
 
 e.g.: `height` & `speed` in wildlife impacts
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 wildlife_impacts %>%
     filter(!is.na(height), ! is.na(speed)) %>%
     dplyr::select(incident_date, height, speed) %>%
@@ -147,16 +161,18 @@ When ratio data are discrete (i.e. counts)
 
 ```{r}
 wildlife_impacts %>%
-    filter(! is.na(height)) %>%
-    summarise(
-      mean = mean(height),
-      median = median(height)
-    )
+  filter(! is.na(height)) %>%
+  summarise(
+    mean = mean(height),
+    median = median(height)
+  )
 ```
 
 Percent of data below mean:
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 percentiles <- ecdf(wildlife_impacts$height)
 meanP <- percentiles(mean(wildlife_impacts$height, na.rm = TRUE))
 paste0(round(100*meanP, 1), '%')
@@ -197,24 +213,26 @@ Here, **averages** are misleading:
 
 ```{r}
 daysToShip %>%
-    gather(warehouse, days, warehouseA:warehouseB) %>%
-    group_by(warehouse) %>%
-    summarise(
-        mean   = mean(days),
-        median = median(days))
+  gather(warehouse, days, warehouseA:warehouseB) %>%
+  group_by(warehouse) %>%
+  summarise(
+    mean   = mean(days),
+    median = median(days)
+  )
 ```
 
 **Variability** reveals difference in days to ship:
 
 ```{r}
 daysToShip %>%
-    gather(warehouse, days, warehouseA:warehouseB) %>%
-    group_by(warehouse) %>%
-    summarise(
-        mean   = mean(days),
-        median = median(days),
-        range = max(days) - min(days),
-        sd    = sd(days))
+  gather(warehouse, days, warehouseA:warehouseB) %>%
+  group_by(warehouse) %>%
+  summarise(
+    mean   = mean(days),
+    median = median(days),
+    range  = max(days) - min(days),
+    sd     = sd(days)
+  )
 ```
 
 <center>
@@ -238,7 +256,7 @@ $s = \sqrt{\frac{\sum_{i=1}^{N}(x_i - \bar{x})^2}{N - 1}}$
 **Extreme values**: $Q_1 - 3 IQR$ or $Q_3 + 3 IQR$
 
 ```{r}
-data1 <- c(3,3,4,5,5,6,6,7,8,9)
+data1 <- c(3, 3, 4, 5, 5, 6, 6, 7, 8, 9)
 ```
 
 - Mean: `r mean(data1)`
@@ -247,7 +265,7 @@ data1 <- c(3,3,4,5,5,6,6,7,8,9)
 - IQR: `r IQR(data1)`
 
 ```{r}
-data2 <- c(3,3,4,5,5,6,6,7,8,20)
+data2 <- c(3, 3, 4, 5, 5, 6, 6, 7, 8, 20)
 ```
 
 - <span style="color:red;">Mean: `r mean(data2)`</span>
@@ -336,19 +354,25 @@ One great example of the importance of visualizing data would be Anscombe's Quar
 
 ```{r}
 wildlife_impacts %>%
-    count(operator, sort = TRUE) %>%
-    mutate(p = n / sum(n))
+  count(operator, sort = TRUE) %>%
+  mutate(p = n / sum(n))
 ```
 
 **Visualize**: (usually sorted) Bars 
 
-```{r wildlife-operator-bars, fig.width=7, fig.height=3}
+```{r} 
+#| label: wildlife-operator-bars
+#| fig.width: 7
+#| fig.height: 3
+
 wildlife_impacts %>%
-    count(operator, sort = TRUE) %>%
-    ggplot() +
-    geom_col(aes(x = n, y = reorder(operator, n)),
-             width = 0.7) +
-    labs(x = "Count", y = "Operator")
+  count(operator, sort = TRUE) %>%
+  ggplot() +
+  geom_col(
+    aes(x = n, y = reorder(operator, n)),
+    width = 0.7
+  ) +
+  labs(x = "Count", y = "Operator")
 ```
 
 ### Summarizing **Ordinal** data
@@ -357,19 +381,25 @@ wildlife_impacts %>%
 
 ```{r}
 wildlife_impacts %>%
-    count(incident_month, sort = TRUE) %>%
-    mutate(p = n / sum(n))
+  count(incident_month, sort = TRUE) %>%
+  mutate(p = n / sum(n))
 ```
 
 **Visualize**: Bars
 
-```{r wildlife-months-bar, fig.width=7, fig.height=3.7}
+```{r}
+#| label: wildlife-months-bar
+#| fig.width: 7
+#| fig.height: 3.7
+
 wildlife_impacts %>%
-    count(incident_month, sort = TRUE) %>%
-    ggplot() +
-    geom_col(aes(x = as.factor(incident_month),
-                 y = n), width = 0.7) +
-    labs(x = "Incident month")
+  count(incident_month, sort = TRUE) %>%
+  ggplot() +
+  geom_col(
+    aes(x = as.factor(incident_month), y = n),
+    width = 0.7
+  ) +
+  labs(x = "Incident month")
 ```
 
 ### Summarizing **Numerical (continuous)** variables
@@ -406,20 +436,27 @@ summary(wildlife_impacts$height)
 
 **Visualize**: Histogram (identify skewness & modes)
 
-```{r wildlife-height-hist, fig.width=7, fig.height=3.7, fig.align='center'}
+**Height**
+
+```{r}
+#| label: wildlife-height-hist
+#| fig.width: 7
+#| fig.height: 3.7
+#| fig.align: center
+
 ggplot(wildlife_impacts) +
   geom_histogram(aes(x = height), bins = 50) +
   labs(x = 'Height (ft)', y = 'Count')
 ```
 
-**Height**
-
-```{r, ref.label="wildlife-height-hist", fig.width=7, fig.height=3.7, fig.align='center'}
-```
-
 **Speed**
 
-```{r wildlife-speed-hist, fig.width=7, fig.height=3.7, fig.align='center'}
+```{r}
+#| label: wildlife-speed-hist
+#| fig.width: 7
+#| fig.height: 3.7
+#| fig.align: center
+
 ggplot(wildlife_impacts) +
   geom_histogram(aes(x = speed), bins = 50) +
   labs(x = 'speed (mph)', y = 'Count')
@@ -429,18 +466,28 @@ ggplot(wildlife_impacts) +
 
 **Height**
 
-```{r wildlife-height-boxplot, fig.width=7, fig.height=3, fig.align='center'}
+```{r}
+#| label: wildlife-height-boxplot
+#| fig.width: 7
+#| fig.height: 3
+#| fig.align: center
+
 ggplot(wildlife_impacts) +
-    geom_boxplot(aes(x = height)) +
-    labs(x = 'Height (ft)', y = NULL)
+  geom_boxplot(aes(x = height)) +
+  labs(x = 'Height (ft)', y = NULL)
 ```
 
 **Speed**
 
-```{r wildlife-speed-boxplot, fig.width=7, fig.height=3, fig.align='center'}
+```{r}
+#| label: wildlife-speed-boxplot
+#| fig.width: 7
+#| fig.height: 3
+#| fig.align: center
+
 ggplot(wildlife_impacts) +
-    geom_boxplot(aes(x = speed)) +
-    labs(x = 'Speed (mph)', y = NULL)
+  geom_boxplot(aes(x = speed)) +
+  labs(x = 'Speed (mph)', y = NULL)
 ```
 
 ## Visualizing Variation
@@ -462,20 +509,25 @@ Summarize with a table of counts
 
 ```{r}
 wildlife_impacts %>%
-    count(operator, time_of_day)
+  count(operator, time_of_day)
 ```
 
 Convert to "wide" format with `pivot_wider()` to make it easier to compare values
 
 ```{r}
 wildlife_impacts %>%
-    count(operator, time_of_day) %>%
-    pivot_wider(names_from = time_of_day, values_from = n)
+  count(operator, time_of_day) %>%
+  pivot_wider(names_from = time_of_day, values_from = n)
 ```
 
 Visualize with bars:<br>map **fill** to denote 2nd categorical var
 
-```{r wildlife-two-var-bars, fig.width=9, fig.height=6, fig.align='center'}
+```{r}
+#| label: wildlife-two-var-bars
+#| fig.width: 9
+#| fig.height: 6
+#| fig.align: center
+
 wildlife_impacts %>%
   count(operator, time_of_day) %>%
   ggplot() +
@@ -486,7 +538,8 @@ wildlife_impacts %>%
       fill = reorder(time_of_day, n)
     ), 
     width = 0.7,
-    position = 'dodge') +
+    position = 'dodge'
+  ) +
   theme(legend.position = "bottom") +
   labs(
     fill = "Time of day", 
@@ -496,14 +549,17 @@ wildlife_impacts %>%
 
 Visualize with scatterplot - looking for _clustering_ and/or _correlational_ relationship
 
-```{r wildlife-scatterplot, fig.width=7, fig.height=4, fig.align='center'}
+```{r}
+#| label: wildlife-scatterplot
+#| fig.width: 7
+#| fig.height: 4
+#| fig.align: center
+
 ggplot(wildlife_impacts) +
   geom_point(
-    aes(
-      x = speed, 
-      y = height  
-    ),
-    size = 0.5) +
+    aes(x = speed, y = height),
+    size = 0.5
+  ) +
   labs(
     x = 'Speed (mph)',
     y = 'Height (f)'
@@ -514,13 +570,14 @@ ggplot(wildlife_impacts) +
 
 Visualize with **boxplot**
 
-```{r wildlife-two-var-boxplot, fig.width=7, fig.height=4, fig.align='center'}
+```{r}
+#| label: wildlife-two-var-boxplot
+#| fig.width: 7
+#| fig.height: 4
+#| fig.align: center
+
 ggplot(wildlife_impacts) +
-  geom_boxplot(
-    aes(
-      x = speed, 
-      y = operator)
-    ) + 
+  geom_boxplot(aes(x = speed, y = operator)) + 
   labs(
     x = 'Speed (mph)',
     y = 'Airline'
@@ -558,22 +615,31 @@ Galton, F. (1886). ["Regression towards mediocrity in hereditary stature"](http:
 midparentHeight =  (father + 1.08*mother)/2
 ```
 
-```{r, eval=FALSE}
+```{r}
+#| label: galton-scatterplot
+#| fig.width: 7
+#| fig.height: 4
+#| fig.align: center
+
 library(HistData)
 
-galtonScatterplot <- ggplot(GaltonFamilies) +
-    geom_point(aes(x = midparentHeight,
-                   y = childHeight),
-               size = 0.5, alpha = 0.7) +
-    theme_classic() +
-    labs(x = 'Midparent height (inches)',
-         y = 'Child height (inches)')
-```
+galtonScatterplot <- GaltonFamilies %>% 
+  ggplot() +
+  geom_point(
+    aes(x = midparentHeight, y = childHeight),
+    size = 0.5, alpha = 0.7
+  ) +
+  theme_classic() +
+  labs(
+    x = 'Midparent height (inches)',
+    y = 'Child height (inches)'
+  )
 
-<img src="figs/galtonScatterplot.png" width=700>
-</center>
+galtonScatterplot
+```
  
 ### How do you measure correlation? (**Pearson**)
+
 Pearson came up with this:
 
 ##### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$
@@ -604,9 +670,11 @@ Interpretation:
 - Closer to 0 is weaker correlation
 
 ```{r}
-cor(x = GaltonFamilies$midparentHeight,
-    y = GaltonFamilies$childHeight,
-    method = 'pearson')
+cor(
+  x = GaltonFamilies$midparentHeight,
+  y = GaltonFamilies$childHeight,
+  method = 'pearson'
+)
 ```
 
 <img src="figs/galtonScatterplot.png" width=700>
@@ -720,7 +788,9 @@ Assumptions:
 </div>
 
 <div style="flex: 1; margin-right: 10px;">
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 tribble(
     ~Pearson, ~Spearman,
     -0.56,    0.53,
@@ -732,7 +802,7 @@ tribble(
     0.95,     0.81,
     0.51,     0.75,
     -0.56,    0.53) %>%
-    kable()
+    kbl()
 ```
 </div>
 
@@ -741,7 +811,6 @@ tribble(
 </div>
 
 </div>
-
 
 ### Summary of correlation
 
@@ -752,14 +821,18 @@ tribble(
 
 R command (hint: add `use = "complete.obs"` to drop NA values)
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 pearson  <- cor(x, y, method = "pearson", use = "complete.obs")
 spearman <- cor(x, y, method = "spearman", use = "complete.obs")
 ```
 
 ### **Scatterplots**: The correlation workhorse
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 scatterplot <- mtcars %>% 
   ggplot() +
   geom_point(
@@ -783,17 +856,19 @@ scatterplot
 
 Make the correlation label
 
-```{r, eval=FALSE}
-corr <- cor(
-    mtcars$mpg, mtcars$hp,
-    method = 'pearson')
+```{r}
+#| eval: false
+
+corr <- cor(mtcars$mpg, mtcars$hp, method = 'pearson')
 
 corrLabel <- paste('r = ', round(corr, 2))
 ```
 
 Add label to the chart with `annotate()`
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 scatterplot +
   annotate(
     geom = 'text',
@@ -811,76 +886,102 @@ scatterplot +
 <img src="images/all-the-correlations.jpeg" width=700>
 </center>
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library('GGally')
 ```
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 mtcars %>%
-    ggcorr()
+  ggcorr()
 ```
 
 <img src="figs/ggcor_mtcars.png" width=700>
 </center>
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library('GGally')
 ```
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 mtcars %>%
-    ggcorr(label = TRUE,
-           label_size = 3,
-           label_round = 2)
+  ggcorr(
+    label = TRUE,
+    label_size = 3,
+    label_round = 2
+  )
 ```
 
 <img src="figs/ggcor_mtcars_labels.png" width=700>
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ggcor_mtcars_final <- mtcars %>%
-    ggcorr(label = TRUE,
-           label_size = 3,
-           label_round = 2,
-           label_color = 'white',
-           nbreaks = 5,
-           palette = "RdBu")
+  ggcorr(
+    label = TRUE,
+    label_size = 3,
+    label_round = 2,
+    label_color = 'white',
+    nbreaks = 5,
+    palette = "RdBu"
+  )
 ```
 
 <img src="figs/ggcor_mtcars_final.png" width=700>
 
 **Pearson**
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 mtcars %>%
-    ggcorr(label = TRUE,
-           label_size = 3,
-           label_round = 2,
-           method = c("pairwise", "pearson"))
+  ggcorr(
+    label = TRUE,
+    label_size = 3,
+    label_round = 2,
+    method = c("pairwise", "pearson")
+  )
 ```
 
 <img src="figs/ggcor_mtcars_pearson.png" width=700>
 
 **Spearman**
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 mtcars %>%
-    ggcorr(label = TRUE,
-           label_size = 3,
-           label_round = 2,
-           method = c("pairwise", "spearman"))
+  ggcorr(
+    label = TRUE,
+    label_size = 3,
+    label_round = 2,
+    method = c("pairwise", "spearman")
+  )
 ```
 
 <img src="figs/ggcor_mtcars_spearman.png" width=700>
 
 ### Correlograms: `ggpairs()`
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library('GGally')
 ```
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 mtcars %>%
-    select(mpg, cyl, disp, hp, wt) %>%
-    ggpairs()
+  select(mpg, cyl, disp, hp, wt) %>%
+  ggpairs()
 ```
 
 - Look for linear relationships
