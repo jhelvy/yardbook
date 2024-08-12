@@ -7,7 +7,7 @@
 source("_common.R")
 ```
 
-> ### Learning Objectives {.unnumbered}
+> ### Learning Objectives
 >
 > * Assess and document the validity, accuracy, and origin of data sources.
 > * Ensure the reproducibility of results using detailed data documentation.

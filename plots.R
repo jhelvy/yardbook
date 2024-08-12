@@ -1,12 +1,3 @@
-source("_common.R")
-
-# index ----
-
-# intro ----
-
-# quarto ----
-
-# ggplot ----
 
 # tidy-data ----
 
@@ -1334,7 +1325,7 @@ us_states <- ne_states(
 
 # Milk fill
 sf_us_milk_2017 <- ggplot(us_states) +
-  geom_sf(aes(fill = milk_produced)) + #<<
+  geom_sf(aes(fill = milk_produced)) +
   scale_fill_viridis(
     option = "plasma", 
     limits = c(0, 40)) +
@@ -1348,7 +1339,7 @@ ggsave(here::here('images', 'plots', 'sf_us_milk_2017.png'),
 
 # Milk fill quad
 sf_us_milk_2017_quad <- ggplot(us_states) +
-  geom_sf(aes(fill = milk_produced)) + #<<
+  geom_sf(aes(fill = milk_produced)) +
   scale_fill_viridis(
     trans = 'sqrt',
     option = "plasma", 

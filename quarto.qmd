@@ -3,10 +3,11 @@
 ```{r}
 #| echo: false
 #| message: false
+
 source("_common.R")
 ```
 
-> ### Learning Objectives {.unnumbered}
+> ### Learning Objectives
 >
 > * Get familiar with the workflow of using Quarto in RStudio.
 > * Understand the anatomy of a Quarto Markdown Document.
@@ -28,7 +29,7 @@ Use R Projects (.Rproj files) to organize your analysis - **don't double-click .
 <img src = "images/rproj.png" width = "75">
 </center>
 
-### Render to multiple outputs {.unnumbered}
+### Render to multiple outputs
 
 PDF uses LaTeX:
 
@@ -68,7 +69,7 @@ A Quarto Markdown document (.qmd) has three main parts:
 * Markdown text
 * R code
 
-### Header {.unnumbered}
+### Header
 
 Define overall document options in the header
 
@@ -95,7 +96,7 @@ format:
 ---
 ```
 
-### Markdown Text {.unnumbered}
+### Markdown Text
 
 This
 
@@ -170,17 +171,17 @@ Simple **url link** to another site:
 
 [Download R](http://www.r-project.org/)
 
-#### Don't want to use Markdown? {.unnumbered}
+#### Don't want to use Markdown?
 
-#### <span style="color: red;">Use Visual Mode!</span> {.unnumbered}
+#### <span style="color: red;">Use Visual Mode!</span>
 
 <center>
 <img src="images/visual-mode.png" width=700>
 </center>
 
-### R Code {.unnumbered}
+### R Code
 
-#### Inline R code {.unnumbered}
+#### Inline R code
 
 ```{r, eval=FALSE}
 `r insert code here`
@@ -194,7 +195,7 @@ Produces this:
 
 The sum of 3 and 4 is `r 3 + 4`
 
-#### R Code chunks {.unnumbered}
+#### R Code chunks
 
 ````markdown
 `r ''````{r}
@@ -216,12 +217,13 @@ head(penguins)
 
 ```{r} 
 #| echo: false
+
 library(palmerpenguins)
 
 head(penguins)
 ```
 
-#### Chunk Options {.unnumbered}
+#### Chunk Options
 
 Control what chunks output using options
 
@@ -281,7 +283,7 @@ Runs, but doesn't print anything
 cat('hello world!')
 ```
 
-#### A Global `setup` Chunk 🌍 {.unnumbered}
+#### A Global `setup` Chunk 🌍
 
 ````markdown
 `r ''````{r}
@@ -299,6 +301,7 @@ knitr::opts_chunk$set(
 )
 ```
 ````
+
 - Typically the first chunk
 - All following chunks will use these options (i.e., sets global chunk options)
 - You can (and should) use individual chunk options too

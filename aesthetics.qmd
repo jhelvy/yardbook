@@ -61,15 +61,15 @@ milk_production %>%
     region = fct_reorder2(region, year, desc(milk_produced))) %>%
   ggplot() +
   geom_col(
-    aes(x = milk_produced, #<<
-        y = region, #<<
+    aes(x = milk_produced,
+        y = region,
         fill = as.factor(year)),
     position = "dodge") +
   scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
   theme_minimal_vgrid() +
   labs(
-    x = 'Milk produced (billions lbs)', #<<
-    y = 'Region', #<<
+    x = 'Milk produced (billions lbs)',
+    y = 'Region',
     title = 'Milk production by region',
     subtitle = '1970 & 2017')
 ```
@@ -88,7 +88,7 @@ milk_production %>%
   geom_col(
     aes(x = milk_produced,
         y = region,
-        fill = as.factor(year)),  #<<
+        fill = as.factor(year)),
     position = "dodge") +
   scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
   theme_minimal_vgrid() +
@@ -97,7 +97,7 @@ milk_production %>%
     y = 'Region',
     title = 'Milk production by region',
     subtitle = '1970 & 2017',
-    fill = "Year") #<<
+    fill = "Year")
 ```
 
 **Legends suck**
@@ -164,10 +164,10 @@ ggplot(milk_region,
 dod_spending <- ggplot(federal_spending_summary) +
     geom_area(aes(x = year, y = rd_budget,
                   fill = department)) +
-    annotate(geom = 'text', x = 1995, y = 85,  #<<
-             label = 'Other', size = 6, color = 'black') + #<<
-    annotate(geom = 'text', x = 1995, y = 25, #<<
-             label = 'DOD', size = 6, color = 'white') + #<<
+    annotate(geom = 'text', x = 1995, y = 85,
+             label = 'Other', size = 6, color = 'black') +
+    annotate(geom = 'text', x = 1995, y = 25,
+             label = 'DOD', size = 6, color = 'white') +
     scale_y_continuous(
         expand = expand_scale(mult = c(0, 0.05))) +
     scale_fill_manual(values = c('grey', 'sienna')) +
@@ -190,15 +190,15 @@ dod_spending
 dod_spending <- ggplot(federal_spending_summary) +
     geom_area(aes(x = year, y = rd_budget,
                   fill = department)) +
-    annotate(geom = 'text', x = 1995, y = 85,  #<<
-             label = 'Other', size = 6, color = 'black') + #<<
-    annotate(geom = 'text', x = 1995, y = 25, #<<
-             label = 'DOD', size = 6, color = 'white') + #<<
+    annotate(geom = 'text', x = 1995, y = 85,
+             label = 'Other', size = 6, color = 'black') +
+    annotate(geom = 'text', x = 1995, y = 25,
+             label = 'DOD', size = 6, color = 'white') +
     scale_y_continuous(
         expand = expand_scale(mult = c(0, 0.05))) +
     scale_fill_manual(values = c('grey', 'sienna')) +
     theme_minimal_hgrid() +
-    theme(legend.position = 'none') +  #<<
+    theme(legend.position = 'none') +
     labs(x = NULL,
          y = 'R&D Budget ($ Billions)',
          title = 'Federal R&D spending, 1976 - 2017',
@@ -213,14 +213,14 @@ dod_spending
 dod_spending <- ggplot(federal_spending_summary) +
     geom_area(aes(x = year, y = rd_budget,
                   fill = department)) +
-    geom_text( #<<
-      data = data.frame(x = 1995, y = 85, label = 'Other'), #<<
-      aes(x = x, y = y, label = label), #<<
-      size = 6, color = 'black') + #<<
-    geom_text( #<<
-      data = data.frame(x = 1995, y = 25, label = 'DOD'), #<<
-      aes(x = x, y = y, label = label), #<<
-      size = 6, color = 'white') + #<<
+    geom_text(
+      data = data.frame(x = 1995, y = 85, label = 'Other'),
+      aes(x = x, y = y, label = label),
+      size = 6, color = 'black') +
+    geom_text(
+      data = data.frame(x = 1995, y = 25, label = 'DOD'),
+      aes(x = x, y = y, label = label),
+      size = 6, color = 'white') +
     scale_y_continuous(
         expand = expand_scale(mult = c(0, 0.05))) +
     scale_fill_manual(values = c('grey', 'sienna')) +
@@ -240,14 +240,14 @@ dod_spending
 dod_spending <- ggplot(federal_spending_summary) +
     geom_area(aes(x = year, y = rd_budget,
                   fill = department)) +
-    geom_label( #<<
+    geom_label(
       data = data.frame(x = 1995, y = 85, label = 'Other'),
       aes(x = x, y = y, label = label),
       size = 6) +
-    geom_label( #<<
+    geom_label(
       data = data.frame(x = 1995, y = 25, label = 'DOD'),
       aes(x = x, y = y, label = label),
-      size = 6, fill = "black", color = "white") + #<<
+      size = 6, fill = "black", color = "white") +
     scale_y_continuous(
         expand = expand_scale(mult = c(0, 0.05))) +
     scale_fill_manual(values = c('grey', 'sienna')) +
@@ -269,13 +269,13 @@ has made up nearly half of all
 federal R&D spending"
 
 dod_spending +
-  geom_curve( #<<
-    data = data.frame( #<<
-      x = 1981, xend = 1987, y = 160, yend = 25), #<<
-    mapping = aes(x = x, xend = xend, y = y, yend = yend), #<<
-    color = 'grey75', size = 0.5, curvature = 0.1, #<<
-    arrow = arrow(length = unit(0.01, "npc"), #<<
-                  type = "closed")) + #<<
+  geom_curve(
+    data = data.frame(
+      x = 1981, xend = 1987, y = 160, yend = 25),
+    mapping = aes(x = x, xend = xend, y = y, yend = yend),
+    color = 'grey75', size = 0.5, curvature = 0.1,
+    arrow = arrow(length = unit(0.01, "npc"),
+                  type = "closed")) +
   geom_label(
     data = data.frame(x = 1977, y = 160, label = label),
     mapping = aes(x = x, y = y, label = label),
@@ -292,11 +292,11 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
     aes(fill = as.factor(cyl)),
     color = 'white', alpha = 0.8,
     size = 3.5, shape = 21) +
-  annotate(geom = "rect", #<<
+  annotate(geom = "rect",
     xmin = 5, xmax = 7.5,
     ymin = 21, ymax = 28,
     fill = "grey55", alpha = 0.2) +
-  annotate(geom = "text", #<<
+  annotate(geom = "text",
     x = 5, y = 29, label = "Hybrid vehicles",
     hjust = 0, size = 5) +
   theme_half_open(font_size = 15) +
@@ -324,7 +324,7 @@ plot <- ggplot(mpg) +
   geom_point(aes(x = displ, y = hwy, color = as.factor(cyl))) +
   theme_half_open()
 
-ggannotate(plot) #<<
+ggannotate(plot)
 ```
 
 ## Colors
@@ -379,7 +379,7 @@ Map color to variable
 ```{r, fig.show='hide'}
 mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
   geom_point(
-    aes(color = as.factor(cyl)), #<<
+    aes(color = as.factor(cyl)),
     alpha = 0.8, size = 3) +
   theme_half_open(font_size = 16) +
   labs(x = "Fuel efficiency (mpg)",
@@ -396,8 +396,8 @@ mpg_plot
 Manually change colors
 ```{r, mpg_colors_manual, fig.height=5, fig.width=6, fig.align='center'}
 mpg_plot +
-    scale_color_manual(values = c( #<<
-        '#a0522d', '#522da0', '#2da052')) #<<
+    scale_color_manual(values = c(
+        '#a0522d', '#522da0', '#2da052'))
 ```
 
 **Consider color blind friendly colors**
@@ -407,8 +407,8 @@ Manually change colors
 ```{r}
 mpg_plot_mycolors <- mpg_plot +
     theme_half_open(font_size = 10) +
-    scale_color_manual(values = c( #<<
-        '#a0522d', '#522da0', '#2da052')) #<<
+    scale_color_manual(values = c(
+        '#a0522d', '#522da0', '#2da052'))
 ```
 
 Simulate color blindness with [colorblindr](https://github.com/clauswilke/colorblindr)
@@ -463,7 +463,7 @@ Map color to variable
 
 ```{r, eval=FALSE}
 mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
-    geom_point(aes(color = as.factor(cyl)), #<<
+    geom_point(aes(color = as.factor(cyl)),
                alpha = 0.8, size = 3) +
     theme_half_open(font_size = 16) +
     labs(x = "Fuel efficiency (mpg)",
@@ -477,7 +477,7 @@ Use "Dark2" palette
 
 ```{r, mpg_colors_dark2, fig.height=5, fig.width=6, fig.align='center'}
 mpg_plot +
-    scale_color_brewer(palette = 'Dark2') #<<
+    scale_color_brewer(palette = 'Dark2')
 ```
 
 <div style="display: flex; justify-content: space-between;">
@@ -488,7 +488,7 @@ Set1
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
 mpg_plot +
     scale_color_brewer(
-        palette = 'Set1') #<<
+        palette = 'Set1')
 ```
 </div>
 
@@ -498,7 +498,7 @@ Set2
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
 mpg_plot +
     scale_color_brewer(
-        palette = 'Set2') #<<
+        palette = 'Set2')
 ```
 </div>
 
@@ -508,7 +508,7 @@ Accent
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
 mpg_plot +
     scale_color_brewer(
-        palette = 'Accent') #<<
+        palette = 'Accent')
 ```
 </div>
 
@@ -521,7 +521,7 @@ Map color to variable
 
 ```{r, eval=FALSE}
 mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
-    geom_point(aes(color = as.factor(cyl)), #<<
+    geom_point(aes(color = as.factor(cyl)),
                alpha = 0.8, size = 3) +
     theme_half_open(font_size = 16) +
     labs(x = "Fuel efficiency (mpg)",
@@ -535,7 +535,7 @@ Use viridis colors
 
 ```{r, mpg_colors_viridis, fig.height=5, fig.width=6, fig.align='center'}
 mpg_plot +
-    scale_color_viridis(discrete = TRUE) #<<
+    scale_color_viridis(discrete = TRUE)
 ```
 
 <div style="display: flex; justify-content: space-between;">
@@ -547,7 +547,7 @@ virdis
 mpg_plot +
     scale_color_viridis(
         discrete = TRUE,
-        option = 'viridis') #<<
+        option = 'viridis')
 ```
 </div>
 
@@ -558,7 +558,7 @@ inferno
 mpg_plot +
     scale_color_viridis(
         discrete = TRUE,
-        option = 'inferno') #<<
+        option = 'inferno')
 ```
 </div>
 
@@ -569,7 +569,7 @@ plasma
 mpg_plot +
     scale_color_viridis(
         discrete = TRUE,
-        option = 'plasma') #<<
+        option = 'plasma')
 ```
 </div>
 
@@ -595,10 +595,10 @@ mpg_plot +
 ```{r, mpg_colors_polished, fig.height=5, fig.width=6, fig.align='center'}
 ggplot(mtcars, aes(x = mpg, y = hp)) +
   geom_point(
-    aes(fill = as.factor(cyl)), #<<
-    color = 'white', shape = 21, #<<
+    aes(fill = as.factor(cyl)),
+    color = 'white', shape = 21,
     size = 3.5, alpha = 0.8) +
-  scale_fill_brewer(palette = 'Dark2') + #<<
+  scale_fill_brewer(palette = 'Dark2') +
   theme_half_open(font_size = 15) +
   labs(
     x = "Fuel efficiency (mpg)",
@@ -624,8 +624,8 @@ dod_spending_plot <- federal_spending %>%
                 fill = department)) +
   scale_y_continuous(
       expand = expand_scale(mult = c(0, 0.05))) +
-  scale_fill_manual( #<<
-    values = c('grey', 'sienna')) + #<<
+  scale_fill_manual(
+    values = c('grey', 'sienna')) +
   theme_minimal_hgrid() +
   labs(x = NULL,
        y = 'R&D Budget ($ Billions)',
@@ -641,7 +641,7 @@ dod_spending_plot
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
 dod_spending_plot +
     scale_fill_manual(
-        values = c('grey40', 'sienna')) #<<
+        values = c('grey40', 'sienna'))
 ```
 </div>
 
@@ -649,7 +649,7 @@ dod_spending_plot +
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
 dod_spending_plot +
     scale_fill_manual(
-        values = c('grey60', 'sienna')) #<<
+        values = c('grey60', 'sienna'))
 ```
 </div>
 
@@ -657,7 +657,7 @@ dod_spending_plot +
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
 dod_spending_plot +
     scale_fill_manual(
-        values = c('grey80', 'sienna')) #<<
+        values = c('grey80', 'sienna'))
 ```
 </div>
 
@@ -805,7 +805,7 @@ First, make the base plot
 ```{r mpg}
 mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
-  theme_minimal(base_size = 15) + #<<
+  theme_minimal(base_size = 15) +
   labs(
     x = "Fuel efficiency (mpg)",
     y = "Power (hp)",
@@ -823,8 +823,8 @@ Use `base_family` with base themes
 ```{r mpg_base}
 mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
-  theme_minimal( #<<
-    base_family = 'Source Sans Pro', #<<
+  theme_minimal(
+    base_family = 'Source Sans Pro',
     base_size = 15) +
   labs(
     x = "Fuel efficiency (mpg)",
@@ -843,8 +843,8 @@ Use `font_family` with cowplot themes
 ```{r mpg_cowplot}
 mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
-  theme_minimal_grid( #<<
-    font_family = 'Source Sans Pro', #<<
+  theme_minimal_grid(
+    font_family = 'Source Sans Pro',
     font_size = 15) +
   labs(
     x = "Fuel efficiency (mpg)",
@@ -867,9 +867,9 @@ mpg_plot <- ggplot(mtcars) +
     font_family = 'Source Sans Pro',
     font_size = 15) +
   theme(
-    plot.title = element_text( #<<
-      family = "Roboto Condensed", #<<
-      size = 20)) + #<<
+    plot.title = element_text(
+      family = "Roboto Condensed",
+      size = 20)) +
   labs(
     x = "Fuel efficiency (mpg)",
     y = "Power (hp)",
@@ -899,7 +899,7 @@ mpg_plot +
         x = 17, y = 270, label = label),
       aes(x = x, y = y, label = label),
       lineheight = .8, hjust = 0,
-      family = 'Roboto Condensed') #<<
+      family = 'Roboto Condensed')
 ```
 
 **The [hrbrthemes](https://github.com/hrbrmstr/hrbrthemes) package:**
@@ -907,7 +907,7 @@ mpg_plot +
 Great themes + great fonts
 
 ```{r mpg_ipsum, fig.height=5, fig.width=6, fig.align='center'}
-library(hrbrthemes) #<<
+library(hrbrthemes)
 
 mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
@@ -919,7 +919,7 @@ mpg_plot <- ggplot(mtcars) +
     caption = "Source: 1974 Motor Trend U.S. magazine.")
 
 mpg_plot +
-  theme_ipsum() #<<
+  theme_ipsum()
 ```
 
 <div style="display: flex; justify-content: space-between;">

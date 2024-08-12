@@ -36,7 +36,7 @@ wildlife_impacts <- wildlife_impacts %>%
             TRUE ~ 'other'))
 ```
 
-> ### Learning Objectives {.unnumbered}
+> ### Learning Objectives
 >
 > * Reshape data between long and wide formats.
 > * Wrangle and format data, including dealing with messy Excel files.
@@ -46,13 +46,13 @@ wildlife_impacts <- wildlife_impacts %>%
 
 ## "Wide" and "Long" Formatted Data
 
-### The Data: Federal R&D Spending by Department {.unnumbered}
+### The Data: Federal R&D Spending by Department
 
 ```{r, echo=FALSE}
 head(fed_spend_wide)
 ```
 
-### "Wide" format {.unnumbered}
+### "Wide" format
 
 ```{r, echo=FALSE}
 head(fed_spend_wide)
@@ -64,7 +64,7 @@ Dimensions:
 dim(fed_spend_wide)
 ```
 
-### "Long" format {.unnumbered}
+### "Long" format
 
 ```{r, echo=FALSE}
 head(fed_spend_long)
@@ -76,7 +76,7 @@ Dimensions:
 dim(fed_spend_long)
 ```
 
-### Tidy data = "Long" format {.unnumbered}
+### Tidy data = "Long" format
 
 - Each **variable** has its own **column**
 - Each **observation** has its own **row**
@@ -85,29 +85,29 @@ dim(fed_spend_long)
 <img src="images/tidy-data.png" width = "1000">
 </center>
 
-### **Do the names describe the values?** {.unnumbered}
+### **Do the names describe the values?**
 
-#### **Yes**: "Long" format {.unnumbered}
+#### **Yes**: "Long" format
 
 ```{r, echo=FALSE}
 head(fed_spend_long)
 ```
 
-#### **No**: "Wide" format {.unnumbered}
+#### **No**: "Wide" format
 
 ```{r, echo=FALSE}
 head(select(fed_spend_wide, year:HHS))
 ```
 
-### Reshaping data {.unnumbered}
+### Reshaping data
 
-#### `pivot_longer()` and `pivot_wider()` {.unnumbered}
+#### `pivot_longer()` and `pivot_wider()`
 
 <center>
 <img src="images/tidyr-pivoting.gif" width=530>
 </center>
 
-#### From "long" to "wide" with `pivot_wider()` {.unnumbered}
+#### From "long" to "wide" with `pivot_wider()`
 
 <center>
 <img src="images/tidy-wider.png" width=600>
@@ -120,13 +120,13 @@ head(fed_spend_long)
 ```{r}
 fed_spend_wide <- fed_spend_long %>%
     pivot_wider(
-        names_from = department,  #<<
-        values_from = rd_budget_mil) #<<
+        names_from = department,
+        values_from = rd_budget_mil)
 
 head(fed_spend_wide)
 ```
 
-#### From "wide" to "long" with `pivot_longer()`{.unnumbered}
+#### From "wide" to "long" with `pivot_longer()`
 
 <center>
 <img src="images/tidy-longer.png" width=600>
@@ -139,14 +139,14 @@ head(fed_spend_wide)
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
     pivot_longer( 
-        names_to = "department", #<<
-        values_to = "rd_budget_mil", #<< 
-        cols = DOD:Other) #<<
+        names_to = "department",
+        values_to = "rd_budget_mil",
+        cols = DOD:Other)
 
 head(fed_spend_long)
 ```
 
-#### Can also set `cols` by selecting which columns _not_ to use {.unnumbered}
+#### Can also set `cols` by selecting which columns _not_ to use
 
 ```{r}
 names(fed_spend_wide)
@@ -157,7 +157,7 @@ fed_spend_long <- fed_spend_wide %>%
     pivot_longer(
         names_to = "department", 
         values_to = "rd_budget_mil",
-        cols = -year) #<<
+        cols = -year)
 
 head(fed_spend_long)
 ```
@@ -237,7 +237,7 @@ head(fed_spend_wide)
 #| fig-show: hide
 
 ggplot(fed_spend_wide) +
-  geom_col(aes(x = rd_budget_mil, y = department)) + #<<
+  geom_col(aes(x = rd_budget_mil, y = department)) +
   theme_bw() +
   labs(
       x = "R&D Spending ($Millions)",
@@ -250,10 +250,10 @@ ggplot(fed_spend_wide) +
 #| fig-show: hide
 
 fed_spend_wide %>%
-  pivot_longer( #<<
-    names_to = "department", #<<
-    values_to = "rd_budget_mil", #<<
-    cols = -year  #<<
+  pivot_longer(
+    names_to = "department",
+    values_to = "rd_budget_mil",
+    cols = -year
   ) %>%
   ggplot() +
   geom_col(aes(x = rd_budget_mil, y = department)) +
@@ -269,7 +269,7 @@ fed_spend_wide %>%
 #| echo: false
 
 ggplot(fed_spend_long) +
-  geom_col(aes(x = rd_budget_mil, y = reorder(department, rd_budget_mil)), #<<
+  geom_col(aes(x = rd_budget_mil, y = reorder(department, rd_budget_mil)),
            width = 0.7, alpha = 0.8) +
   theme_bw(base_size = 15) +
   labs(x = "R&D Spending ($Millions)",

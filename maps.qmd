@@ -24,11 +24,11 @@ Example:
 ```{r, eval=FALSE}
 library(maps)
 
-us_counties <- st_as_sf( #<<
-    map("county", plot = FALSE, fill = TRUE)) #<<
+us_counties <- st_as_sf(
+    map("county", plot = FALSE, fill = TRUE))
 
 ggplot(data = us_counties) +
-    geom_sf(fill = 'grey90', color = 'grey60') #<<
+    geom_sf(fill = 'grey90', color = 'grey60')
 ```
 
 <center>
@@ -59,15 +59,15 @@ Generally, polygon maps are plotted with two steps.
 ```{r}
 library(ggplot2)
 
-world <- map_data("world") #<<
+world <- map_data("world")
 head(world)
 ```
 
 2. Make the plot with `geom_polygon()`
 ```{r, eval=FALSE}
 ggplot(world) +
-  geom_polygon( #<<
-    aes(x = long, y = lat, group = group), #<<
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
     fill = "grey90", color = "grey60"
   )
 ```
@@ -82,15 +82,15 @@ ggplot(world) +
 ```{r}
 library(ggplot2)
 
-us_states <- map_data("state") #<<
+us_states <- map_data("state")
 ```
 
 2. Make the plot with `geom_polygon()`
 
 ```{r, eval=FALSE}
 ggplot(us_states) +
-  geom_polygon( #<<
-    aes(x = long, y = lat, group = group), #<<
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
     fill = "grey90", color = "grey60"
   )
 ```
@@ -115,10 +115,10 @@ To show an example of a simple features map, we shall use the library data from 
 library(rnaturalearth)
 library(rnaturalearthdata)
 
-world <- ne_countries( #<<
-  scale = "medium", #<<
-  returnclass = "sf"  #<<
-) #<<
+world <- ne_countries(
+  scale = "medium",
+  returnclass = "sf"
+)
 
 world %>%
     select(name, geometry) %>%
@@ -126,13 +126,13 @@ world %>%
 ```
 
 ```{r, echo=FALSE}
-library(rnaturalearth) #<<
-library(rnaturalearthdata) #<<
+library(rnaturalearth)
+library(rnaturalearthdata)
 
 world <- ne_countries(
-  scale = "medium", #<<
-  returnclass = "sf"  #<<
-) #<<
+  scale = "medium",
+  returnclass = "sf"
+)
 
 world %>%
     select(name, geometry) %>%
@@ -161,7 +161,7 @@ world <- ne_countries(
 library(sf)
 
 ggplot(data = world) +
-  geom_sf(fill = "grey90", color = "grey60") #<<
+  geom_sf(fill = "grey90", color = "grey60")
 ```
 
 <center>
@@ -188,7 +188,7 @@ us_states <- ne_states(
 library(sf)
 
 ggplot(data = us_states) +
-    geom_sf(fill = "grey90", color = "grey60") #<<
+    geom_sf(fill = "grey90", color = "grey60")
 ```
 
 <center>
@@ -207,7 +207,7 @@ us_states_cont <- ne_states(
       country = 'united states of america',
       returnclass = 'sf'
     ) %>%
-    filter(! name %in% c('Alaska', 'Hawaii')) #<<
+    filter(! name %in% c('Alaska', 'Hawaii'))
 ```
 
 2. Make the plot with `geom_sf()`
@@ -216,7 +216,7 @@ us_states_cont <- ne_states(
 library(sf)
 
 ggplot(data = us_states_cont) +
-  geom_sf(fill = "grey90", color = "grey60") #<<
+  geom_sf(fill = "grey90", color = "grey60")
 ```
 
 <center>
@@ -257,7 +257,7 @@ us_sf %>%
 ```{r, message=FALSE}
 library(sf)
 
-world <- st_read(here::here( #<<
+world <- st_read(here::here(
     'data', 'natural_earth_countries',
     'ne_50m_admin_0_countries.shp')) %>%
     clean_names()
@@ -267,7 +267,7 @@ world <- st_read(here::here( #<<
 
 ```{r, eval=FALSE}
 ggplot(data = world) +
-  geom_sf(fill = "grey90", color = "grey60") #<<
+  geom_sf(fill = "grey90", color = "grey60")
 ```
 
 <center>
@@ -306,8 +306,8 @@ Hexmaps:
 - Practice with wind data?
 -->
 
-#### **First rule of adding data to maps:**<br/> {.unnumbered}
-#### **Do you need to make a map?** {.unnumbered}
+#### **First rule of adding data to maps:**<br/>
+#### **Do you need to make a map?**
 
 **Not all maps are useful...**
 <center>
@@ -446,7 +446,7 @@ us_states <- ne_states(
     country = 'united states of america',
     returnclass = 'sf') %>%
     filter(! name %in% c('Alaska', 'Hawaii')) %>%
-    left_join(milk_2017, by = 'name') #<<
+    left_join(milk_2017, by = 'name')
 ```
 
 ```{r}
@@ -459,7 +459,7 @@ Plot the map
 
 ```{r, eval=FALSE}
 ggplot(us_states) +
-  geom_sf(aes(fill = milk_produced)) + #<<
+  geom_sf(aes(fill = milk_produced)) +
   scale_fill_viridis(
     option = "plasma",
     limits = c(0, 40)) +
@@ -481,7 +481,7 @@ Non-linear scale:
 ggplot(us_states) +
   geom_sf(aes(fill = milk_produced)) +
   scale_fill_viridis(
-    trans = 'sqrt', #<<
+    trans = 'sqrt',
     option = "plasma",
     limits = c(0, 40)) +
   theme_void(base_size = 15) +
@@ -580,11 +580,11 @@ Plot coffee shop locations over map
 ```{r, eval=FALSE}
 ggplot() +
   geom_sf(data = us_states_cont) +
-  geom_point( #<<
-    data = us_coffee_shops, #<<
-    aes(x = long, y = lat, color = name), #<<
-    size = 0.3   #<<
-  ) +  #<<
+  geom_point(
+    data = us_coffee_shops,
+    aes(x = long, y = lat, color = name),
+    size = 0.3
+  ) +
   theme_void(base_size = 15) +
   theme(legend.position = 'bottom') +
   guides(color = guide_legend(
@@ -661,7 +661,7 @@ Robinson projection
 ```{r, eval=FALSE}
 ggplot(data = world) +
     geom_sf() +
-    coord_sf(crs = "ESRI:54030") #<<
+    coord_sf(crs = "ESRI:54030")
 ```
 <img src="images/plots/sf_world_robinson.png" width = 220>
 </div>
@@ -672,7 +672,7 @@ Mollweide projection
 ```{r, eval=FALSE}
 ggplot(data = world) +
     geom_sf() +
-    coord_sf(crs = "ESRI:54009") #<<
+    coord_sf(crs = "ESRI:54009")
 ```
 <img src="images/plots/sf_world_mollweide.png" width = 220 >
 </div>
@@ -721,7 +721,7 @@ NAD 83 projection
 ```{r, eval=FALSE}
 ggplot(data = world) +
     geom_sf() +
-    coord_sf(crs = 4269) #<<
+    coord_sf(crs = 4269)
 ```
 <img src="images/plots/sf_us_cont_nad83.png" width = 220>
 </div>
@@ -732,7 +732,7 @@ Mercator
 ```{r, eval=FALSE}
 ggplot(data = world) +
     geom_sf() +
-    coord_sf(crs = "ESRI:54004") #<<
+    coord_sf(crs = "ESRI:54004")
 ```
 <img src="images/plots/sf_us_cont_merc.png" width = 220>
 </div>
@@ -743,7 +743,7 @@ Albers
 ```{r, eval=FALSE}
 ggplot(data = us_states_cont) +
     geom_sf() +
-    coord_sf(crs = "ESRI:102003") #<<
+    coord_sf(crs = "ESRI:102003")
 ```
 <img src="images/plots/sf_us_cont_albers.png" width = 220>
 </div>
@@ -762,10 +762,10 @@ us_states <- ne_states(
   country = 'united states of america',
   returnclass = 'sf') %>%
   filter(! name %in% c('Alaska', 'Hawaii')) %>%
-  left_join(milk_2017, by = 'name') #<<
+  left_join(milk_2017, by = 'name')
 
 ggplot(us_states) +
-  geom_sf(aes(fill = milk_produced)) + #<<
+  geom_sf(aes(fill = milk_produced)) +
   scale_fill_viridis(
     option = "plasma",
     limits = c(0, 40)) +
@@ -806,7 +806,7 @@ ggplot(us_states) +
     fill = 'Milk produced\n(billions lbs)',
     title = 'Milk Production by State in 2017'
   ) +
-  coord_sf(crs = "ESRI:102003") #<<
+  coord_sf(crs = "ESRI:102003")
 ```
 
 <center>
@@ -827,10 +827,10 @@ us_coffee_shops <- us_coffee_shops %>%
 
 ggplot() +
   geom_sf(data = us_states_cont) +
-  geom_point( #<<
-    data = us_coffee_shops, #<<
-    aes(x = long, y = lat, color = name), #<<
-    size = 0.3) + #<<
+  geom_point(
+    data = us_coffee_shops,
+    aes(x = long, y = lat, color = name),
+    size = 0.3) +
   theme_void(base_size = 15) +
   theme(legend.position = 'bottom') +
   guides(color = guide_legend(
@@ -875,7 +875,7 @@ ggplot() +
     color = 'Coffee shop',
     title = 'Coffee Shops in the US'
   ) +
-  coord_sf(crs = "ESRI:102003") #<<
+  coord_sf(crs = "ESRI:102003")
 ```
 
 **Fail!**
@@ -895,9 +895,9 @@ us_coffee_shops <- us_coffee_shops %>%
     filter(lat > 22,    lat < 50,
            long > -150, long < -66)
 
-us_coffee_shops_sf <- st_as_sf(us_coffee_shops, #<<
-    coords = c("long", "lat"), #<<
-    crs = st_crs(us_states_cont)) #<<
+us_coffee_shops_sf <- st_as_sf(us_coffee_shops,
+    coords = c("long", "lat"),
+    crs = st_crs(us_states_cont))
 ```
 
 ```{r}
@@ -909,10 +909,10 @@ Plot coffee shop locations over map with `geom_sf()`
 ```{r, eval=FALSE}
 ggplot() +
   geom_sf(data = us_states_cont) +
-  geom_sf( #<<
-    data = us_coffee_shops_sf, #<<
-    aes(color = name), #<<
-    size = 0.3) + #<<
+  geom_sf(
+    data = us_coffee_shops_sf,
+    aes(color = name),
+    size = 0.3) +
   theme_void(base_size = 15) +
   theme(legend.position = 'bottom') +
   guides(color = guide_legend(
@@ -950,7 +950,7 @@ ggplot() +
     fill = 'Coffee shop',
     title = 'Coffee Shops in the US'
   ) +
-  coord_sf(crs = "ESRI:102003") #<<
+  coord_sf(crs = "ESRI:102003")
 ```
 
 <center>
@@ -977,7 +977,7 @@ ggplot() +
     fill = 'Coffee shop',
     title = 'Coffee Shops in the US'
   ) +
-  coord_sf(crs = "ESRI:102004") #<<
+  coord_sf(crs = "ESRI:102004")
 ```
 
 <center>

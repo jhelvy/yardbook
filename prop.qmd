@@ -71,8 +71,8 @@ milk_production %>%
 
 # Make the chart
   ggplot() +
-  geom_col( #<<
-    aes(x = "", y = milk_produced, fill = state), #<<
+  geom_col(
+    aes(x = "", y = milk_produced, fill = state),
     width = 0.7, alpha = 0.8) +
   scale_y_continuous(
     expand = expansion(mult = c(0, 0.05))) +
@@ -100,8 +100,8 @@ milk_production %>%
 
 # Make the chart
   ggplot() +
-  geom_col( #<< 
-    aes(x = milk_produced, y = "", fill = state), #<<
+  geom_col(
+    aes(x = milk_produced, y = "", fill = state),
     width = 0.7, alpha = 0.8) +
   scale_x_continuous(
     expand = expansion(mult = c(0, 0.05))) +
@@ -123,8 +123,8 @@ milk_production %>%
 milk_production %>%
   filter(year == 2017) %>%
   mutate(state = fct_other(state,
-    keep = c('California', 'Wisconsin', #<<
-             'New York', 'Idaho'))) %>% #<<
+    keep = c('California', 'Wisconsin',
+             'New York', 'Idaho'))) %>%
   group_by(state) %>%
   summarise(milk_produced = sum(milk_produced))
 
@@ -206,7 +206,7 @@ milk_production %>%
     aes(x = milk_produced, 
         y = as.factor(year),
         fill = state),
-    position = 'dodge', #<<
+    position = 'dodge',
     width = 0.7, alpha = 0.8) +
   scale_x_continuous(
     expand = expansion(mult = c(0, 0.05))) +
@@ -255,8 +255,8 @@ milk_production %>%
 
 # Make the chart
   ggplot() +
-  geom_col( #<<
-    aes(x = "", y = milk_produced, fill = state), #<<
+  geom_col(
+    aes(x = "", y = milk_produced, fill = state),
     width = 0.7, alpha = 0.8) +
   theme_minimal_hgrid() +
   labs(x = NULL,
@@ -281,7 +281,7 @@ milk_production %>%
   geom_col(
     aes(x = "", y = milk_produced, fill = state),
     width = 0.7, alpha = 0.8) +
-  coord_polar(theta = "y") + #<<
+  coord_polar(theta = "y") +
   theme_minimal_hgrid() +
   labs(x = NULL,
        y = 'Milk produced (lbs)',
@@ -299,21 +299,21 @@ milk_production %>%
     keep = c('California', 'Wisconsin'))) %>%
   group_by(state) %>%
   summarise(milk_produced = sum(milk_produced)) %>%
-  arrange(desc(state)) %>% #<<
-  mutate(p = 100*(milk_produced / sum(milk_produced)), #<<
-         label = str_c(round(p), '%')) %>% #<<
+  arrange(desc(state)) %>%
+  mutate(p = 100*(milk_produced / sum(milk_produced)),
+         label = str_c(round(p), '%')) %>%
 
 # Make the chart
   ggplot() +
   geom_col(
     aes(x = "", y = milk_produced, fill = state),
     width = 0.7, alpha = 0.8) +
-  geom_text( #<<
-    aes(x = "", y = milk_produced, label = label), #<<
-    color = "white", size = 6, #<<
-    position = position_stack(vjust = 0.5)) + #<<
+  geom_text(
+    aes(x = "", y = milk_produced, label = label),
+    color = "white", size = 6,
+    position = position_stack(vjust = 0.5)) +
   coord_polar(theta = "y") +
-  theme_map() + #<<
+  theme_map() +
   labs(x = NULL,
        y = NULL,
        fill = 'State',
@@ -346,7 +346,7 @@ https://eagereyes.org/blog/2016/a-reanalysis-of-a-study-about-square-pie-charts-
 ### Waffle plots
 
 ```{r waffle_2017, fig.show='hide'}
-library(waffle) #<<
+library(waffle)
 
 # Format the data
 milk_production %>%
@@ -360,9 +360,9 @@ milk_production %>%
 
 # Make the chart
   ggplot() +
-  geom_waffle( #<<
-    aes(fill = state, values = milk_produced), #<<
-    color = "white", size = 1, n_rows = 15) + #<<
+  geom_waffle(
+    aes(fill = state, values = milk_produced),
+    color = "white", size = 1, n_rows = 15) +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_discrete(expand = c(0, 0)) +
   theme_minimal() +
@@ -386,7 +386,7 @@ milk_summary_2017
 **If you flip it...**
 
 ```{r waffle_2017_flip, fig.show='hide'}
-library(waffle) #<<
+library(waffle)
 
 # Format the data
 milk_production %>%
@@ -402,7 +402,7 @@ milk_production %>%
   geom_waffle(
     aes(fill = state, values = milk_produced),
     color = "white", size = 1, n_rows = 15,
-    flip = TRUE) + #<<
+    flip = TRUE) +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_discrete(expand = c(0, 0)) +
   theme_minimal() +
@@ -422,10 +422,10 @@ library(waffle)
 
 # Format the data
 milk_production %>%
-  filter(year %in% c(1970, 2017)) %>% #<<
+  filter(year %in% c(1970, 2017)) %>%
   mutate(state = fct_other(state,
     keep = c('California', 'Wisconsin'))) %>%
-  group_by(year, state) %>% #<<
+  group_by(year, state) %>%
   summarise(milk_produced = sum(milk_produced)) %>%
   mutate(milk_produced = milk_produced / 10^9) %>%
 
@@ -435,7 +435,7 @@ milk_production %>%
     aes(fill = state, values = milk_produced),
     color = "white", size = 1, n_rows = 10,
     flip = TRUE) +
-  facet_wrap(vars(year), strip.position = 'bottom') + #<<
+  facet_wrap(vars(year), strip.position = 'bottom') +
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_discrete(expand = c(0, 0)) +
   theme_minimal() +

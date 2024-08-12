@@ -106,9 +106,9 @@ ggplot(gapminder_americas) +
   geom_point(
     aes(x = lifeExp, y = country),
     color = 'steelblue', size = 2.5) +
-  geom_vline( #<<
-    xintercept = mean(gapminder_americas$lifeExp), #<<
-    color = 'red', linetype = 'dashed') + #<<
+  geom_vline(
+    xintercept = mean(gapminder_americas$lifeExp),
+    color = 'red', linetype = 'dashed') +
   theme_minimal_vgrid() +
   labs(x = 'Life expectancy (years)',
        y = 'Country')
@@ -124,9 +124,9 @@ ggplot(gapminder_americas) +
     xintercept = mean(gapminder_americas$lifeExp),
     color = 'red', linetype = 'dashed') +
   annotate(
-    'text', x = 73.2, y = 'Puerto Rico', #<<
-    color = 'red', hjust = 1, #<<
-    label = 'Mean Life\nExpectancy') + #<<
+    'text', x = 73.2, y = 'Puerto Rico',
+    color = 'red', hjust = 1,
+    label = 'Mean Life\nExpectancy') +
   theme_minimal_vgrid() +
   labs(x = 'Life expectancy (years)',
        y = 'Country')
@@ -138,18 +138,18 @@ ggplot(gapminder_americas) +
 gapminder_diverging <- gapminder_americas %>%
     mutate(
         # Subtract the mean
-        lifeExp = lifeExp - mean(lifeExp), #<<
+        lifeExp = lifeExp - mean(lifeExp),
         # Define the fill color
-        color = ifelse(lifeExp > 0, 'Above', 'Below')) #<<
+        color = ifelse(lifeExp > 0, 'Above', 'Below'))
 ```
 
 ```{r, fig.height=6.5, fig.width=6, fig.align='center'}
 ggplot(gapminder_diverging) +
   geom_col(
-    aes(x = lifeExp, y = country, fill = color), #<<
+    aes(x = lifeExp, y = country, fill = color),
     width = 0.7, alpha = 0.8) +
   scale_fill_manual(
-    values = c('steelblue', 'red')) + #<<
+    values = c('steelblue', 'red')) +
   theme_minimal_vgrid() +
   theme(legend.position = 'none') +
   labs(
@@ -197,7 +197,7 @@ diamonds %>%
   count(clarity, cut) %>%
   ggplot(
     aes(x = clarity, y = n,
-        color = cut, group = cut)) + #<<
+        color = cut, group = cut)) +
   geom_line() +
   geom_point() +
   scale_y_continuous(limits = c(0, 5100)) +
@@ -213,7 +213,7 @@ diamonds %>%
   ggplot() +
   geom_col(aes(x = clarity, y = n),
            width = 0.7) +
-  facet_wrap(vars(cut), nrow = 1) + #<<
+  facet_wrap(vars(cut), nrow = 1) +
   scale_y_continuous(
     expand = expansion(mult = c(0, 0.05))) +
   theme_minimal_hgrid(font_size = 16)
@@ -227,11 +227,11 @@ diamonds %>%
   ggplot() +
   geom_col(aes(x = clarity, y = n),
            width = 0.7) +
-  facet_wrap(vars(cut), ncol = 2) + #<<
-  coord_flip() + #<<
+  facet_wrap(vars(cut), ncol = 2) +
+  coord_flip() +
   scale_y_continuous(
     expand = expansion(mult = c(0, 0.05))) +
-  theme_minimal_vgrid(font_size = 16) + #<<
+  theme_minimal_vgrid(font_size = 16) +
   labs(y = "Count (thousands)")
 
 ```
@@ -404,7 +404,7 @@ ggplot(milk_compare_toomany) +
 
 ### Comparing 2 Things Across **More Than 2 Categories**
 
-#### Strategies: {.unnumbered}
+#### Strategies:
 
 <div style="display: flex; justify-content: space-between;">
 
@@ -575,8 +575,8 @@ milk_summary_dumbbell <- milk_production %>%
 Then, make lines (note the `group` variable).
 ```{r milk_dumbbell_chart1, fig.height=6, fig.width=6, fig.align='center'}
 ggplot(milk_summary_dumbbell,
-       aes(x = milk_produced, y = state)) + #<<
-  geom_line(aes(group = state), #<<
+       aes(x = milk_produced, y = state)) +
+  geom_line(aes(group = state),
             color = 'lightblue', size = 1)
 ```
 
@@ -586,7 +586,7 @@ ggplot(milk_summary_dumbbell,
        aes(x = milk_produced, y = state)) +
   geom_line(aes(group = state),
             color = 'lightblue', size = 1) +
-  geom_point(aes(color = year), size = 2.5) #<<
+  geom_point(aes(color = year), size = 2.5)
 ```
 
 Change the colors:
@@ -596,8 +596,8 @@ ggplot(milk_summary_dumbbell,
   geom_line(aes(group = state),
             color = 'lightblue', size = 1) +
   geom_point(aes(color = year), size = 2.5) +
-  scale_color_manual( #<<
-      values = c('lightblue', 'steelblue')) #<<
+  scale_color_manual(
+      values = c('lightblue', 'steelblue'))
 ```
 
 Finally, adjust the theme and annotate.
@@ -609,16 +609,16 @@ ggplot(milk_summary_dumbbell,
   geom_point(aes(color = year), size = 2.5) +
   scale_color_manual(
       values = c('lightblue', 'steelblue')) +
-  theme_minimal_vgrid() + #<<
+  theme_minimal_vgrid() +
   # Remove y axis line and tick marks
   theme(
     axis.line.y = element_blank(),
-    axis.ticks.y = element_blank()) + #<<
-  labs(x = 'Milk produced (billion lbs)', #<<
-       y = 'State', #<<
-       color = 'Year', #<<
-       title = 'Top 10 milk producing states', #<<
-       subtitle = '(1970 - 2017)') #<<
+    axis.ticks.y = element_blank()) +
+  labs(x = 'Milk produced (billion lbs)',
+       y = 'State',
+       color = 'Year',
+       title = 'Top 10 milk producing states',
+       subtitle = '(1970 - 2017)')
 ```
 
 ```{r ref.label='milk-dumbbell-chart', echo=FALSE, fig.height=6, fig.width=6, fig.align='center'}
@@ -645,14 +645,14 @@ milk_summary_slope <- milk_production %>%
     year = as.factor(year),
     # Modify units
     milk_produced = milk_produced / 10^9,
-    # Define line color  #<<
-    lineColor = if_else( #<<
-      state == 'California', 'CA', 'other'), #<<
-    # Make labels #<<
-    label = paste(state, ' (', #<<
-                  round(milk_produced), ')'), #<<
-    label_left = ifelse(year == 1970, label, NA), #<<
-    label_right = ifelse(year == 2017, label, NA)) #<<
+    # Define line color
+    lineColor = if_else(
+      state == 'California', 'CA', 'other'),
+    # Make labels
+    label = paste(state, ' (',
+                  round(milk_produced), ')'),
+    label_left = ifelse(year == 1970, label, NA),
+    label_right = ifelse(year == 2017, label, NA))
 ```
 
 ```{r}
@@ -663,9 +663,9 @@ milk_summary_slope %>%
 Then,start with a line plot - note the `group` variable:
 ```{r milk-slope-chart-1, fig.height=6, fig.width=6, fig.align='center'}
 ggplot(milk_summary_slope,
-       aes(x = year, y = milk_produced, #<<
-           group = state)) + #<<
-    geom_line(aes(color = lineColor)) #<<
+       aes(x = year, y = milk_produced,
+           group = state)) +
+    geom_line(aes(color = lineColor))
 ```
 
 Add labels:
@@ -683,11 +683,11 @@ ggplot(milk_summary_slope,
            group = state)) +
     geom_line(aes(color = lineColor)) +
     # Add 1970 labels (left side)
-    geom_text(aes(label = label_left), #<<
-              hjust = 1, nudge_x = -0.05) + #<<
+    geom_text(aes(label = label_left),
+              hjust = 1, nudge_x = -0.05) +
     # Add 2017 labels (right side)
-    geom_text(aes(label = label_right), #<<
-              hjust = 0, nudge_x = 0.05) #<<
+    geom_text(aes(label = label_right),
+              hjust = 0, nudge_x = 0.05)
 ```
 
 **Overlapping labels?**
@@ -696,8 +696,7 @@ ggplot(milk_summary_slope,
 <img src="images/overlapping_labels.png" width = 700>
 </center>
 
-#### **ggrepel** library to the rescue! {.unnumbered}
-
+#### **ggrepel** library to the rescue!
 <center>
 <img src="images/horst_monsters_ggrepel.jpg" width=700>
 </center>
@@ -705,22 +704,22 @@ Artwork by [@allison_horst](https://twitter.com/allison_horst)
 
 Now we can align labels so they don't overlap:
 ```{r milk-slope-chart-3, fig.height=6, fig.width=7, fig.align='center'}
-library(ggrepel) #<<
+library(ggrepel)
 
 ggplot(milk_summary_slope,
        aes(x = year, y = milk_produced,
            group = state)) +
     geom_line(aes(color = lineColor)) +
     # Add 1970 labels (left side)
-    geom_text_repel( #<<
+    geom_text_repel(
       aes(label = label_left),
       hjust = 1, nudge_x = -0.05,
-      direction = 'y', segment.color = 'grey') + #<<
+      direction = 'y', segment.color = 'grey') +
     # Add 2017 labels (right side)
-    geom_text_repel( #<<
+    geom_text_repel(
       aes(label = label_right),
       hjust = 0, nudge_x = 0.05,
-      direction = 'y', segment.color = 'grey') #<<
+      direction = 'y', segment.color = 'grey')
 ```
 
 Adjust colors:
@@ -738,8 +737,8 @@ ggplot(milk_summary_slope,
       hjust = 0, nudge_x = 0.05,
       direction = 'y', segment.color = 'grey') +
     # Move year labels to top, modify line colors
-    scale_x_discrete(position = 'top') + #<<
-    scale_color_manual(values = c('red', 'black')) #<<
+    scale_x_discrete(position = 'top') +
+    scale_color_manual(values = c('red', 'black'))
 ```
 
 Adjust the theme and annotate:
@@ -764,11 +763,11 @@ ggplot(milk_summary_slope,
     labs(x = NULL,
          y = 'Milk produced (billion lbs)',
          title = 'Top 10 milk producing states (1970 - 2017)') +
-    theme_minimal_grid() + #<<
-    theme(panel.grid  = element_blank(), #<<
-          axis.text.y = element_blank(), #<<
-          axis.ticks = element_blank(), #<<
-          legend.position = 'none') #<<
+    theme_minimal_grid() +
+    theme(panel.grid  = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          legend.position = 'none')
 ```
 
 ## Comparing Distributions
@@ -909,8 +908,8 @@ You can use `facet_wrap()`, but you won't get the full density overlay.
 ggplot(marathon,
        aes(x = Age, y = ..count..,
            fill = `M/F`)) +
-    geom_density(alpha = 0.7) + #<<
-    facet_wrap(vars(`M/F`)) + #<<
+    geom_density(alpha = 0.7) +
+    facet_wrap(vars(`M/F`)) +
     scale_fill_manual(
         values = c('sienna', 'steelblue')) +
     scale_y_continuous(
@@ -926,8 +925,8 @@ If you want the full density overlay, you have to hand-make the facets.
 Make the full density plot first.
 ```{r}
 base <- ggplot(marathon,
-               aes(x = Age, y = ..count..)) + #<<
-    geom_density(fill = 'grey', alpha = 0.7) + #<<
+               aes(x = Age, y = ..count..)) +
+    geom_density(fill = 'grey', alpha = 0.7) +
     scale_y_continuous(
         expand = expansion(mult = c(0, 0.05))) +
     theme_minimal_hgrid()
@@ -940,8 +939,8 @@ Then, separately create each sub-plot.
 ```{r}
 male <- base +
   geom_density(
-    data = marathon %>% #<<
-      filter(`M/F` == 'M'), #<<
+    data = marathon %>%
+      filter(`M/F` == 'M'),
     fill = 'steelblue', alpha = 0.7) +
   theme(legend.position = 'none')
 ```
@@ -953,8 +952,8 @@ male
 ```{r}
 female <- base +
   geom_density(
-    data = marathon %>% #<<
-      filter(`M/F` == 'F'), #<<
+    data = marathon %>%
+      filter(`M/F` == 'F'),
     fill = 'sienna', alpha = 0.7) +
   theme(legend.position = 'none')
 ```
@@ -977,14 +976,14 @@ Make the histograms by filtering the data.
 ggplot(marathon, aes(x = Age)) +
     # Add histogram for Female runners:
     geom_histogram(
-      data = marathon %>% #<<
-        filter(`M/F` == 'F'), #<<
+      data = marathon %>%
+        filter(`M/F` == 'F'),
       aes(fill = `M/F`, y=..count..),
       alpha = 0.7, color = 'white') +
     # Add negative histogram for Male runners:
     geom_histogram(
-      data = marathon %>% #<<
-        filter(`M/F` == 'M'), #<<
+      data = marathon %>%
+        filter(`M/F` == 'M'),
       aes(fill = `M/F`, y=..count..*(-1)),
       alpha = 0.7, color = 'white')
 ```
@@ -1005,12 +1004,12 @@ ggplot(marathon, aes(x = Age)) +
         filter(`M/F` == 'M'),
       aes(fill = `M/F`, y=..count..*(-1)),
       alpha = 0.7, color = 'white')
-    scale_fill_manual( #<<
+    scale_fill_manual(
         values = c('sienna', 'steelblue')) +
-    coord_flip() + #<<
-    theme_minimal_hgrid() + #<<
-    labs(fill = 'Gender', #<<
-         y    = 'Count') #<<
+    coord_flip() +
+    theme_minimal_hgrid() +
+    labs(fill = 'Gender',
+         y    = 'Count')
 ```
 
 ```{r ref.label='marathon_diverging_histograms', echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
@@ -1021,20 +1020,20 @@ ggplot(marathon, aes(x = Age)) +
 Make a ridgeplot with **ggridges** library.
 
 ```{r, eval=FALSE}
-library(ggridges) #<<
+library(ggridges)
 
 college_all_ages %>%
   mutate(
     major_category = fct_reorder(
       major_category, median)) %>%
   ggplot() +
-  geom_density_ridges( #<<
-    aes(x = median, y = major_category), #<<
-    scale = 4, alpha = 0.7) + #<<
+  geom_density_ridges(
+    aes(x = median, y = major_category),
+    scale = 4, alpha = 0.7) +
   scale_y_discrete(expand = c(0, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
-  coord_cartesian(clip = "off") +  #<<
-  theme_ridges() +  #<<
+  coord_cartesian(clip = "off") +
+  theme_ridges() +
   labs(x = 'Median income ($)',
        y = 'Major category')
 ```

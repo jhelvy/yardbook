@@ -97,7 +97,7 @@ course slides: https://datavizf17.classes.andrewheiss.com/class/06-class/
 -->
 
 ## Truncating Axes
-#### When is it okay to to truncate an axis? {.unnumbered}
+#### When is it okay to to truncate an axis?
 
 - **When small movements matter**
 
@@ -131,9 +131,9 @@ us_gdp_plot +
 ```{r, echo=FALSE}
 mpg_plot <- ggplot(mtcars) +
     geom_point(aes(x = mpg, y = hp)) +
-    theme_minimal_grid(font_family = 'Source Sans Pro', #<<
+    theme_minimal_grid(font_family = 'Source Sans Pro',
                        font_size = 15) +
-    theme(plot.title = element_text(family = "Roboto Condensed", #<<
+    theme(plot.title = element_text(family = "Roboto Condensed",
                                     size = 20)) +
     labs(x = "Fuel efficiency (mpg)",
          y = "Power (hp)",
@@ -164,7 +164,7 @@ mpg_plot
 </center>
 ---
 
-#### You are most sensitive to changes in angles close to 45 degrees {.unnumbered}
+#### You are most sensitive to changes in angles close to 45 degrees
 
 <div style="display: flex; justify-content: space-between;">
 
@@ -261,7 +261,7 @@ plot
 </div>
 
 
-## Consider setting dimensions to "Golden Ratio" (1 : 1.618) {.unnumbered}
+## Consider setting dimensions to "Golden Ratio" (1 : 1.618)
 
 <center>
 <img src="images/golden_ratio.jpg" width = 700>
@@ -342,18 +342,18 @@ milk_bars
 
 ```{r milk_top10_y, fig.height=5, fig.width=6, fig.align='center'}
 milk_bars +
-  scale_x_continuous( #<<
-    breaks = c(0, 15, 30, 45), #<<
-    limits = c(0 , 45), #<<
-    expand = expand_scale(mult = c(0, 0.05))) #<<
+  scale_x_continuous(
+    breaks = c(0, 15, 30, 45),
+    limits = c(0 , 45),
+    expand = expand_scale(mult = c(0, 0.05)))
 ```
 
 ### Adjusting **discrete** scales
 
 ```{r milk_top10_discrete, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
 milk_bars +
-  scale_y_discrete( #<<
-    breaks = c('California', 'Wisconsin', 'Idaho')) #<<
+  scale_y_discrete(
+    breaks = c('California', 'Wisconsin', 'Idaho'))
 ```
 
 ### Adjusting **log** scales
@@ -374,8 +374,8 @@ Log scaling
 
 ```{r msleep_log, fig.height=4, fig.width=5, fig.align='center'}
 plot +
-  scale_x_log10() + #<<
-  scale_y_log10() + #<<
+  scale_x_log10() +
+  scale_y_log10() +
   labs(x = 'Log brain weight (kg)',
        y = 'Log body weight (kg)')
 ```
@@ -411,7 +411,7 @@ plot <- transit_cost %>%
   filter(!is.na(length)) %>%
   filter(length < 2500) %>%
   mutate(cost = as.numeric(real_cost)) %>%
-  ggplot(aes(x = length, y = cost)) + #<<
+  ggplot(aes(x = length, y = cost)) +
   geom_point() +
   geom_smooth(method = 'lm', se = FALSE) +
   theme_half_open(font_size = 20) +
@@ -425,8 +425,8 @@ Log scaling
 
 ```{r transit_cost_log, fig.height=4, fig.width=5, fig.align='center'}
 plot +
-  scale_x_log10() + #<<
-  scale_y_log10() + #<<
+  scale_x_log10() +
+  scale_y_log10() +
   labs(x = 'Log length of proposed line',
        y = 'Log cost')
 ```
@@ -453,7 +453,7 @@ $$\log(y) = n\log(x)$$
 
 ## Date Scales
 
-#### Date scales can be confusing {.unnumbered}
+#### Date scales can be confusing
 
 **What's wrong with this chart?**
 
@@ -485,12 +485,12 @@ $$\log(y) = n\log(x)$$
 Summarise the data
 
 ```{r wildlife, fig.height=8, fig.width=7, fig.align='center'}
-library(lubridate) #<<
+library(lubridate)
 
 plot <- wildlife_impacts %>%
   filter(incident_year == 2016) %>%
   count(operator, incident_date) %>%
-  mutate(incident_date = ymd(incident_date)) %>% #<<
+  mutate(incident_date = ymd(incident_date)) %>%
   ggplot() +
   geom_col(
     aes(x = incident_date, y = n,
@@ -508,9 +508,9 @@ plot
 
 ```{r wildlife_date, fig.height=8, fig.width=7, fig.align='center'}
 plot +
-  scale_x_date( #<<
-    date_breaks = '1 month', #<<
-    date_labels = '%b') #<<
+  scale_x_date(
+    date_breaks = '1 month',
+    date_labels = '%b')
 ```
 
 Let's explore other variations of the last step:
@@ -594,7 +594,7 @@ federal_spending %>%
   ggplot() +
   geom_col(aes(x = rd_budget, y = department)) +
   scale_x_continuous(
-    labels = scales::comma, #<<
+    labels = scales::comma,
     expand = expand_scale(mult = c(0, 0.05))) +
   theme_minimal_vgrid(font_size = 16) +
   labs(x = 'Department',
@@ -612,7 +612,7 @@ federal_spending %>%
   ggplot() +
   geom_col(aes(x = rd_budget, y = department)) +
   scale_x_continuous(
-    labels = scales::dollar, #<<
+    labels = scales::dollar,
     expand = expand_scale(mult = c(0, 0.05))) +
   theme_minimal_vgrid(font_size = 16) +
   labs(x = 'Department',

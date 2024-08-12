@@ -66,7 +66,7 @@ federal_spending %>%
   geom_col(
     aes(
       x = rd_budget_bil,
-      y = reorder(department, rd_budget_bil) #<<
+      y = reorder(department, rd_budget_bil)
     ), 
     width = 0.7, alpha = 0.8,
     fill = "steelblue"
@@ -85,7 +85,7 @@ federal_spending %>%
   summarise(
     rd_budget_bil = sum(rd_budget_mil) / 10^3) %>%
   mutate(
-    department = fct_reorder(department, rd_budget_bil)  #<<
+    department = fct_reorder(department, rd_budget_bil)
   ) %>%
 # Make the chart
   ggplot() +
@@ -113,7 +113,7 @@ Loaded with `library(tidyverse)`
 3. Modify factors manually<br/>
 4. What if there are too many factor levels?<br/>
 
-#### 1. Reorder factors based on another **numerical variable** {.unnumbered}
+#### 1. Reorder factors based on another **numerical variable**
 
 Use `fct_reorder()`
 
@@ -123,7 +123,7 @@ Use `fct_reorder()`
 <img src="figs/federal_spending_bars.png" width = 700>
 <center>
 
-#### 2. Reorder factors **manually** {.unnumbered}
+#### 2. Reorder factors **manually**
 
 ```{r lotr_bars, eval=FALSE}
 # Format the data frame
@@ -147,7 +147,7 @@ lotr_words %>%
 <img src="figs/lotr_bars.png" width = 700>
 <center>
 
-#### 2. Reorder factors **manually** with `fct_relevel()`{.unnumbered}
+#### 2. Reorder factors **manually** with `fct_relevel()`
 
 ```{r fct_relevel, eval=FALSE}
 # Format the data frame
@@ -156,11 +156,11 @@ lotr_words %>%
       names_to = 'gender', 
       values_to = 'wordCount',
       cols = Female:Male) %>%
-  mutate( #<<
-    Film = fct_relevel(Film, levels = c( #<<
-      'The Fellowship Of The Ring', #<<
-      'The Two Towers', #<<
-      'The Return Of The King'))) %>% #<<
+  mutate(
+    Film = fct_relevel(Film, levels = c(
+      'The Fellowship Of The Ring',
+      'The Two Towers',
+      'The Return Of The King'))) %>%
 
 # Make the chart
   ggplot() +
@@ -176,7 +176,7 @@ lotr_words %>%
 <img src="figs/lotr_bars_relevel.png">
 <center>
 
-#### 3. Modify factors manually {.unnumbered}
+#### 3. Modify factors manually
 
 ```{r, ref.label="lotr_bars", fig.show='hide'}
 ```
@@ -186,7 +186,7 @@ The film names here are too long:
 <img src="figs/lotr_bars.png">
 <center>
 
-#### 3. Modify factors manually with `fct_recode()` {.unnumbered}
+#### 3. Modify factors manually with `fct_recode()`
 
 `"new label" = "old label"`
 ```{r, eval=FALSE}
@@ -196,10 +196,10 @@ lotr_words %>%
       names_to = 'gender', 
       values_to = 'wordCount',
       cols = Female:Male) %>%
-  mutate( #<<
-    Film = fct_recode(Film, #<<
-      'The Fellowship\nof the Ring' = 'The Fellowship Of The Ring', #<<
-      'The Return\nof the King' = 'The Return Of The King')) %>% #<<
+  mutate(
+    Film = fct_recode(Film,
+      'The Fellowship\nof the Ring' = 'The Fellowship Of The Ring',
+      'The Return\nof the King' = 'The Return Of The King')) %>%
 
 # Make the chart
   ggplot() +
@@ -215,7 +215,7 @@ lotr_words %>%
 <img src="figs/lotr_bars_recode.png">
 <center>
 
-#### 2 & 3. Modify and reorder factors manually {.unnumbered}
+#### 2 & 3. Modify and reorder factors manually
 
 ```{r, eval=FALSE}
 # Format the data frame
@@ -224,14 +224,14 @@ lotr_words %>%
       names_to = 'gender', 
       values_to = 'wordCount',
       cols = Female:Male) %>% 
-  mutate( #<<
-    Film = fct_relevel(Film, levels = c( #<<
-      'The Fellowship Of The Ring',  #<<
-      'The Two Towers',  #<<
-      'The Return Of The King')), #<<
-    Film = fct_recode(Film, #<<
-      'The Fellowship\nof the Ring' = 'The Fellowship Of The Ring', #<<
-      'The Return\nof the King' = 'The Return Of The King')) %>% #<<
+  mutate(
+    Film = fct_relevel(Film, levels = c(
+      'The Fellowship Of The Ring',
+      'The Two Towers',
+      'The Return Of The King')),
+    Film = fct_recode(Film,
+      'The Fellowship\nof the Ring' = 'The Fellowship Of The Ring',
+      'The Return\nof the King' = 'The Return Of The King')) %>%
 
 # Make the chart
   ggplot() +
@@ -248,7 +248,7 @@ lotr_words %>%
 <img src="figs/lotr_bars_relevel_recode.png">
 <center>
 
-#### 4. What if there are too many factor levels? {.unnumbered}
+#### 4. What if there are too many factor levels?
 
 ```{r, ref.label="fct_reorder", fig.show='hide'}
 ```
@@ -261,9 +261,9 @@ lotr_words %>%
 ```{r, eval=FALSE}
 # Format the data frame
 federal_spending %>%
-  mutate( #<<
-    department = fct_other(department, #<<
-      keep = c('DOD', 'HHS', 'NIH', 'NASA', 'DOE'))) %>% #<<
+  mutate(
+    department = fct_other(department,
+      keep = c('DOD', 'HHS', 'NIH', 'NASA', 'DOE'))) %>%
   group_by(department) %>%
   summarise(
     rd_budget_bil = sum(rd_budget_mil) / 10^3) %>%
@@ -286,13 +286,13 @@ federal_spending %>%
 <img src="figs/federal_spending_bars_top5.png" width=500>
 </center>
 
-#### 4. What if there are _really_ too many factor levels? {.unnumbered}
+#### 4. What if there are _really_ too many factor levels?
 
 ```{r, eval=FALSE}
 # Format the data frame
 avengers %>%
   mutate(
-    name_alias = fct_reorder(name_alias, appearances)) %>% #<<
+    name_alias = fct_reorder(name_alias, appearances)) %>%
 
 # Make the chart
   ggplot() +
@@ -315,8 +315,8 @@ avengers %>%
 avengers %>%
   mutate(
     name_alias = fct_reorder(name_alias, appearances)) %>%
-  arrange(desc(appearances)) %>% #<<
-  slice(1:10) %>% #<<
+  arrange(desc(appearances)) %>%
+  slice(1:10) %>%
 
 # Make the chart
   ggplot() +
@@ -339,9 +339,9 @@ avengers %>%
 avengers %>%
   mutate(
     name_alias = fct_reorder(name_alias, appearances)) %>%
-  arrange(desc(appearances)) %>% #<<
-  group_by(gender) %>% #<<
-  slice(1:10) %>% #<<
+  arrange(desc(appearances)) %>%
+  group_by(gender) %>%
+  slice(1:10) %>%
 
 # Make the chart
   ggplot() +
@@ -432,12 +432,12 @@ avengers %>%
 federal_spending %>%
   group_by(department) %>%
   summarise(rd_budget_bil = sum(rd_budget_mil) / 10^3) %>%
-  mutate(department = fct_reorder(department, rd_budget_bil)) %>% #<<
+  mutate(department = fct_reorder(department, rd_budget_bil)) %>%
 
 # Make chart
   ggplot() +
-  geom_col( #<<
-    aes(x = rd_budget_bil, y = department), #<<
+  geom_col(
+    aes(x = rd_budget_bil, y = department),
     width = 0.7, alpha = 0.8,
     fill = 'steelblue') +
   scale_x_continuous(
@@ -469,7 +469,7 @@ federal_spending %>%
     width = 0.7, alpha = 0.8) +
   scale_x_continuous(
     expand = expansion(mult = c(0, 0.05))) +
-  scale_fill_manual(values = c('grey', 'steelblue')) + #<<
+  scale_fill_manual(values = c('grey', 'steelblue')) +
   theme_minimal_vgrid() +
   theme(legend.position = 'none')
 ```
@@ -495,8 +495,8 @@ federal_spending %>%
 
 # Make the chart
   ggplot() +
-  geom_point( #<<
-    aes(x = rd_budget_bil, y = department), #<<
+  geom_point(
+    aes(x = rd_budget_bil, y = department),
     size = 2.5, color = 'steelblue') +
   theme_minimal_vgrid()
 ```
@@ -522,12 +522,12 @@ federal_spending %>%
 
 # Make the chart
   ggplot() +
-  geom_segment( #<<
-    aes(x = 0, xend = rd_budget_bil, #<<
-        y = department, yend = department), #<<
+  geom_segment(
+    aes(x = 0, xend = rd_budget_bil,
+        y = department, yend = department),
     color = 'grey') +
-  geom_point( #<<
-    aes(x = rd_budget_bil, y = department), #<<
+  geom_point(
+    aes(x = rd_budget_bil, y = department),
     size = 2.5, color = 'steelblue') +
   theme_minimal_vgrid()
 ```

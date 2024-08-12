@@ -35,7 +35,7 @@ Measure things with numbers
 - How many?
 - How much?
 
-#### Categorical (discrete) variables: {.unnumbered}
+#### Categorical (discrete) variables:
 
 **Nominal**
 
@@ -61,7 +61,7 @@ marathon %>%
   head()
 ```
 
-#### Numerical data: {.unnumbered}
+#### Numerical data:
 
 **Interval**
 
@@ -200,8 +200,8 @@ daysToShip %>%
     gather(warehouse, days, warehouseA:warehouseB) %>%
     group_by(warehouse) %>%
     summarise(
-        mean   = mean(days), #<<
-        median = median(days)) #<<
+        mean   = mean(days),
+        median = median(days))
 ```
 
 **Variability** reveals difference in days to ship:
@@ -213,8 +213,8 @@ daysToShip %>%
     summarise(
         mean   = mean(days),
         median = median(days),
-        range = max(days) - min(days), #<<
-        sd    = sd(days)) #<<
+        range = max(days) - min(days),
+        sd    = sd(days))
 ```
 
 <center>
@@ -281,7 +281,7 @@ One great example of the importance of visualizing data would be Anscombe's Quar
 
 <img src="images/datasaurus.png" width=700>
 
-### The data _type_ determines how to summarize and visualize it. {.unnumbered}
+### The data _type_ determines how to summarize and visualize it.
 
 <div style="display: flex; justify-content: space-between;">
 
@@ -336,8 +336,8 @@ One great example of the importance of visualizing data would be Anscombe's Quar
 
 ```{r}
 wildlife_impacts %>%
-    count(operator, sort = TRUE) %>% #<<
-    mutate(p = n / sum(n)) #<<
+    count(operator, sort = TRUE) %>%
+    mutate(p = n / sum(n))
 ```
 
 **Visualize**: (usually sorted) Bars 
@@ -345,9 +345,9 @@ wildlife_impacts %>%
 ```{r wildlife-operator-bars, fig.width=7, fig.height=3}
 wildlife_impacts %>%
     count(operator, sort = TRUE) %>%
-    ggplot() + #<<
-    geom_col(aes(x = n, y = reorder(operator, n)), #<<
-             width = 0.7) + #<<
+    ggplot() +
+    geom_col(aes(x = n, y = reorder(operator, n)),
+             width = 0.7) +
     labs(x = "Count", y = "Operator")
 ```
 
@@ -357,8 +357,8 @@ wildlife_impacts %>%
 
 ```{r}
 wildlife_impacts %>%
-    count(incident_month, sort = TRUE) %>% #<<
-    mutate(p = n / sum(n)) #<<
+    count(incident_month, sort = TRUE) %>%
+    mutate(p = n / sum(n))
 ```
 
 **Visualize**: Bars
@@ -366,9 +366,9 @@ wildlife_impacts %>%
 ```{r wildlife-months-bar, fig.width=7, fig.height=3.7}
 wildlife_impacts %>%
     count(incident_month, sort = TRUE) %>%
-    ggplot() + #<<
-    geom_col(aes(x = as.factor(incident_month), #<<
-                 y = n), width = 0.7) + #<<
+    ggplot() +
+    geom_col(aes(x = as.factor(incident_month),
+                 y = n), width = 0.7) +
     labs(x = "Incident month")
 ```
 
@@ -396,7 +396,7 @@ wildlife_impacts %>%
 
 <img src = 'images/eda-boxplot.png' width = 700>
 
-#### **Histogram**: Identify Skewness & # of Modes {.unnumbered}
+#### **Histogram**: Identify Skewness & # of Modes
 
 **Summarise**: Mean, median, sd, range, & IQR:
 
@@ -408,7 +408,7 @@ summary(wildlife_impacts$height)
 
 ```{r wildlife-height-hist, fig.width=7, fig.height=3.7, fig.align='center'}
 ggplot(wildlife_impacts) +
-  geom_histogram(aes(x = height), bins = 50) + #<<
+  geom_histogram(aes(x = height), bins = 50) +
   labs(x = 'Height (ft)', y = 'Count')
 ```
 
@@ -421,17 +421,17 @@ ggplot(wildlife_impacts) +
 
 ```{r wildlife-speed-hist, fig.width=7, fig.height=3.7, fig.align='center'}
 ggplot(wildlife_impacts) +
-  geom_histogram(aes(x = speed), bins = 50) + #<<
+  geom_histogram(aes(x = speed), bins = 50) +
   labs(x = 'speed (mph)', y = 'Count')
 ```
 
-#### **Boxplot**: Identify outliers {.unnumbered}
+#### **Boxplot**: Identify outliers
 
 **Height**
 
 ```{r wildlife-height-boxplot, fig.width=7, fig.height=3, fig.align='center'}
 ggplot(wildlife_impacts) +
-    geom_boxplot(aes(x = height)) + #<<
+    geom_boxplot(aes(x = height)) +
     labs(x = 'Height (ft)', y = NULL)
 ```
 
@@ -439,7 +439,7 @@ ggplot(wildlife_impacts) +
 
 ```{r wildlife-speed-boxplot, fig.width=7, fig.height=3, fig.align='center'}
 ggplot(wildlife_impacts) +
-    geom_boxplot(aes(x = speed)) + #<<
+    geom_boxplot(aes(x = speed)) +
     labs(x = 'Speed (mph)', y = NULL)
 ```
 
@@ -462,7 +462,7 @@ Summarize with a table of counts
 
 ```{r}
 wildlife_impacts %>%
-    count(operator, time_of_day) #<<
+    count(operator, time_of_day)
 ```
 
 Convert to "wide" format with `pivot_wider()` to make it easier to compare values
@@ -470,7 +470,7 @@ Convert to "wide" format with `pivot_wider()` to make it easier to compare value
 ```{r}
 wildlife_impacts %>%
     count(operator, time_of_day) %>%
-    pivot_wider(names_from = time_of_day, values_from = n) #<<
+    pivot_wider(names_from = time_of_day, values_from = n)
 ```
 
 Visualize with bars:<br>map **fill** to denote 2nd categorical var
@@ -483,10 +483,10 @@ wildlife_impacts %>%
     aes(
       x = n,
       y = reorder(operator, n),
-      fill = reorder(time_of_day, n) #<<
+      fill = reorder(time_of_day, n)
     ), 
     width = 0.7,
-    position = 'dodge') + #<<
+    position = 'dodge') +
   theme(legend.position = "bottom") +
   labs(
     fill = "Time of day", 
@@ -576,7 +576,7 @@ galtonScatterplot <- ggplot(GaltonFamilies) +
 ### How do you measure correlation? (**Pearson**)
 Pearson came up with this:
 
-##### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$ {.unnumbered}
+##### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$
 
 Assumptions: <br/>
 1. Variables must be interval or ratio <br/>
@@ -596,7 +596,7 @@ Assumptions: <br/>
 
 ### How do you _interpret_ $r$?
 
-##### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$ {.unnumbered}
+##### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$
 
 Interpretation:
 - $-1 \le r \le 1$
@@ -699,7 +699,7 @@ Single Axis:
 
 ### **Spearman**'s rank-order correlation
 
-#### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$ {.unnumbered}
+#### $r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}$
 
 - Separately rank the values of X & Y.
 - Use Pearson's correlation on the _ranks_ instead of the $x$ & $y$ values.
@@ -762,10 +762,10 @@ spearman <- cor(x, y, method = "spearman", use = "complete.obs")
 ```{r, eval=FALSE}
 scatterplot <- mtcars %>% 
   ggplot() +
-  geom_point( #<<
-    aes(x = mpg, y = hp), #<<
-    size = 2, alpha = 0.7 #<<
-  ) + #<<
+  geom_point(
+    aes(x = mpg, y = hp),
+    size = 2, alpha = 0.7
+  ) +
   theme_classic(base_size = 20) +
   labs(
     x = 'Fuel economy (mpg)',
@@ -788,19 +788,19 @@ corr <- cor(
     mtcars$mpg, mtcars$hp,
     method = 'pearson')
 
-corrLabel <- paste('r = ', round(corr, 2)) #<<
+corrLabel <- paste('r = ', round(corr, 2))
 ```
 
 Add label to the chart with `annotate()`
 
 ```{r, eval=FALSE}
 scatterplot +
-  annotate( #<<
-    geom = 'text', #<<
-    x = 25, y = 310, #<<
-    label = corrLabel, #<<
-    hjust = 0, size = 7 #<<
-  ) #<<
+  annotate(
+    geom = 'text',
+    x = 25, y = 310,
+    label = corrLabel,
+    hjust = 0, size = 7
+  )
 ```
 
 <img src="figs/mtcarsScatterplot.png" width=700>
@@ -817,7 +817,7 @@ library('GGally')
 
 ```{r, eval=FALSE}
 mtcars %>%
-    ggcorr() #<<
+    ggcorr()
 ```
 
 <img src="figs/ggcor_mtcars.png" width=700>
@@ -829,9 +829,9 @@ library('GGally')
 
 ```{r, eval=FALSE}
 mtcars %>%
-    ggcorr(label = TRUE, #<<
-           label_size = 3, #<<
-           label_round = 2) #<<
+    ggcorr(label = TRUE,
+           label_size = 3,
+           label_round = 2)
 ```
 
 <img src="figs/ggcor_mtcars_labels.png" width=700>
@@ -841,9 +841,9 @@ ggcor_mtcars_final <- mtcars %>%
     ggcorr(label = TRUE,
            label_size = 3,
            label_round = 2,
-           label_color = 'white', #<<
-           nbreaks = 5,  #<<
-           palette = "RdBu") #<<
+           label_color = 'white',
+           nbreaks = 5,
+           palette = "RdBu")
 ```
 
 <img src="figs/ggcor_mtcars_final.png" width=700>
@@ -855,7 +855,7 @@ mtcars %>%
     ggcorr(label = TRUE,
            label_size = 3,
            label_round = 2,
-           method = c("pairwise", "pearson")) #<<
+           method = c("pairwise", "pearson"))
 ```
 
 <img src="figs/ggcor_mtcars_pearson.png" width=700>
@@ -867,7 +867,7 @@ mtcars %>%
     ggcorr(label = TRUE,
            label_size = 3,
            label_round = 2,
-           method = c("pairwise", "spearman")) #<<
+           method = c("pairwise", "spearman"))
 ```
 
 <img src="figs/ggcor_mtcars_spearman.png" width=700>
@@ -880,7 +880,7 @@ library('GGally')
 ```{r, eval=FALSE}
 mtcars %>%
     select(mpg, cyl, disp, hp, wt) %>%
-    ggpairs() #<<
+    ggpairs()
 ```
 
 - Look for linear relationships

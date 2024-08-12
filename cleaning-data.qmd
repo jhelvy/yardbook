@@ -44,7 +44,7 @@ state_abbs_50 <- state_abbs %>%
   filter(!state_abb %in% bad_abbs)
 ```
 
-> ### Learning Objectives {.unnumbered}
+> ### Learning Objectives
 >
 > * Reshape data between long and wide formats.
 > * Wrangle and format data, including dealing with messy Excel files.
@@ -94,7 +94,7 @@ band_members
 band_instruments
 ```
 
-#### `inner_join()` {.unnumbered}
+#### `inner_join()`
 
 ```{r}
 band_members %>%
@@ -105,7 +105,7 @@ band_members %>%
 <img src="images/inner_join.gif">
 </center>
 
-#### `full_join()` {.unnumbered}
+#### `full_join()`
 
 ```{r}
 band_members %>%
@@ -116,7 +116,7 @@ band_members %>%
 <img src="images/full_join.gif">
 </center>
 
-#### `left_join()` {.unnumbered}
+#### `left_join()`
 
 ```{r}
 band_members %>%
@@ -127,7 +127,7 @@ band_members %>%
 <img src="images/left_join.gif">
 </center>
 
-#### `right_join()` {.unnumbered}
+#### `right_join()`
 
 ```{r}
 band_members %>%
@@ -138,7 +138,7 @@ band_members %>%
 <img src="images/right_join.gif">
 </center>
 
-#### We can also specify the joining variable name {.unnumbered}
+#### We can also specify the joining variable name
 
 ```{r, echo=TRUE, message=TRUE}
 band_members %>%
@@ -149,11 +149,11 @@ band_members %>%
 band_members %>%
     left_join(
         band_instruments,
-        by = 'name' #<<
+        by = 'name'
     )
 ```
 
-#### If the names differ, use `by = c("left_name" = "joining_name")` {.unnumbered}
+#### If the names differ, use `by = c("left_name" = "joining_name")`
 
 ```{r}
 band_members
@@ -167,7 +167,7 @@ band_instruments2
 band_members %>%
     left_join(
         band_instruments2,
-        by = c("name" = "artist") #<<
+        by = c("name" = "artist")
     ) 
 ```
 
@@ -183,10 +183,10 @@ band_instruments2
 
 ```{r}
 band_members %>%
-    rename(artist = name) %>% #<<
+    rename(artist = name) %>%
     left_join(
         band_instruments2,
-        by = "artist"  #<<
+        by = "artist"
     )
 ```
 
@@ -194,7 +194,7 @@ band_members %>%
 
 ### Variable Types
 
-#### Always check variable types after reading in data! {.unnumbered}
+#### Always check variable types after reading in data!
 
 ```{r}
 wind <- read_excel(here::here(
@@ -203,16 +203,16 @@ wind <- read_excel(here::here(
 glimpse(wind)
 ```
 
-#### Be careful converting strings to numbers! {.unnumbered}
+#### Be careful converting strings to numbers!
 
-##### `as.numeric()` {.unnumbered}
+##### `as.numeric()`
 
 ```{r}
 as.numeric(c("2.1", "3.7", "4.50"))
 as.numeric(c("$2.1", "$3.7", "$4.50"))
 ```
 
-##### `parse_number()` {.unnumbered}
+##### `parse_number()`
 
 ```{r}
 parse_number(c("2.1", "3.7", "4.50"))
@@ -226,10 +226,10 @@ Once applied we get:
 wind <- read_excel(here::here(
   'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
   mutate(
-    Ranking = as.numeric(Ranking),#<<
-    `Equivalent Homes Powered` = as.numeric(`Equivalent Homes Powered`),#<<
-    `Total Investment ($ Millions)` = as.numeric(`Total Investment ($ Millions)`),#<<
-    `# of Wind Turbines` = as.numeric(`# of Wind Turbines`) #<<
+    Ranking = as.numeric(Ranking),
+    `Equivalent Homes Powered` = as.numeric(`Equivalent Homes Powered`),
+    `Total Investment ($ Millions)` = as.numeric(`Total Investment ($ Millions)`),
+    `# of Wind Turbines` = as.numeric(`# of Wind Turbines`)
   )
     
 glimpse(wind)
@@ -260,37 +260,37 @@ glimpse(wind)
 
 .. and use janitor, we can easily "clean" the names.
 ```{r}
-library(janitor) #<<
+library(janitor)
 
 wind <- read_excel(here::here(
   'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
-  clean_names() #<<
+  clean_names()
 
 glimpse(wind)
 ```
 
 We can even change the style of the names.
 ```{r}
-library(janitor) #<<
+library(janitor)
 
 wind <- read_excel(here::here(
   'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
-  clean_names(case = 'lower_camel') #<<
+  clean_names(case = 'lower_camel')
 
 glimpse(wind)
 ```
 
 ```{r}
-library(janitor) #<<
+library(janitor)
 
 wind <- read_excel(here::here(
   'data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
-  clean_names(case = 'screaming_snake') #<<
+  clean_names(case = 'screaming_snake')
 
 glimpse(wind)
 ```
 
-#### `select()` : More Powerful Than You Probably Thought {.unnumbered}
+#### `select()` : More Powerful Than You Probably Thought
 
 Example: data on sleeping patterns of different mammals
 
@@ -302,7 +302,7 @@ Use `select()` to choose which columns to **keep**
 
 ```{r}
 msleep %>%
-  select(name:order, sleep_total:sleep_cycle) %>% #<<
+  select(name:order, sleep_total:sleep_cycle) %>%
   glimpse()
 ```
 
@@ -314,7 +314,7 @@ msleep %>%
   glimpse()
 ```
 
-##### We can also select columns based on **partial column names** {.unnumbered}
+##### We can also select columns based on **partial column names**
 
 For example, we can select columns that start with "sleep":
 
@@ -332,7 +332,7 @@ msleep %>%
   glimpse()
 ```
 
-##### Use `select()` to select columns based on their **data type** {.unnumbered}
+##### Use `select()` to select columns based on their **data type**
 
 Select only numeric columns:
 
@@ -350,7 +350,7 @@ msleep %>%
     glimpse()
 ```
 
-##### Use `select()` to **reorder** variables {.unnumbered}
+##### Use `select()` to **reorder** variables
 
 ```{r}
 msleep %>%
@@ -364,13 +364,13 @@ msleep %>%
     glimpse()
 ```
 
-##### Use `select()` to **rename** variables {.unnumbered}
+##### Use `select()` to **rename** variables
 
 Use `rename()` to just change the name
 
 ```{r}
 msleep %>%
-  rename( #<<
+  rename(
     animal = name,
     extinction_threat = conservation
   ) %>%
@@ -381,20 +381,20 @@ Use `select()` to change the name **and drop everything else**
 
 ```{r}
 msleep %>%
-  select( #<<
+  select(
     animal = name,
     extinction_threat = conservation
   ) %>%
   glimpse()
 ```
 
-##### Use `select()` to **rename** variables {.unnumbered}
+##### Use `select()` to **rename** variables
 
 Use `rename()` to just change the name
 
 ```{r}
 msleep %>%
-  rename( #<<
+  rename(
     animal = name,
     extinction_threat = conservation
   ) %>%
@@ -405,11 +405,11 @@ Use `select()` + `everything()` to change names **and keep everything else**
 
 ```{r}
 msleep %>%
-  select( #<<
+  select(
     animal = name,
     extinction_threat = conservation,
     everything()
-  ) %>% #<<
+  ) %>%
   glimpse()
 ```
 
@@ -425,7 +425,7 @@ wildlife_impacts1 <- wildlife_impacts %>%
   filter(!is.na(cost)) %>%
   mutate(
     cost_median = median(cost),
-    cost_high = ifelse(cost > cost_median, TRUE, FALSE) #<<
+    cost_high = ifelse(cost > cost_median, TRUE, FALSE)
   )
 
 wildlife_impacts1 %>%
@@ -439,10 +439,10 @@ Create a variable, `season`, based on the `incident_month` variable.
 
 ```{r}
 wildlife_impacts2 <- wildlife_impacts %>%
-  mutate(season = ifelse( #<<
-    incident_month %in% c(3, 4, 5), 'spring', ifelse( #<<
-    incident_month %in% c(6, 7, 8), 'summer', ifelse( #<<
-    incident_month %in% c(9, 10, 11), 'fall', 'winter'))) #<<
+  mutate(season = ifelse(
+    incident_month %in% c(3, 4, 5), 'spring', ifelse(
+    incident_month %in% c(6, 7, 8), 'summer', ifelse(
+    incident_month %in% c(9, 10, 11), 'fall', 'winter')))
   ) 
 
 wildlife_impacts2 %>%
@@ -458,11 +458,11 @@ Create a variable, `season`, based on the `incident_month` variable.
 
 ```{r}
 wildlife_impacts2 <- wildlife_impacts %>%
-  mutate(season = case_when( #<<
-    incident_month %in% c(3, 4, 5) ~ 'spring', #<<
-    incident_month %in% c(6, 7, 8) ~ 'summer', #<<
-    incident_month %in% c(9, 10, 11) ~ 'fall', #<<
-    TRUE ~ 'winter') #<<
+  mutate(season = case_when(
+    incident_month %in% c(3, 4, 5) ~ 'spring',
+    incident_month %in% c(6, 7, 8) ~ 'summer',
+    incident_month %in% c(9, 10, 11) ~ 'fall',
+    TRUE ~ 'winter')
   ) 
 
 wildlife_impacts2 %>%
@@ -470,16 +470,16 @@ wildlife_impacts2 %>%
   head()
 ```
 
-#### Recoding with `case_when()` with `between()` {.unnumbered}
+#### Recoding with `case_when()` with `between()`
 
 Create a variable, `season`, based on the `incident_month` variable.
 
 ```{r}
 wildlife_impacts2 <- wildlife_impacts %>%
   mutate(season = case_when(
-    between(incident_month, 3, 5) ~ 'spring', #<<
-    between(incident_month, 6, 8) ~ 'summer', #<<
-    between(incident_month, 9, 11) ~ 'fall', #<<
+    between(incident_month, 3, 5) ~ 'spring',
+    between(incident_month, 6, 8) ~ 'summer',
+    between(incident_month, 9, 11) ~ 'fall',
     TRUE ~ 'winter') 
   )
 
@@ -488,7 +488,7 @@ wildlife_impacts2 %>%
     head()
 ```
 
-#### `case_when()` is "cleaner" than `ifelse()` {.unnumbered}
+#### `case_when()` is "cleaner" than `ifelse()`
 
 Convert the `num_engs` variable into a word of the number.
 
@@ -529,7 +529,7 @@ tb_rates
 
 ```{r}
 tb_rates %>%
-  separate(rate, into = c("cases", "population")) #<<
+  separate(rate, into = c("cases", "population"))
 ```
 
 ### Break a single variable into two with `separate()`
@@ -541,9 +541,9 @@ tb_rates
 ```{r}
 tb_rates %>%
   separate(
-      rate, #<<
-      into = c("cases", "population"), #<<
-      sep = "/" #<<
+      rate,
+      into = c("cases", "population"),
+      sep = "/"
   )
 ```
 
@@ -557,7 +557,7 @@ tb_rates %>%
       rate, 
       into = c("cases", "population"),
       sep = "/", 
-      convert = TRUE #<<
+      convert = TRUE
   )
 ```
 
@@ -571,8 +571,8 @@ tb_rates
 tb_rates %>%
   separate(
       year, 
-      into = c("century", "year"), #<<
-      sep = 2 #<<
+      into = c("century", "year"),
+      sep = 2
   )
 ```
 
@@ -586,7 +586,7 @@ tb_rates
 tb_rates %>%
   separate(year, into = c("century", "year"),
            sep = 2) %>%
-  unite(year_new, century, year) #<<
+  unite(year_new, century, year)
 ```
 
 ```{r}
@@ -598,7 +598,7 @@ tb_rates %>%
   separate(year, into = c("century", "year"),
            sep = 2) %>%
   unite(year_new, century, year,
-        sep = "") #<<
+        sep = "")
 ```
 
 ## Dealing with Dates Data
@@ -611,7 +611,7 @@ tb_rates %>%
 
 **order is the ONLY thing that matters!**
 
-#### Year-Month-Day {.unnumbered}
+#### Year-Month-Day
 
 ```{r}
 ymd('2020-02-26')
@@ -629,7 +629,7 @@ ymd('2020 Feb. 26')
 ymd('2020 february 26')
 ```
 
-#### Month-Day-Year {.unnumbered}
+#### Month-Day-Year
 
 ```{r}
 mdy('February 26, 2020')
@@ -637,7 +637,7 @@ mdy('Feb. 26, 2020')
 mdy('Feb 26 2020')
 ```
 
-#### Day-Month-Year {.unnumbered}
+#### Day-Month-Year
 
 ```{r}
 dmy('26 February 2020')
@@ -645,7 +645,7 @@ dmy('26 Feb. 2020')
 dmy('26 Feb, 2020')
 ```
 
-##### Check out the `lubridate` **[cheat sheet](https://rawgit.com/rstudio/cheatsheets/master/lubridate.pdf)** {.unnumbered}
+##### Check out the `lubridate` **[cheat sheet](https://rawgit.com/rstudio/cheatsheets/master/lubridate.pdf)**
 
 ### Extracting information from dates
 
@@ -712,16 +712,16 @@ date
 
 Example: When columns are repeated; like in the data for the winners of Nathan's hot dog eating contest.
 
-### Strategies {.unnumbered}
+### Strategies
 
-#### 1. divide & conquer {.unnumbered}
-#### 2. pivot long, separate, pivot wide {.unnumbered}
+#### 1. divide & conquer
+#### 2. pivot long, separate, pivot wide
 
 <center>
 <img src="images/hot_dogs.png" width=500>
 </center>
 
-### Strategy 1: divide & conquer {.unnumbered}
+### Strategy 1: divide & conquer
 
 Steps:
 
@@ -754,7 +754,7 @@ hot_dogs_m <- hot_dogs %>%
         competitor = mens,
         dogs_eaten = dogs_eaten_3,
         country    = country_4) %>%
-    mutate(competition = 'Mens') #<<
+    mutate(competition = 'Mens')
 
 hot_dogs_w <- hot_dogs %>%
     select(
@@ -762,7 +762,7 @@ hot_dogs_w <- hot_dogs %>%
         competitor = womens,
         dogs_eaten = dogs_eaten_6,
         country    = country_7) %>%
-    mutate(competition = 'Womens') %>% #<<
+    mutate(competition = 'Womens') %>%
     dplyr::filter(!is.na(competitor))
 ```
 
@@ -777,7 +777,7 @@ Steps
 7. **Clean up final data frame**
 
 ```{r}
-hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>% #<<
+hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>%
     mutate(
         new_record = str_detect(dogs_eaten, "\\*"),
         dogs_eaten = parse_number(dogs_eaten),
@@ -793,7 +793,7 @@ glimpse(hot_dogs)
 head(hot_dogs)
 ```
 
-### Strategy 2: pivot long, separate, pivot wide {.unnumbered}
+### Strategy 2: pivot long, separate, pivot wide
 
 Steps:
 
@@ -829,8 +829,8 @@ hot_dogs <- hot_dogs %>%
         dogs_eaten.womens = dogs_eaten_6,
         country.mens      = country_4,
         country.womens    = country_7) %>%
-    pivot_longer(names_to = 'variable', values_to = 'value',  #<<
-           competitor.mens:country.womens)  #<<
+    pivot_longer(names_to = 'variable', values_to = 'value',
+           competitor.mens:country.womens)
 
 head(hot_dogs, 3)
 ```
@@ -846,8 +846,8 @@ Steps:
 
 ```{r}
 hot_dogs <- hot_dogs %>%
-    separate(variable, into = c('variable', 'competition'),  #<<
-             sep = '\\.') #<<
+    separate(variable, into = c('variable', 'competition'),
+             sep = '\\.')
 
 head(hot_dogs)
 ```
@@ -865,7 +865,7 @@ Steps:
 
 ```{r}
 hot_dogs <- hot_dogs %>%
-    spread(key = variable, value = value) %>% #<<
+    spread(key = variable, value = value) %>%
     mutate(
         new_record = str_detect(dogs_eaten, "\\*"),
         dogs_eaten = parse_number(dogs_eaten),
@@ -887,25 +887,25 @@ hot_dogs <- read_excel(
     clean_names() %>%
     dplyr::filter(!is.na(mens))
 
-# Divide #<<
-hot_dogs_m <- hot_dogs %>% #<<
-    select( #<<
-        year, #<<
-        competitor = mens, #<<
-        dogs_eaten = dogs_eaten_3, #<<
-        country    = country_4) %>% #<<
-    mutate(competition = 'Mens') #<<
-hot_dogs_w <- hot_dogs %>% #<<
-    select( #<<
-        year, #<<
-        competitor = womens, #<<
-        dogs_eaten = dogs_eaten_6, #<<
-        country    = country_7) %>% #<<
-    mutate(competition = 'Womens') %>%  #<<
-    dplyr::filter(!is.na(competitor)) #<<
+# Divide
+hot_dogs_m <- hot_dogs %>%
+    select(
+        year,
+        competitor = mens,
+        dogs_eaten = dogs_eaten_3,
+        country    = country_4) %>%
+    mutate(competition = 'Mens')
+hot_dogs_w <- hot_dogs %>%
+    select(
+        year,
+        competitor = womens,
+        dogs_eaten = dogs_eaten_6,
+        country    = country_7) %>%
+    mutate(competition = 'Womens') %>%
+    dplyr::filter(!is.na(competitor))
 
 # Merge and finish cleaning
-hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>% #<<
+hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>%
     mutate(
         new_record = str_detect(dogs_eaten, "\\*"),
         dogs_eaten = parse_number(dogs_eaten),
@@ -924,23 +924,23 @@ hot_dogs <- read_excel(
     clean_names() %>%
     dplyr::filter(!is.na(mens)) %>%
 
-    # Rename variables #<<
-    select( #<<
-        year, #<<
-        competitor.mens   = mens, #<<
-        competitor.womens = womens, #<<
-        dogs_eaten.mens   = dogs_eaten_3, #<<
-        dogs_eaten.womens = dogs_eaten_6, #<<
-        country.mens      = country_4, #<<
-        country.womens    = country_7) %>% #<<
-    # Gather "joint" variables #<<
-    pivot_longer(names_to = 'variable', values_to = 'value', #<<
-           competitor.mens:country.womens) %>%  #<<
-    # Separate "joint" variables #<<
-    separate(variable, into = c('variable', 'competition'), #<<
-             sep = '\\.') %>%  #<<
-    # Spread "joint" variables #<<
-    pivot_wider(names_from = variable, values_from = value) %>% #<<
+    # Rename variables
+    select(
+        year,
+        competitor.mens   = mens,
+        competitor.womens = womens,
+        dogs_eaten.mens   = dogs_eaten_3,
+        dogs_eaten.womens = dogs_eaten_6,
+        country.mens      = country_4,
+        country.womens    = country_7) %>%
+    # Gather "joint" variables
+    pivot_longer(names_to = 'variable', values_to = 'value',
+           competitor.mens:country.womens) %>%
+    # Separate "joint" variables
+    separate(variable, into = c('variable', 'competition'),
+             sep = '\\.') %>%
+    # Spread "joint" variables
+    pivot_wider(names_from = variable, values_from = value) %>%
     # Finish cleaning
     mutate(
         new_record = str_detect(dogs_eaten, "\\*"),
@@ -951,7 +951,7 @@ hot_dogs <- read_excel(
 </div>
 </div>
 
-### Strategies for dealing with **sub-headers** {.unnumbered}
+### Strategies for dealing with **sub-headers**
 
 Example: OICA passenger car sales data
 
@@ -967,7 +967,7 @@ Steps:
 ```{r}
 pc_sales <- read_excel(
     here::here('data', 'pc_sales_2018.xlsx'),
-    sheet = 'pc_sales', skip = 5) %>% #<<
+    sheet = 'pc_sales', skip = 5) %>%
     clean_names() %>%
     rename(country = regions_countries)
 
@@ -993,7 +993,7 @@ drop <- c(
 
 pc_sales <- pc_sales %>%
     select(-c(x2:x4)) %>%       # Drop bad columns
-    filter(! country %in% drop, # Drop bad rows #<<
+    filter(! country %in% drop, # Drop bad rows
            ! is.na(country))
 
 head(pc_sales)
@@ -1010,7 +1010,7 @@ Steps:
 ```{r}
 pc_sales <- pc_sales %>%
     pivot_longer(names_to = 'year', values_to = 'num_cars', 
-                 cols = x2005:x2018) #<<
+                 cols = x2005:x2018)
 
 head(pc_sales)
 ```
@@ -1026,8 +1026,8 @@ Steps:
 
 ```{r}
 pc_sales <- pc_sales %>%
-    separate(year, into = c('drop', 'year'), sep = 'x', #<<
-             convert = TRUE) #<<
+    separate(year, into = c('drop', 'year'), sep = 'x',
+             convert = TRUE)
 
 head(pc_sales)
 ```
@@ -1045,15 +1045,15 @@ Steps:
 
 ```{r}
 pc_sales <- pc_sales %>%
-  select(-drop) %>%  #<<
+  select(-drop) %>%
   mutate(country  = str_to_title(country))
 
 head(pc_sales)
 ```
 
-##### What if I wanted to keep the continents? {.unnumbered}
+##### What if I wanted to keep the continents?
 
-### Strategy: Join a new data frame linking country -> continent {.unnumbered}
+### Strategy: Join a new data frame linking country -> continent
 
 ```{r}
 drop <- c(
@@ -1081,9 +1081,9 @@ pc_sales <- read_excel(
 head(pc_sales, 3)
 ```
 
-### Strategy 1: Find another source {.unnumbered}
+### Strategy 1: Find another source
 
-### Strategy 2: Hand-make it {.unnumbered}
+### Strategy 2: Hand-make it
 
 ```{r}
 pc_regions <- read_csv(here::here(
@@ -1094,7 +1094,7 @@ head(pc_regions)
 
 ```{r}
 pc_sales <- pc_sales %>% 
-  left_join(pc_regions) #<<
+  left_join(pc_regions)
 
 head(pc_sales)
 ```

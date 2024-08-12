@@ -4,14 +4,20 @@
 #| echo: false
 #| message: false
 #| include: false
+
 source("_common.R")
+
+# Load packages
+library(tidyverse)
+library(here)
+library(cowplot)
 
 # Read in data sets for chapter
 wildlife_impacts <- read_csv(here('data', 'wildlife_impacts.csv'))
 gapminder <- read_csv(here('data', 'gapminder.csv'))
 ```
 
-> ### Learning Objectives {.unnumbered}
+> ### Learning Objectives
 >
 > * Learn the functions necessary to import various file types.
 > * Understand the basic features of ggplot.
@@ -35,7 +41,7 @@ File type  | Function       | Library
 `.txt`     | `read.table()` | **utils**
 `.xlsx`    | `read_excel()` | **readxl**
 
-#### Importing Comma Separated Values (.csv) {.unnumbered}
+#### Importing Comma Separated Values (.csv)
 
 Read in `.csv` files with `read_csv()`:
 
@@ -44,35 +50,35 @@ library(tidyverse)
 library(here)
 
 csvPath <- here('data', 'milk_production.csv')
-milk_production <- read_csv(csvPath) #<<
+milk_production <- read_csv(csvPath)
 
 head(milk_production)
 ```
 
-#### Importing Text Files (.txt) {.unnumbered}
-
-Read in `.txt` files with `read.table()`:
-
-```{r}
-txtPath <- here('data', 'nasa_global_temps.txt')
-global_temps <- read.table(txtPath, skip = 5, header = FALSE) #<<
-
-head(global_temps)
-```
-
-#### Importing Text Files (.txt) {.unnumbered}
+#### Importing Text Files (.txt)
 
 Read in `.txt` files with `read.table()`:
 
 ```{r}
 txtPath <- here('data', 'nasa_global_temps.txt')
 global_temps <- read.table(txtPath, skip = 5, header = FALSE)
-names(global_temps) <- c('year', 'no_smoothing', 'loess') # Add header #<<
 
 head(global_temps)
 ```
 
-#### Importing Excel Files (.xlsx) {.unnumbered}
+#### Importing Text Files (.txt)
+
+Read in `.txt` files with `read.table()`:
+
+```{r}
+txtPath <- here('data', 'nasa_global_temps.txt')
+global_temps <- read.table(txtPath, skip = 5, header = FALSE)
+names(global_temps) <- c('year', 'no_smoothing', 'loess') # Add header
+
+head(global_temps)
+```
+
+#### Importing Excel Files (.xlsx)
 
 Read in `.xlsx` files with `read_excel()`:
 
@@ -80,7 +86,7 @@ Read in `.xlsx` files with `read_excel()`:
 library(readxl)
 
 xlsxPath <- here('data', 'pv_cell_production.xlsx')
-pv_cells <- read_excel(xlsxPath, sheet = 'Cell Prod by Country', skip = 2) #<<
+pv_cells <- read_excel(xlsxPath, sheet = 'Cell Prod by Country', skip = 2)
 ```
 
 ```{r}
@@ -110,13 +116,15 @@ The basic inputs to the `plot()` function are `x` and `y`, which must be vectors
 #| fig.height: 5
 #| fig.width: 6
 
-plot(x    = mtcars$hp,
-     y    = mtcars$mpg,
-     col  = 'darkblue', # "col" changes the point color
-     pch  = 19, # "pch" changes the point shape
-     main = "",
-     xlab = "Horsepower",
-     ylab = "Miles Per Gallon")
+plot(
+  x    = mtcars$hp,
+  y    = mtcars$mpg,
+  col  = 'darkblue', # "col" changes the point color
+  pch  = 19, # "pch" changes the point shape
+  main = "",
+  xlab = "Horsepower",
+  ylab = "Miles Per Gallon"
+)
 ```
 
 From this scatter plot, we can observe the relationship between a car's horsepower and its fuel efficiency. As you may have guessed, cars with more horsepower or more powerful engines have less fuel efficiency.
@@ -140,12 +148,14 @@ With this plot, we can see a trend where the geyser mostly erupts in roughly 50 
 #| fig.height: 5
 #| fig.width: 6
 
-hist(x      = faithful$waiting,
-     breaks = 20,
-     col    = 'lightblue3',
-     main   = "Waiting Times Between Eruptions",
-     xlab   = "Waiting Time (in minutes)",
-     ylab   = "Count")
+hist(
+  x      = faithful$waiting,
+  breaks = 20,
+  col    = 'lightblue3',
+  main   = "Waiting Times Between Eruptions",
+  xlab   = "Waiting Time (in minutes)",
+  ylab   = "Count"
+)
 ```
 
 With our changes, the chart is cleaner and it is clearer which waiting times the were most common.
@@ -160,7 +170,7 @@ While Base R plot functions are useful for making simple, quick plots, many R us
 
 ## Layering with ggplot
 
-#### "Grammar of Graphics" {.unnumbered}
+#### "Grammar of Graphics"
 
 The ggplot2 library is built on the “Grammar of Graphics” concept developed by Leland Wilkinson (1999). A “grammar of graphics” (that’s what the “gg” in “ggplot2” stands for) is a framework that uses layers to describe and construct visualizations or graphics in a structured manner. Here’s a visual summary of the concept:
 
@@ -170,15 +180,15 @@ The ggplot2 library is built on the “Grammar of Graphics” concept developed 
 
 **ggplot2** package developed by Hadley Wickham (2005)
 
-#### Making plot layers with ggplot2 {.unnumbered}
+#### Making plot layers with ggplot2
 
-##### 1. The data {.unnumbered}
-##### 2. The aesthetic mapping (what goes on the axes?) {.unnumbered}
-##### 3. The geometries (points? bars? etc.) {.unnumbered}
-##### 4. The annotations / labels {.unnumbered}
-##### 5. The theme {.unnumbered}
+##### 1. The data
+##### 2. The aesthetic mapping (what goes on the axes?)
+##### 3. The geometries (points? bars? etc.)
+##### 4. The annotations / labels
+##### 5. The theme
 
-#### Layer 1: The data {.unnumbered}
+#### Layer 1: The data
 
 ```{r}
 head(mpg)
@@ -195,7 +205,7 @@ mpg %>%
   ggplot()
 ```
 
-#### Layer 2: The aesthetic mapping {.unnumbered}
+#### Layer 2: The aesthetic mapping
 
 The `aes()` function determines which variables will be _mapped_ to the geometries<br>(e.g. the axes)
 
@@ -205,10 +215,10 @@ The `aes()` function determines which variables will be _mapped_ to the geometri
 #| fig.width: 7
 
 mpg %>% 
-  ggplot(aes(x = displ, y = hwy)) #<<
+  ggplot(aes(x = displ, y = hwy))
 ```
 
-#### Layer 3: The geometries {.unnumbered}
+#### Layer 3: The geometries
 
 Use `+` to add geometries, e.g. `geom_points()` for points
 
@@ -219,30 +229,35 @@ Use `+` to add geometries, e.g. `geom_points()` for points
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
-  geom_point() #<<
+  geom_point()
 ```
 
-#### Layer 4: The annotations / labels {.unnumbered}
+#### Layer 4: The annotations / labels
 
 Use `labs()` to modify most labels
 
-```{r gglabs, fig.show='hide'}
+```{r}
+#| label: gglabs
+#| fig.height: 5
+#| fig.width: 7
+
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
   geom_point() +
-  labs( #<<
-    x = "Engine displacement (liters)",  #<<
-    y = "Highway fuel economy (mpg)",  #<<
-    title = "Most larger engine vehicles are less fuel efficient" #<<
-  ) #<<
+  labs(
+    x = "Engine displacement (liters)",
+    y = "Highway fuel economy (mpg)",
+    title = "Most larger engine vehicles are less fuel efficient"
+  )
 ```
 
-```{r ref.label='gglabs', echo=FALSE, fig.height=5, fig.width=7}
-```
+#### Layer 5: The theme
 
-#### Layer 5: The theme {.unnumbered}
+```{r}
+#| label: ggtheme_bw
+#| fig.height: 5
+#| fig.width: 7
 
-```{r ggtheme_bw, fig.show='hide'}
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
   geom_point() +
@@ -251,48 +266,61 @@ mpg %>%
     y = "Highway fuel economy (mpg)", 
     title = "Most larger engine vehicles are less fuel efficient"
   ) + 
-  theme_bw() #<<
+  theme_bw()
 ```
 
-```{r ref.label='ggtheme_bw', echo=FALSE, fig.height=5, fig.width=7}
-```
-
-##### Common themes {.unnumbered}
+##### Common themes
 
 `theme_bw()`
 
-```{r, fig.height=4, fig.width=6}
+```{r}
+#| label: ggtheme_bw2
+#| fig.height: 4
+#| fig.width: 6
+
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
   geom_point() +
-  theme_bw() #<<
+  theme_bw()
 ```
 
 `theme_minimal()`
 
-```{r, fig.height=4, fig.width=6}
+```{r}
+#| label: ggtheme_minimal
+#| fig.height: 4
+#| fig.width: 6
+
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
   geom_point() +
-  theme_minimal() #<<
+  theme_minimal()
 ```
 
 `theme_classic()`
 
-```{r, fig.height=4, fig.width=6}
+```{r}
+#| label: ggtheme_classic
+#| fig.height: 4
+#| fig.width: 6
+
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
   geom_point() +
-  theme_classic() #<<
+  theme_classic()
 ```
 
 `theme_void()`
 
-```{r, fig.height=4, fig.width=6}
+```{r}
+#| label: ggtheme_void
+#| fig.height: 4
+#| fig.width: 6
+
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
   geom_point() +
-  theme_void() #<<
+  theme_void()
 ```
 
 ## Making a (good) ggplot
@@ -305,119 +333,123 @@ mpg %>%
 6. Adjust theme
 7. Annotate
 
-#### 1) Format data frame {.unnumbered}
+#### 1) Format data frame
 
 ```{r}
 # Format the data frame
 wildlife_impacts %>%
-  count(operator) #<<
+  count(operator)
 ```
 
-#### 2) Add geoms {.unnumbered}
+#### 2) Add geoms
 
-```{r, eval=FALSE}
+```{r}
+#| label: birds_before
+#| fig.height: 4
+#| fig.width: 6
+
 # Format the data frame
 wildlife_impacts %>%
   count(operator) %>%
 
 # Add geoms
-  ggplot() +
+ggplot() +
   geom_col(
-      aes(x = operator, y = n), #<<
-      width = 0.7, alpha = 0.8)
+    aes(x = operator, y = n),
+    width = 0.7, alpha = 0.8
+  )
 ```
 
-<center>
-<img src="figs/birds_before.png" width = 500>
-</center>
+#### 3) Flip coordinates - can you read the labels?
 
+```{r}
+#| label: birds_coord_flip
+#| fig.height: 4
+#| fig.width: 6
 
-#### 3) Flip coordinates - can you read the labels? {.unnumbered}
-
-```{r, eval=FALSE}
 # Format the data frame
 wildlife_impacts %>%
   count(operator) %>%
 
 # Add geoms
-  ggplot() +
+ ggplot() +
   geom_col(
       aes(x = operator, y = n),
       width = 0.7, alpha = 0.8) +
 
 # Flip coordinates
-  coord_flip() #<<
+  coord_flip()
 ```
 
-<center>
-<img src="figs/birds_coord_flip.png" width=500>
-</center>
+```{r}
+#| label: birds_coord_flip2
+#| fig.height: 4
+#| fig.width: 6
 
-```{r, eval=FALSE}
 # Format the data frame
 wildlife_impacts %>%
   count(operator) %>%
 
 # Add geoms
-  ggplot() +
+ggplot() +
   geom_col(
-      aes(x = n, y = operator), #<<
+    aes(x = n, y = operator),
+    width = 0.7, alpha = 0.8
+  )
+```
+
+#### 4) Reorder factors with `reorder()`
+
+```{r}
+#| label: birds_fct_reorder
+#| fig.height: 4
+#| fig.width: 6
+
+wildlife_impacts %>%
+  count(operator) %>%
+
+# Add geoms
+ggplot() +
+  geom_col(
+      aes(x = n, y = reorder(operator, n)),
       width = 0.7, alpha = 0.8)
 ```
 
-<center>
-<img src="figs/birds_coord_flip.png" width=500>
-</center>
+#### 5) Adjust scales
 
-#### 4) Reorder factors with `reorder()` {.unnumbered}
+```{r}
+#| label: birds_scales1
+#| fig.height: 4
+#| fig.width: 6
 
-```{r, eval=FALSE}
 # Format the data frame
 wildlife_impacts %>%
   count(operator) %>%
 
 # Add geoms
-  ggplot() +
-  geom_col(
-      aes(x = n, y = reorder(operator, n)), #<<
-      width = 0.7, alpha = 0.8)
-```
-
-<center>
-<img src="figs/birds_fct_reorder.png" width = 500>
-</center>
-
-#### 5) Adjust scales {.unnumbered}
-
-```{r, eval=FALSE}
-# Format the data frame
-wildlife_impacts %>%
-  count(operator) %>%
-
-# Add geoms
-  ggplot() +
+ggplot() +
   geom_col(
       aes(x = n, y = reorder(operator, n)),
       width = 0.7, alpha = 0.8) +
 
 # Adjust x axis scale
-  scale_x_continuous( #<<
-    expand = expansion(mult = c(0, 0.05))) #<<
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.05)))
 ```
 
-<center>
-<img src="figs/birds_scales1.png" width = 500>
-</center>
+##### Customize break points (if you want)
 
-##### Customize break points (if you want) {.unnumbered}
+```{r}
+#| label: birds_scales2
+#| fig.height: 4
+#| fig.width: 6
 
-```{r, eval=FALSE}
 # Format the data frame
 wildlife_impacts %>%
   count(operator) %>%
 
 # Add geoms
-  ggplot() +
+ggplot() +
   geom_col(
       aes(x = n, y = reorder(operator, n)),
       width = 0.7, alpha = 0.8) +
@@ -425,25 +457,25 @@ wildlife_impacts %>%
 # Adjust x axis scale
   scale_x_continuous(
     expand = expansion(mult = c(0, 0.05)),
-    breaks = c(0, 10000, 20000), #<<
-    limits = c(0, 20000)) #<<
+    breaks = c(0, 10000, 20000),
+    limits = c(0, 20000))
 ```
 
-<center>
-<img src="figs/birds_scales2.png" width = 500>
-</center>
+#### 6) Adjust theme
 
-#### 6) Adjust theme {.unnumbered}
-
-##### Four `cowplot` themes you should know {.unnumbered}
+##### Four `cowplot` themes you should know
 
 <center>
-<img src="figs/cowplot_themes.png" width=700>
+<img src="images/cowplot_themes.png" width=700>
 </center>
 
 For horizontal bars, add only vertical grid
 
-```{r, eval=FALSE}
+```{r}
+#| label: birds_theme
+#| fig.height: 4
+#| fig.width: 6
+
 # Format the data frame
 wildlife_impacts %>%
   count(operator) %>%
@@ -459,20 +491,20 @@ wildlife_impacts %>%
     expand = expansion(mult = c(0, 0.05))) +
 
 # Adjust theme
-  theme_minimal_vgrid() #<<
+  theme_minimal_vgrid()
 ```
 
-<center>
-<img src="figs/birds_theme.png" width=500>
-</center>
+#### 7) Annotate
 
-#### 7) Annotate {.unnumbered}
+```{r}
+#| label: birds_annotate
+#| fig.height: 4
+#| fig.width: 6
 
-```{r, eval=FALSE}
 # Format the data frame
 wildlife_impacts %>%
   count(operator) %>%
-  mutate(operator = str_to_title(operator)) %>% #<<
+  mutate(operator = str_to_title(operator)) %>%
 
 # Add geoms
   ggplot() +
@@ -488,18 +520,18 @@ wildlife_impacts %>%
   theme_minimal_vgrid() +
 
 # Annotate
-  labs( #<<
-    x = 'Count', #<<
-    y = NULL) #<<
+  labs(
+    x = 'Count',
+    y = NULL)
 ```
 
-<center>
-<img src="figs/birds_after.png" width = 500>
-</center>
+#### Finished product
 
-#### Finished product {.unnumbered}
+```{r}
+#| label: birds_after
+#| fig.height: 4
+#| fig.width: 6
 
-```{r, eval=FALSE}
 wildlife_impacts %>%
   count(operator) %>%
   mutate(operator = str_to_title(operator)) %>%
@@ -514,7 +546,3 @@ wildlife_impacts %>%
     x = 'Count',
     y = NULL)
 ```
-
-<center>
-<img src="figs/birds_after.png" width = 500>
-</center>
