@@ -2,6 +2,18 @@
 # that are not written in code chunks. This just speeds
 # things up when rendering the book.
 
+# Install packages
+
+# install.packages(
+#   "HistData", "GGally", "palmerpenguins", "lubridate", 
+#   "countdown", "knitr", "cowplot", "tidyverse", "here", 
+#   "ggrepel", "RColorBrewer", "scales", "MASS", "viridis", 
+#   "ggforce", "jph", "fontawesome", "metathis", "janitor", 
+#   "maps", "mapproj", "sf", "rnaturalearth", "remotes"
+# )
+# remotes::install_github("ropensci/rnaturalearthhires")
+# remotes::install_github("ropensci/rnaturalearthdata")
+
 # summarizing-data ----
 
 library(HistData)
@@ -15,6 +27,22 @@ library(tidyverse)
 library(here)
 library(ggrepel)
 library(RColorBrewer)
+library(scales)
+library(MASS)
+library(viridis)
+library(ggforce)
+library(jph)
+library(fontawesome)
+library(metathis)
+library(janitor)
+library(maps)
+library(mapproj)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rnaturalearthhires)
+
+set.seed(42)
 
 # Set main theme settings
 theme_set(theme_gray(base_size = 18))
@@ -682,11 +710,11 @@ ggsave(here::here('figs', 'ggcor_mtcars_colors.png'),
 # Correlogram
 
 ggpairs_mtcars <- mtcars %>%
-    select(mpg, cyl, disp, hp, wt) %>%
+    dplyr::select(mpg, cyl, disp, hp, wt) %>%
     ggpairs()
 
 ggpairs_mtcars_classic <- mtcars %>%
-    select(mpg, cyl, disp, hp, wt) %>%
+    dplyr::select(mpg, cyl, disp, hp, wt) %>%
     ggpairs() +
     theme_classic(base_size = 18)
 
@@ -1786,7 +1814,7 @@ source(here::here('data', 'state_abbs.R'))
 
 # https://ggplot2-book.org/maps.html
 
-# Polygon maps -----------------------------------------------------
+## Polygon maps ----
 # https://www.r-graph-gallery.com/map.html
 
 # Polygon maps
@@ -1806,7 +1834,7 @@ polygon_us <- ggplot(us_states,
 ggsave(here::here('images', 'plots', 'polygon_us.png'),
        polygon_us, width = 6, height = 3.7)
 
-# Simple features maps -----------------------------------------------------
+## Simple features maps ----
 
 # World
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -1877,7 +1905,8 @@ sf_us_counties_albers <- ggplot(data = us_counties) +
 ggsave(here::here('images', 'plots', 'sf_us_counties_albers.png'),
        sf_us_counties_albers, width = 6, height = 3.7)
 
-# China
+## China ----
+
 china <- ne_states(
   country = 'china',
   returnclass = 'sf')
@@ -1899,8 +1928,7 @@ sf_africa <- ggplot(data = africa) +
 ggsave(here::here('images', 'plots', 'sf_africa.png'),
        sf_africa, width = 6, height = 3.7)
 
-
-# Read shape file --------------------------------------------------------
+## Read shape file ----
 
 world <- st_read(here::here(
   'data', 'natural_earth_countries',
@@ -1919,7 +1947,7 @@ sf_central_park <- ggplot(data = central_park) +
 ggsave(here::here('images', 'plots', 'sf_central_park.png'),
        sf_central_park, width = 8, height = 7)
 
-# Projections Polygons --------------------------------------------------------
+## Projections Polygons ----
 
 us_states <- map_data("state")
 polygon_us <- ggplot(us_states,
@@ -1930,9 +1958,10 @@ polygon_us +
   coord_map(projection = "albers", lat0 = 39, lat1 = 45)
 
 
-# Projections sf --------------------------------------------------------
+## Projections sf ----
 
 # World
+
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
 sf_world_robinson <- ggplot(data = world) +
@@ -1950,6 +1979,7 @@ ggsave(here::here('images', 'plots', 'sf_world_mollweide.png'),
        sf_world_mollweide, width = 6, height = 3.7)
 
 # North America, Albers projection
+
 us_states_cont <- ne_states(
   country = 'united states of america',
   returnclass = 'sf') %>%
@@ -1984,6 +2014,7 @@ ggsave(here::here('images', 'plots', 'sf_us_cont_robinson.png'),
        sf_us_cont_robinson, width = 6, height = 3.7)
 
 # China 
+
 china <- ne_states(
   country = 'china',
   returnclass = 'sf')
@@ -1996,13 +2027,14 @@ sf_china_proj <- ggplot(data = china) +
 ggsave(here::here('images', 'plots', 'sf_china_proj.png'),
        sf_china_proj, width = 6, height = 3.7)
 
-# Choropleth milk -------------------------------------------------------
+## Choropleth milk ----
+
 # https://www.r-graph-gallery.com/327-chloropleth-map-from-geojson-with-ggplot2.html
 
 # Milk 2017
 milk_2017 <- milk_production %>% 
   filter(year == 2017) %>% 
-  select(name = state, milk_produced) %>% 
+  dplyr::select(name = state, milk_produced) %>% 
   mutate(milk_produced = milk_produced / 10^9)
 
 # US States, continental data
@@ -2055,49 +2087,8 @@ sf_us_milk_2017_albers <- ggplot(us_states) +
 
 ggsave(here::here('images', 'plots', 'sf_us_milk_2017_albers.png'),
        sf_us_milk_2017_albers, width = 6, height = 3.7)
-# 
-# # Animation...broken
-# milk_years <- milk_production %>% 
-#     select(name = state, year, milk_produced) %>% 
-#     mutate(milk_produced = milk_produced / 10^9,
-#            year = as.integer(year))
-# 
-# us_states <- ne_states(
-#     country = 'united states of america',
-#     returnclass = 'sf') %>%
-#     filter(! name %in% c('Alaska', 'Hawaii')) %>% 
-#     right_join(milk_years, by = 'name')
-# 
-# us_milk_anim_plot <- ggplot(us_states) +
-#     geom_sf(aes(fill = milk_produced)) +
-#     scale_fill_viridis(
-#         option = "plasma", 
-#         limits = c(0, 40)) +
-#     theme_void(
-#         base_size = 15,
-#         base_family = 'Roboto Condensed') +
-#     theme(legend.position = 'bottom') +
-#     labs(fill = 'Milk produced (billions lbs)', 
-#          title = 'Milk Production by State')
-# 
-# library(gganimate)
-# 
-# us_milk_anim_plot +
-#     transition_time(year) 
-# 
-# us_milk_anim <- us_milk_anim_plot +
-#     transition_time(year)
-# labs(title = "Year: {frame_time}")
-# 
-# # transition_reveal(year)
-# 
-# # Render the animation
-# animate(us_milk_anim, end_pause = 10,
-#         width = 800, height = 600, res = 150)
 
-
-
-# Choropleth internet -------------------------------------------------------
+## Choropleth internet ----
 
 internet_users_2015 <- internet_users %>% 
   filter(year == 2015)
@@ -2147,8 +2138,8 @@ ggsave(here::here('images', 'plots', 'sf_world_internet_mercator.png'),
        sf_world_internet_mercator, width = 6, height = 3.7)
 
 
+## Bubble map - England ----
 
-# Bubble map - England -------------------------------------------------------
 # https://www.r-graph-gallery.com/330-bubble-map-with-ggplot2.html
 
 uk_shape <- map_data("world") %>%
@@ -2244,7 +2235,7 @@ ggsave(here::here('images', 'plots', 'uk_pop_area.png'),
 ggsave(here::here('images', 'plots', 'uk_pop_radius.png'),
        uk_pop_radius, width = 4.5, height = 4.5)
 
-# Bubble map squirrels ------------------------------------------------------
+## Bubble map squirrels ----
 
 central_park <- st_read(here::here(
   'data', 'central_park', 'CentralPark.shp'))
@@ -2282,9 +2273,7 @@ sf_central_park_squirrels_facet <- ggplot(data = central_park) +
 ggsave(here::here('images', 'plots', 'sf_central_park_squirrels_facet.png'),
        sf_central_park_squirrels_facet, width = 10, height = 4)
 
-
-
-# Coffee maps ----------------------------------------------------
+## Coffee maps ----
 
 # US States, continental data
 us_states_cont <- ne_states(
@@ -2358,8 +2347,7 @@ sf_us_coffee_lcc <- sf_us_coffee_base +
 ggsave(here::here('images', 'plots', 'sf_us_coffee_lcc.png'),
        sf_us_coffee_lcc, width = 9, height = 6)
 
-
-# State centroid map ------------------------------------------------------
+## State centroid map ----
 
 # US States, continental data
 us_states_cont <- ne_states(
@@ -2385,21 +2373,22 @@ ggsave(here::here('images', 'plots', 'sf_us_labeled.png'),
        sf_us_labeled, width = 9, height = 5.5)
 
 
-# Hexbin map -----------------------------------------------------------
+## Hexbin map ----
+
 # https://www.r-graph-gallery.com/hexbin-map.html
 # Also statebins: http://socviz.co/maps.html#maps
 
 
 
-# OTHER ----------------------------------------------------------------
+## OTHER ----
 
 
 
-# sf & spatial ------------------------------------------------------------
+## sf & spatial ----
 # https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html
 
 
-# andrew - world projections ----------------------------------------------------------------
+## andrew - world projections ----
 # https://datavizf17.classes.andrewheiss.com/assignment/07-assignment/
 
 int_users_2015 <- internet_users %>%
@@ -2430,13 +2419,13 @@ ggplot(int_users_2015) +
   theme(legend.position = "bottom") +
   labs(fill = '% of population')
 
-# internet animation ----------------------------------------------------------
+## internet animation ----
 # https://ourworldindata.org/internet
 
-# Map insets ----------------------------------------------------------
+## Map insets ----
 # https://www.r-spatial.org/r/2018/10/25/ggplot2-sf-3.html
 
-# Polygon election ----------------------------------------------------
+## Polygon election ----
 # http://socviz.co/maps.html#maps
 
 library(socviz)
@@ -2512,20 +2501,23 @@ ggplot(us_states_elec %>%
   labs(title = "Winning margins",
        fill = "Percent")
 
-# Polygon population -------------------------------------------------
+## Polygon population ----
 # http://socviz.co/maps.html#maps
 
 county_full <- county_map %>%
   left_join(county_data, by = "id") %>%
   mutate(
-    pop_dens = fct_recode(pop_dens,
-                          "0-10"        = "[    0,   10)",
-                          "10-50"       = "[   10,   50)",
-                          "50-100"      = "[   50,  100)",
-                          "100-500"     = "[  100,  500)",
-                          "500-1,000"   = "[  500, 1000)",
-                          "1,000-5,000" = "[ 1000, 5000)",
-                          ">5,000"      = "[ 5000,71672]"))
+    pop_dens = fct_recode(
+      pop_dens,
+      "0-10"        = "[    0,   10)",
+      "10-50"       = "[   10,   50)",
+      "50-100"      = "[   50,  100)",
+      "100-500"     = "[  100,  500)",
+      "500-1,000"   = "[  500, 1000)",
+      "1,000-5,000" = "[ 1000, 5000)",
+      ">5,000"      = "[ 5000,71672]"
+    )
+  )
 
 ggplot(county_full,
        aes(x = long, y = lat,
@@ -2550,9 +2542,7 @@ ggplot(county_full,
   labs(fill = "US Population, Percent Black")
 
 
-
-
-# Animation reprex -------------------------------------------------
+## Animation reprex ----
 
 library(ggplot2)
 library(gganimate)
@@ -2577,7 +2567,6 @@ ggplot(us_states) +
 ggplot(us_states) + 
   geom_sf(aes(fill = fill)) + 
   transition_time(year)
-
 
 # scales ----
 
