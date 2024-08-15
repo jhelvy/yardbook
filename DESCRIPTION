@@ -6,7 +6,12 @@ Authors@R: c(
            family  = "Helveston",
            role    = c("aut", "cre", "cph"),
            email   = "john.helveston@gmail.com",
-           comment = c(ORCID = "0000-0002-2657-9191")))
+           comment = c(ORCID = "0000-0002-2657-9191")),
+    person(given   = "Lola",
+           family  = "Nurullaeva",
+           role    = c("aut", "cre"),
+           email   = "nlola777@gwu.edu",
+           comment = c(ORCID = "0009-0004-0684-4703")))
 Depends: R (>= 4.0.2)
 License: CC-BY-SA
 Encoding: UTF-8
@@ -25,7 +30,6 @@ Imports:
     HistData,
     hrbrthemes,
     janitor,
-    jph,
     kableExtra,
     knitr,
     lubridate,

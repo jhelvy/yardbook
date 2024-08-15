@@ -31,6 +31,8 @@ Sorting in ggplot is done by reordering factors
 **Method 1**: Use `reorder()` inside aesthetic mapping
 
 ```{r}
+#| label: reorder
+
 # Format the data frame
 federal_spending %>%
   group_by(department) %>%
@@ -95,8 +97,6 @@ Loaded with `library(tidyverse)`
 
 Use `fct_reorder()`
 
-```{r, ref.label="fct_reorder", fig.show='hide'}
-```
 <center>
 <img src="figs/federal_spending_bars.png" width = 700>
 <center>
@@ -156,16 +156,15 @@ lotr_words %>%
     expand = expansion(mult = c(0, 0.05))) +
   theme_minimal_vgrid()
 ```
+
 <center>
 <img src="figs/lotr_bars_relevel.png">
 <center>
 
 #### 3. Modify factors manually
 
-```{r, ref.label="lotr_bars", fig.show='hide'}
-```
-
 The film names here are too long:
+
 <center>
 <img src="figs/lotr_bars.png">
 <center>
@@ -197,6 +196,7 @@ lotr_words %>%
     expand = expansion(mult = c(0, 0.05))) +
   theme_minimal_vgrid()
 ```
+
 <center>
 <img src="figs/lotr_bars_recode.png">
 <center>
@@ -238,14 +238,12 @@ lotr_words %>%
 
 #### 4. What if there are too many factor levels?
 
-```{r, ref.label="fct_reorder", fig.show='hide'}
-```
-
 <center>
 <img src="figs/federal_spending_bars.png">
 <center>
 
 **Strategy**: Merge smaller factors into "Other" with `fct_other()`
+
 ```{r}
 #| eval: false
 

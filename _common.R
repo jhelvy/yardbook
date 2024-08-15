@@ -45,7 +45,6 @@ library(palmerpenguins)
 # Misc packages
 library(fontawesome)
 library(metathis)
-library(jph)
 library(janitor)
 
 # Mapping packages

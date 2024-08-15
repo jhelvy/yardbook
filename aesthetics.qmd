@@ -17,6 +17,7 @@ As seen below, text is what catches your attention first.
 <center>
 <img src="images/eye_tracking.gif" width=700>
 </center>
+
 Michelle Borkin, et al. (2015) [Beyond Memorability: Visualization Recognition and Recall](https://ieeexplore.ieee.org/document/7192646)
 
 **Titles matter**
@@ -26,6 +27,7 @@ Below is an example of a chart with an incorrect title.
 <center>
 <img src="images/titles_matter.jpg" width = 700>
 </center>
+
 Source: https://www.reddit.com/r/dataisugly/comments/odk65x/this_was_not_the_right_headline_to_go_along_with
 
 **Good annotations should tell a story**
@@ -33,17 +35,21 @@ Source: https://www.reddit.com/r/dataisugly/comments/odk65x/this_was_not_the_rig
 <center>
 <img src="images/protein.png" width = 700>
 </center>
+
 Source: https://ourworldindata.org/less-meat-or-sustainable-meat
 
 **Use captions as a way to annotate**
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 labs(
   x = 'Year',
   y = 'Cost of incident repairs ($ millions)',
   title = 'Repair costs of aircraft impacts with wildlife',
   subtitle = 'Top 4 airlines',
-  caption = 'Source: https://wildlife.faa.gov/home')
+  caption = 'Source: https://wildlife.faa.gov/home'
+)
 ```
 
 ```{r, ref.label='wildlife_costs', echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
@@ -51,7 +57,12 @@ labs(
 
 **Use mapped variables in `aes()` in `labs()`**
 
-```{r milk_bars, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: milk_bars
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 milk_production %>%
   filter(year %in% c(1970, 2017)) %>%
   group_by(year, region) %>%
@@ -76,7 +87,12 @@ milk_production %>%
 
 Use `labs()` to label everything.
 
-```{r milk_bars2, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: milk_bars2
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 milk_production %>%
   filter(year %in% c(1970, 2017)) %>%
   group_by(year, region) %>%
@@ -107,7 +123,12 @@ milk_production %>%
 <div style="flex: 1; margin-right: 10px;">
 Legends require look-up task
 
-```{r milk_region_line, echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+```{r}
+#| label: milk_region_line
+#| fig-height: 5
+#| fig-width: 7.5
+#| fig-align: center
+
 ggplot(milk_region,
     aes(x = year, y = milk_produced,
         color = region)) +
@@ -121,7 +142,12 @@ ggplot(milk_region,
          title = 'Milk production in four US regions')
 ```
 
-```{r fed_spending_legend, echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: fed_spending_legend
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 ggplot(federal_spending_summary) +
   geom_area(
     aes(x = year, y = rd_budget_mil, fill = department)) +
@@ -141,7 +167,13 @@ ggplot(federal_spending_summary) +
 <div style="flex: 1; margin-right: 10px;">
 Direct labeling is much better
 
-```{r milk_region_line_label, echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: milk_region_line_label
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 ggplot(milk_region,
     aes(x = year, y = milk_produced,
         color = region)) +
@@ -160,7 +192,13 @@ ggplot(milk_region,
          title = 'Milk production in four US regions')
 ```
 
-```{r, fed_spending_annotate, echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: fed_spending_annotate
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 dod_spending <- ggplot(federal_spending_summary) +
     geom_area(aes(x = year, y = rd_budget_mil,
                   fill = department)) +
@@ -186,7 +224,13 @@ dod_spending
 
 **Use `annotate()` to add text to chart**
 
-```{r, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: fed_spending_annotate2
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 dod_spending <- ggplot(federal_spending_summary) +
     geom_area(aes(x = year, y = rd_budget_mil,
                   fill = department)) +
@@ -209,7 +253,13 @@ dod_spending
 
 **Use `geom_text()` to add text to chart**
 
-```{r, fed_spending_geom_text, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: fed_spending_geom_text
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 dod_spending <- ggplot(federal_spending_summary) +
     geom_area(aes(x = year, y = rd_budget_mil,
                   fill = department)) +
@@ -236,7 +286,13 @@ dod_spending
 
 **Use `geom_label()` to add text to chart *with a background* **
 
-```{r, fed_spending_geom_label, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: fed_spending_geom_label
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 dod_spending <- ggplot(federal_spending_summary) +
     geom_area(aes(x = year, y = rd_budget_mil,
                   fill = department)) +
@@ -263,7 +319,13 @@ dod_spending
 
 **Use `geom_curve()` + `geom_label()` to direct attention**
 
-```{r fed_spending_curve, fig.height=5, fig.width=7, fig.align='center'}
+```{r}
+#| label: fed_spending_curve
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 label <- "The Dept. of Defense R&D Budget
 has made up nearly half of all
 federal R&D spending"
@@ -286,7 +348,13 @@ dod_spending +
 
 Use `geom = "rect"` for box, `geom = "text"` for label
 
-```{r mpg_box, fig.height=6, fig.width=7, fig.align='center'}
+```{r}
+#| label: mpg_box
+#| echo: false
+#| fig-height: 6
+#| fig-width: 7
+#| fig-align: center
+
 ggplot(mpg, aes(x = displ, y = hwy)) +
   geom_point(
     aes(fill = as.factor(cyl)),
@@ -376,7 +444,7 @@ Steal colors with the [eye dropper tool](https://chrome.google.com/webstore/deta
 
 Map color to variable
 
-```{r, fig.show='hide'}
+```{r}
 mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
   geom_point(
     aes(color = as.factor(cyl)),
@@ -389,27 +457,29 @@ mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
        caption = "Source: 1974 Motor Trend U.S. magazine.")
 ```
 
-```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_plot_basic
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+
 mpg_plot
 ```
 
 Manually change colors
-```{r, mpg_colors_manual, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_manual
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_manual(values = c(
         '#a0522d', '#522da0', '#2da052'))
 ```
 
 **Consider color blind friendly colors**
-
-Manually change colors
-
-```{r}
-mpg_plot_mycolors <- mpg_plot +
-    theme_half_open(font_size = 10) +
-    scale_color_manual(values = c(
-        '#a0522d', '#522da0', '#2da052'))
-```
 
 Simulate color blindness with [colorblindr](https://github.com/clauswilke/colorblindr)
 
@@ -467,7 +537,9 @@ Image from [betterfigures.org](https://betterfigures.org/2015/06/23/picking-a-co
 
 Map color to variable
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
     geom_point(aes(color = as.factor(cyl)),
                alpha = 0.8, size = 3) +
@@ -481,7 +553,12 @@ mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
 
 Use "Dark2" palette
 
-```{r, mpg_colors_dark2, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_dark2
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_brewer(palette = 'Dark2')
 ```
@@ -491,7 +568,12 @@ mpg_plot +
 <div style="flex: 1; margin-right: 10px;">
 Set1 
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_set1
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_brewer(
         palette = 'Set1')
@@ -501,7 +583,12 @@ mpg_plot +
 <div style="flex: 1; margin-right: 10px;">
 Set2 
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_set2
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_brewer(
         palette = 'Set2')
@@ -511,7 +598,12 @@ mpg_plot +
 <div style="flex: 1; margin-right: 10px;">
 Accent
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_accent
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_brewer(
         palette = 'Accent')
@@ -525,7 +617,9 @@ mpg_plot +
 
 Map color to variable
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
     geom_point(aes(color = as.factor(cyl)),
                alpha = 0.8, size = 3) +
@@ -539,7 +633,12 @@ mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
 
 Use viridis colors
 
-```{r, mpg_colors_viridis, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_viridis
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_viridis(discrete = TRUE)
 ```
@@ -549,7 +648,12 @@ mpg_plot +
 <div style="flex: 1; margin-right: 10px;">
 virdis
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_viridis2
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_viridis(
         discrete = TRUE,
@@ -560,7 +664,12 @@ mpg_plot +
 <div style="flex: 1; margin-right: 10px;">
 inferno
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_inferno
+#| #| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_viridis(
         discrete = TRUE,
@@ -571,7 +680,12 @@ mpg_plot +
 <div style="flex: 1; margin-right: 10px;">
 plasma
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_plasma
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
     scale_color_viridis(
         discrete = TRUE,
@@ -598,7 +712,12 @@ mpg_plot +
 
 **Consider using `color` + `fill` for points**
 
-```{r, mpg_colors_polished, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_colors_polished
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(mtcars, aes(x = mpg, y = hp)) +
   geom_point(
     aes(fill = as.factor(cyl)),
@@ -616,7 +735,12 @@ ggplot(mtcars, aes(x = mpg, y = hp)) +
 
 **Use `grey` for "Other"**
 
-```{r dod_spending_grey, fig.height=4, fig.width=6, fig.align='center'}
+```{r}
+#| label: dod_spending_grey
+#| fig-height: 4
+#| fig-width: 6
+#| fig-align: center
+
 dod_spending_plot <- federal_spending %>%
   mutate(department = fct_other(
     department, keep = 'DOD')) %>%
@@ -644,7 +768,12 @@ dod_spending_plot
 <div style="display: flex; justify-content: space-between;">
 
 <div style="flex: 1; margin-right: 10px;">
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: dod_spending_grey2
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 dod_spending_plot +
     scale_fill_manual(
         values = c('grey40', 'sienna'))
@@ -652,7 +781,12 @@ dod_spending_plot +
 </div>
 
 <div style="flex: 1; margin-right: 10px;">
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: dod_spending_grey3
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 dod_spending_plot +
     scale_fill_manual(
         values = c('grey60', 'sienna'))
@@ -660,7 +794,12 @@ dod_spending_plot +
 </div>
 
 <div style="flex: 1; margin-right: 10px;">
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: dod_spending_grey4
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 dod_spending_plot +
     scale_fill_manual(
         values = c('grey80', 'sienna'))
@@ -802,13 +941,14 @@ For "cowplot" themes, use `font_family`:
 ```{r, eval=FALSE}
 theme_half_open(font_family = "Roboto Condensed")
 ```
+
 ```{r, eval=FALSE}
 theme_minimal_grid(font_family = "Roboto Condensed")
 ```
 
 First, make the base plot
 
-```{r mpg}
+```{r}
 mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
   theme_minimal(base_size = 15) +
@@ -820,13 +960,19 @@ mpg_plot <- ggplot(mtcars) +
     caption = "Source: 1974 Motor Trend U.S. magazine.")
 ```
 
-```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_base
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot
 ```
 
 Use `base_family` with base themes
 
-```{r mpg_base}
+```{r}
 mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
   theme_minimal(
@@ -840,13 +986,19 @@ mpg_plot <- ggplot(mtcars) +
     caption = "Source: 1974 Motor Trend U.S. magazine.")
 ```
 
-```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_base2
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot
 ```
 
 Use `font_family` with cowplot themes
 
-```{r mpg_cowplot}
+```{r}
 mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
   theme_minimal_grid(
@@ -860,13 +1012,24 @@ mpg_plot <- ggplot(mtcars) +
     caption = "Source: 1974 Motor Trend U.S. magazine.")
 ```
 
-```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_cowplot
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot
 ```
 
 **2. Adjust theme elements with `element_text()`**
 
-```{r mpg_cowplot_title, fig.show='hide'}
+```{r}
+#| label: mpg_cowplot_title
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
   theme_minimal_grid(
@@ -882,9 +1045,7 @@ mpg_plot <- ggplot(mtcars) +
     title = "Vehicle fuel efficiency vs. power",
     subtitle = "Select makes and models",
     caption = "Source: 1974 Motor Trend U.S. magazine.")
-```
 
-```{r, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
 mpg_plot
 ```
 
@@ -894,7 +1055,12 @@ See theme components [here](https://ggplot2.tidyverse.org/reference/theme.html)
 
 (Using `geom_text()`, `geom_label()`, and/or `annotate()`)
 
-```{r mpg_cowplot_annotate, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_cowplot_annotate
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 label <- "Higher power engines,
 often come at the expense,
 of fuel economy."
@@ -912,7 +1078,12 @@ mpg_plot +
 
 Great themes + great fonts
 
-```{r mpg_ipsum, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_ipsum
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 library(hrbrthemes)
 
 mpg_plot <- ggplot(mtcars) +
@@ -931,21 +1102,36 @@ mpg_plot +
 <div style="display: flex; justify-content: space-between;">
 
 <div style="flex: 1; margin-right: 10px;">
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_ipsum2
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
   theme_ipsum()
 ```
 </div>
 
 <div style="flex: 1; margin-right: 10px;">
-```{r mpg_ipsum_rc, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_ipsum_rc
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
   theme_ipsum_rc()
 ```
 </div>
 
 <div style="flex: 1; margin-right: 10px;">
-```{r mpg_ft_rc, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: mpg_ft_rc
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 mpg_plot +
   theme_ft_rc()
 ```
