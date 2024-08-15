@@ -29,6 +29,8 @@ book:
   repo-url: https://github.com/jhelvy/yardbook/
   repo-branch: main
   repo-actions: [edit, issue]
+  sidebar:
+    background: "light"
 
   chapters:
     - index.qmd
@@ -59,9 +61,10 @@ book:
 format:
   html:
     theme:
-      - cosmo
+      - cerulean
       - style.css
     code-link: true
+    css: styles.css
 
     author-meta: "John Paul Helveston"
     callout-appearance: simple
