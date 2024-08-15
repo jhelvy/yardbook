@@ -4,7 +4,8 @@
 
 suppressWarnings(suppressMessages(source("_common.R")))
 
-# Large packages that are only needed for the map plots here
+# Maps packages only needed for the map plots here
+library(rnaturalearth)
 library(rnaturalearthdata)
 library(rnaturalearthhires)
 

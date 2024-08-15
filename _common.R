@@ -51,7 +51,6 @@ library(janitor)
 library(maps)
 library(mapproj)
 library(sf)
-library(rnaturalearth)
 
 set.seed(42)
 
