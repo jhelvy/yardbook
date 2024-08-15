@@ -94,7 +94,7 @@ head(fed_spend_long)
 ```{r}
 #| echo: false
 
-head(select(fed_spend_wide, year:HHS))
+head(dplyr::select(fed_spend_wide, year:HHS))
 ```
 
 ### Reshaping data

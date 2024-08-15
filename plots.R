@@ -4,6 +4,10 @@
 
 suppressWarnings(suppressMessages(source("_common.R")))
 
+# Large packages that are only needed for the map plots here
+library(rnaturalearthdata)
+library(rnaturalearthhires)
+
 # summarizing-data ----
 
 # Set main theme settings

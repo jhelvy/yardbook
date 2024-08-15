@@ -1,11 +1,14 @@
 # Install packages
 
 # install.packages(
-#   "HistData", "GGally", "palmerpenguins", "lubridate", 
-#   "countdown", "knitr", "cowplot", "tidyverse", "here", 
-#   "ggrepel", "RColorBrewer", "scales", "MASS", "viridis", 
-#   "ggforce", "jph", "fontawesome", "metathis", "janitor", 
-#   "maps", "mapproj", "sf", "rnaturalearth", "remotes"
+#   c("HistData", "GGally", "palmerpenguins", "lubridate", 
+#     "countdown", "knitr", "cowplot", "tidyverse", "here", 
+#     "ggrepel", "RColorBrewer", "scales", "MASS", "viridis", 
+#     "ggforce", "jph", "fontawesome", "metathis", "janitor", 
+#     "maps", "mapproj", "sf", "rnaturalearth", "remotes",
+#     "colorblindr", "geomtextpath", "gsheet", "hrbrthemes",
+#     "magick", "quarto", "readxl", "rmarkdown", "rvest",
+#     "waffle", "xaringanExtra")
 # )
 # remotes::install_github("ropensci/rnaturalearthhires")
 # remotes::install_github("ropensci/rnaturalearthdata")
@@ -30,8 +33,10 @@ library(RColorBrewer)
 library(scales)
 library(gganimate)
 library(magick)
+library(ggridges)
 library(hrbrthemes)
 library(RColorBrewer)
+library(colorblindr)
 
 # Data packages
 library(HistData)
@@ -41,7 +46,6 @@ library(palmerpenguins)
 # Misc packages
 library(fontawesome)
 library(metathis)
-library(MASS)
 library(jph)
 library(janitor)
 
@@ -50,8 +54,6 @@ library(maps)
 library(mapproj)
 library(sf)
 library(rnaturalearth)
-library(rnaturalearthdata)
-library(rnaturalearthhires)
 
 set.seed(42)
 

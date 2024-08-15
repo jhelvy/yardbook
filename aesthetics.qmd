@@ -124,7 +124,7 @@ ggplot(milk_region,
 ```{r fed_spending_legend, echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
 ggplot(federal_spending_summary) +
   geom_area(
-    aes(x = year, y = rd_budget, fill = department)) +
+    aes(x = year, y = rd_budget_mil, fill = department)) +
   scale_y_continuous(
     expand = expand_scale(mult = c(0, 0.05))) +
   scale_fill_manual(values = c('grey', 'sienna')) +
@@ -162,7 +162,7 @@ ggplot(milk_region,
 
 ```{r, fed_spending_annotate, echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
 dod_spending <- ggplot(federal_spending_summary) +
-    geom_area(aes(x = year, y = rd_budget,
+    geom_area(aes(x = year, y = rd_budget_mil,
                   fill = department)) +
     annotate(geom = 'text', x = 1995, y = 85,
              label = 'Other', size = 6, color = 'black') +
@@ -188,7 +188,7 @@ dod_spending
 
 ```{r, fig.height=5, fig.width=7, fig.align='center'}
 dod_spending <- ggplot(federal_spending_summary) +
-    geom_area(aes(x = year, y = rd_budget,
+    geom_area(aes(x = year, y = rd_budget_mil,
                   fill = department)) +
     annotate(geom = 'text', x = 1995, y = 85,
              label = 'Other', size = 6, color = 'black') +
@@ -211,7 +211,7 @@ dod_spending
 
 ```{r, fed_spending_geom_text, fig.height=5, fig.width=7, fig.align='center'}
 dod_spending <- ggplot(federal_spending_summary) +
-    geom_area(aes(x = year, y = rd_budget,
+    geom_area(aes(x = year, y = rd_budget_mil,
                   fill = department)) +
     geom_text(
       data = data.frame(x = 1995, y = 85, label = 'Other'),
@@ -238,7 +238,7 @@ dod_spending
 
 ```{r, fed_spending_geom_label, fig.height=5, fig.width=7, fig.align='center'}
 dod_spending <- ggplot(federal_spending_summary) +
-    geom_area(aes(x = year, y = rd_budget,
+    geom_area(aes(x = year, y = rd_budget_mil,
                   fill = department)) +
     geom_label(
       data = data.frame(x = 1995, y = 85, label = 'Other'),
@@ -615,12 +615,12 @@ dod_spending_plot <- federal_spending %>%
   mutate(department = fct_other(
     department, keep = 'DOD')) %>%
   group_by(department, year) %>%
-  summarise(rd_budget = sum(rd_budget) / 10^3) %>%
+  summarise(rd_budget_mil = sum(rd_budget_mil) / 10^3) %>%
   ungroup() %>%
   mutate(department = fct_relevel(
   department, c('Other', 'DOD'))) %>%
   ggplot() +
-  geom_area(aes(x = year, y = rd_budget,
+  geom_area(aes(x = year, y = rd_budget_mil,
                 fill = department)) +
   scale_y_continuous(
       expand = expand_scale(mult = c(0, 0.05))) +
