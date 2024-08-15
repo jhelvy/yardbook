@@ -6,7 +6,7 @@
 #     "ggrepel", "RColorBrewer", "scales", "MASS", "viridis", 
 #     "ggforce", "jph", "fontawesome", "metathis", "janitor", 
 #     "maps", "mapproj", "sf", "rnaturalearth", "remotes",
-#     "colorblindr", "geomtextpath", "gsheet", "hrbrthemes",
+#     geomtextpath", "gsheet", "hrbrthemes",
 #     "magick", "quarto", "readxl", "rmarkdown", "rvest",
 #     "waffle", "xaringanExtra")
 # )
@@ -36,7 +36,6 @@ library(magick)
 library(ggridges)
 library(hrbrthemes)
 library(RColorBrewer)
-library(colorblindr)
 
 # Data packages
 library(HistData)
