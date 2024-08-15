@@ -112,9 +112,6 @@ Art by<br>[Allison Horst](https://allisonhorst.com/)
 To show an example of a simple features map, we shall use the library data from [Natural Earth](http://www.naturalearthdata.com/downloads/50m-cultural-vectors/)
 
 ```{r, eval=FALSE}
-library(rnaturalearth)
-library(rnaturalearthdata)
-
 world <- ne_countries(
   scale = "medium",
   returnclass = "sf"
@@ -126,9 +123,6 @@ world %>%
 ```
 
 ```{r, echo=FALSE}
-library(rnaturalearth)
-library(rnaturalearthdata)
-
 world <- ne_countries(
   scale = "medium",
   returnclass = "sf"
@@ -146,9 +140,6 @@ Once again, we use two steps to plot our maps.
 1. Get the "World" shape file
 
 ```{r}
-library(rnaturalearth)
-library(rnaturalearthdata)
-
 world <- ne_countries(
   scale = "medium",
   returnclass = "sf"
@@ -173,9 +164,6 @@ ggplot(data = world) +
 1. Get the "US States" shape file
 
 ```{r}
-library(rnaturalearth)
-library(rnaturalearthdata)
-
 us_states <- ne_states( 
   country = 'united states of america', 
   returnclass = 'sf'
@@ -200,9 +188,6 @@ ggplot(data = us_states) +
 1. Get the **Continental** "US States" shape file
 
 ```{r}
-library(rnaturalearth)
-library(rnaturalearthdata)
-
 us_states_cont <- ne_states(
       country = 'united states of america',
       returnclass = 'sf'
