@@ -4,32 +4,8 @@
 #| echo: false
 #| message: false
 #| include: false
-source("_common.R")
 
-# Set main plot theme
-theme_set(theme_cowplot(font_size = 20))
-
-# Read in data
-milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
-global_temps     <- read_csv(here::here('data', 'nasa_global_temps.csv'))
-hotdogs          <- read_csv(here::here('data', 'hot_dog_winners.csv'))
-internet_country <- read_csv(here::here('data', 'internet_users_country.csv'))
-internet_region  <- read_csv(here::here('data', 'internet_users_region.csv'))
-us_diseases      <- read_csv(here::here('data', 'us_contagious_diseases.csv'))
-us_covid         <- read_csv(here::here('data', 'us_covid.csv'))
-avengers         <- read_csv(here::here('data', 'avengers.csv'))
-bears            <- read_csv(here::here('data', 'north_america_bear_killings.csv'))
-federal_spending <- read_csv(here::here('data', 'fed_spending_long.csv'))
-gapminder        <- read_csv(here::here('data', 'gapminder.csv'))
-lotr_words       <- read_csv(here::here('data', 'lotr_words_temp.csv'))
-wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
-milk_summary_2017 <- milk_production %>%
-  filter(year == 2017) %>%
-  mutate(state = fct_other(state,
-    keep = c('California', 'Wisconsin'))) %>%
-  group_by(state) %>%
-  summarise(milk_produced = sum(milk_produced)) %>%
-  mutate(milk_produced = milk_produced / 10^9)
+suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
 ## Manipulating Factors
@@ -78,7 +54,9 @@ federal_spending %>%
 
 **Method 2**: Use `fct_reorder()` when formatting the data frame
 
-```{r fct_reorder}
+```{r}
+#| label: fct_reorder
+
 # Format the data frame
 federal_spending %>%
   group_by(department) %>%
@@ -125,7 +103,10 @@ Use `fct_reorder()`
 
 #### 2. Reorder factors **manually**
 
-```{r lotr_bars, eval=FALSE}
+```{r}
+#| label: lotr_bars
+#| eval: false
+
 # Format the data frame
 lotr_words %>%
   pivot_longer(
@@ -149,7 +130,10 @@ lotr_words %>%
 
 #### 2. Reorder factors **manually** with `fct_relevel()`
 
-```{r fct_relevel, eval=FALSE}
+```{r}
+#| label: fct_relevel
+#| eval: false
+
 # Format the data frame
 lotr_words %>%
   pivot_longer(
@@ -189,7 +173,9 @@ The film names here are too long:
 #### 3. Modify factors manually with `fct_recode()`
 
 `"new label" = "old label"`
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Format the data frame
 lotr_words %>%
   pivot_longer(
@@ -217,7 +203,9 @@ lotr_words %>%
 
 #### 2 & 3. Modify and reorder factors manually
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Format the data frame
 lotr_words %>%
   pivot_longer(
@@ -258,7 +246,9 @@ lotr_words %>%
 <center>
 
 **Strategy**: Merge smaller factors into "Other" with `fct_other()`
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Format the data frame
 federal_spending %>%
   mutate(
@@ -288,7 +278,9 @@ federal_spending %>%
 
 #### 4. What if there are _really_ too many factor levels?
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Format the data frame
 avengers %>%
   mutate(
@@ -310,7 +302,9 @@ avengers %>%
 </center>
 
 **Strategy**: Keep top N, drop the rest with `slice()`
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Format the data frame
 avengers %>%
   mutate(
@@ -334,7 +328,9 @@ avengers %>%
 </center>
 
 `slice()` works with grouping too!
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Format the data frame
 avengers %>%
   mutate(
@@ -427,7 +423,9 @@ avengers %>%
 
 ### How to make a **Bar chart**
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Summarize the data
 federal_spending %>%
   group_by(department) %>%
@@ -451,7 +449,9 @@ federal_spending %>%
 
 **Filling the bars with color:**
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Summarize the data
 federal_spending %>%
   group_by(department) %>%
@@ -484,7 +484,9 @@ The DOD's R&D budget is nearly the same as all other departments combined
 
 Summarize data frame:
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Summarize the data
 federal_spending %>%
   group_by(department) %>%
@@ -511,7 +513,9 @@ federal_spending %>%
 
 Summarize data frame:
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Summarize the data
 federal_spending %>%
   group_by(department) %>%

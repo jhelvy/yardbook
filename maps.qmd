@@ -4,8 +4,8 @@
 #| echo: false
 #| message: false
 #| include: false
-source("_common.R")
 
+suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
 ## How to Make a Map

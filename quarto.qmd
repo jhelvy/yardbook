@@ -4,7 +4,7 @@
 #| echo: false
 #| message: false
 
-source("_common.R")
+suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
 > ### Learning Objectives {.unnumbered}

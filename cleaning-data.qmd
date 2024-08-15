@@ -5,29 +5,7 @@
 #| message: false
 #| include: false
 
-source("_common.R")
-
-# Load packages
-library(tidyverse)
-library(here)
-library(cowplot)
-library(readxl)
-
-# Read in data
-wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
-milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
-tb_rates <- table3
-tb_cases <- read_csv(here('data', 'tb_cases.csv'))
-milk_production <- read_csv(here('data', 'milk_production.csv'))
-fed_spend_long <- read_csv(here('data', 'fed_spend_long.csv'))
-fed_spend <- fed_spend_long
-fed_spend_wide <- read_csv(here('data', 'fed_spend_wide.csv'))
-lotr_words <- read_csv(here('data', 'lotr_words.csv'))
-pv_cells <- read_excel(
-    here('data', 'pv_cell_production.xlsx'),
-    sheet = 'Cell Prod by Country', skip = 2) %>%
-  mutate(Year = as.numeric(Year)) %>% 
-  filter(!is.na(Year)) 
+suppressWarnings(suppressMessages(source("_common.R")))
 
 # Add new variables
 wildlife_impacts_orig <- wildlife_impacts
@@ -41,9 +19,6 @@ wildlife_impacts <- wildlife_impacts %>%
             phase_of_flt %in% c('climb', 'departure',
                                 'take-off run') ~ 'departure',
             TRUE ~ 'other'))
-
-# Load state_abbs data frame, containing state abbreviations
-source(here::here('data', 'state_abbs.R'))
 
 bad_abbs <- c("MH", "AE", "AA", "AE", "AP")
 

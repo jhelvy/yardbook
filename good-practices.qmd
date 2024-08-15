@@ -5,9 +5,7 @@
 #| message: false
 #| include: false
 
-source("_common.R")
-
-library(fontawesome)
+suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
 > ### Learning Objectives {.unnumbered}

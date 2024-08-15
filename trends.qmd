@@ -4,90 +4,8 @@
 #| echo: false
 #| message: false
 #| include: false
-source("_common.R")
 
-gapminder        <- read_csv(here::here('data', 'gapminder.csv'))
-milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
-global_temps     <- read_csv(here::here('data', 'nasa_global_temps.csv'))
-internet_region  <- read_csv(here::here('data', 'internet_users_region.csv'))
-hotdogs          <- read_csv(here::here('data', 'hot_dog_winners.csv'))
-internet_country <- read_csv(here::here('data', 'internet_users_country.csv'))
-us_covid         <- read_csv(here::here('data', 'us_covid.csv'))
-us_diseases      <- read_csv(here::here('data', 'us_contagious_diseases.csv'))
-# Modify data
-milk_production <- milk_production %>%
-    mutate(
-        milk_produced = milk_produced / 10^9,
-        state = fct_reorder(state, milk_produced))
-
-gapminder <- gapminder %>%
-    mutate(year = as.integer(year))
-
-# Make data subsets
-milk_ca <- milk_production %>%
-    filter(state == 'California')
-
-milk_ca_sparse <- milk_ca %>%
-    mutate(yearColor = ifelse(year %in% seq(1970, 2020, 10), 'one', 'two'))
-
-milk_region <- milk_production %>%
-    filter(region %in% c(
-        'Pacific', 'Northeast', 'Lake States', 'Mountain')) %>%
-    group_by(year, region) %>%
-    summarise(milk_produced = sum(milk_produced)) %>%
-    ungroup() %>%
-    mutate(label = ifelse(year == max(year), region, NA))
-
-milk_race <- milk_production %>%
-    group_by(year) %>%
-    mutate(
-        rank = rank(-milk_produced),
-        Value_rel = milk_produced / milk_produced[rank==1],
-        Value_lbl = paste0(' ', round(milk_produced))) %>%
-    group_by(state) %>%
-    filter(rank <= 10) %>%
-    ungroup() %>%
-    mutate(year = as.integer(year))
-
-hotdogs_mens <- hotdogs %>%
-    filter(Competition == 'Mens') %>%
-    rename(dogs = `Dogs eaten`,
-           record = `New record`) %>%
-    mutate(
-        record = if_else(record == 1, 'Yes', 'No'),
-        Winner = fct_other(Winner,
-            keep = c('Joey Chestnut', 'Takeru Kobayashi')))
-
-internet_country_summary <- internet_country %>%
-    filter(country %in% c(
-        'United States', 'China',
-        'Singapore', 'Cuba')) %>%
-    mutate(
-        label = ifelse(year == max(year), country, NA))
-
-internet_region_summary <- internet_region %>%
-    mutate(
-        numUsers = numUsers / 10^9,
-        label    = ifelse(year == max(year), region, NA))
-
-measles <- us_diseases %>%
-  filter(
-    disease == 'Measles',
-    !state %in% c("Hawaii", "Alaska")) %>%
-  mutate(
-    rate = (count / population) * 10000,
-    state = fct_reorder(state, rate)) %>%
-  # Compute annual mean rate across all states
-  group_by(year) %>%
-  mutate(
-    mean_rate = sum(count) / sum(population) * 10000)
-
-measles_ca <- measles %>%
-    filter(state == "California")
-
-measles_us <- measles %>%
-    group_by(year) %>%
-    summarize(rate = sum(count) / sum(population) * 10000)
+suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
 ## Single Variables
@@ -96,7 +14,13 @@ measles_us <- measles %>%
 
 Plotting the data points is a good starting point for viewing trends.
 
-```{r milk_ca_point, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: milk_ca_point
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(milk_ca,
     aes(x = year, y = milk_produced)) +
     geom_point(color = 'steelblue', size = 2) +
@@ -110,21 +34,15 @@ ggplot(milk_ca,
 
 Adding lines between the points helps see the overall trend.
 
-```{r milk_ca_point_line, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
-ggplot(milk_ca,
-    aes(x = year, y = milk_produced)) +
-    geom_line(color = 'steelblue', size = 0.5) +
-    geom_point(color = 'steelblue', size = 2) +
-    theme_half_open(font_size = 18) +
-    labs(x = 'Year',
-         y = 'Milk produced (billion lbs)',
-         title = 'Milk production in California')
-```
-
 How to: **Points + line**
 
 Be sure to draw the line first, then overlay the points
-```{r, eval=FALSE}
+```{r}
+#| label: milk_ca_point_line
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(milk_ca,
     aes(x = year, y = milk_produced)) +
     geom_line(color = 'steelblue', size = 0.5) +
@@ -133,16 +51,19 @@ ggplot(milk_ca,
     labs(x = 'Year',
          y = 'Milk produced (billion lbs)',
          title = 'Milk production in California')
-```
-
-```{r ref.label='milk_ca_point_line', echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
 ```
 
 ### Line
 
 Omitting the points emphasizes the overall trend.
 
-```{r milk_ca_line, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: milk_ca_line
+#| #| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(milk_ca,
     aes(x = year, y = milk_produced)) +
     geom_line(color = 'steelblue', size = 1) +
@@ -157,7 +78,13 @@ ggplot(milk_ca,
 Filling area below line emphasizes cumulative over time.
 (y-axis should start at 0)
 
-```{r milk_ca_line_area, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: milk_ca_line_area
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(milk_ca,
     aes(x = year, y = milk_produced)) +
     geom_area(fill = 'steelblue', alpha = 0.5) +
@@ -173,7 +100,13 @@ ggplot(milk_ca,
 
 **If points are too sparse, a line can be misleading.**
 
-```{r milk_ca_point_line_sparse1, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: milk_ca_point_line_sparse1
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(milk_ca_sparse,
        aes(x = year, y = milk_produced)) +
     geom_line(color = 'steelblue', size = 0.5) +
@@ -186,7 +119,13 @@ ggplot(milk_ca_sparse,
          title = 'Milk production in California')
 ```
 
-```{r milk_ca_point_line_sparse2, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: milk_ca_point_line_sparse2
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 milk_ca_sparse %>%
     filter(yearColor == 'one') %>%
     ggplot(aes(x = year, y = milk_produced)) +
@@ -202,19 +141,6 @@ How to: **Line + area**
 
 Likewise, draw the area first then overlay the line
 
-```{r, eval=FALSE}
-ggplot(milk_ca,
-    aes(x = year, y = milk_produced)) +
-    geom_area(fill = 'steelblue', alpha = 0.5) +
-    geom_line(color = 'steelblue', size = 1) +
-    scale_y_continuous(
-        expand = expansion(mult = c(0, 0.05))) +
-    theme_half_open(font_size = 18) +
-    labs(x = 'Year',
-         y = 'Milk produced (billion lbs)',
-         title = 'Milk production in California')
-```
-
 ```{r ref.label='milk_ca_line_area', echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
 ```
 
@@ -222,7 +148,13 @@ ggplot(milk_ca,
 
 Adding a "smoothed" line shows a modeled representation of the overall trend.
 
-```{r milk_ca_smooth, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: milk_ca_smooth
+#| #| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(milk_ca,
     aes(x = year, y = milk_produced)) +
     geom_smooth(color = 'steelblue', size = 1, se = FALSE) +
@@ -236,7 +168,17 @@ ggplot(milk_ca,
 
 Putting the smoothed line over the data points helps show whether **outliers** are driving the trend line.
 
-```{r milk_ca_smooth_points, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+How to: **Smoothed line + points**
+
+Use `alpha` to make points slightly transparent
+
+```{r}
+#| label: milk_ca_smooth_points
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(milk_ca,
     aes(x = year, y = milk_produced)) +
     geom_point(color = 'grey', size = 2, alpha = 0.9) +
@@ -247,32 +189,17 @@ ggplot(milk_ca,
          title = 'Milk production in California')
 ```
 
-How to: **Smoothed line + points**
-
-Use `alpha` to make points slightly transparent
-
-```{r, eval=FALSE}
-ggplot(milk_ca,
-    aes(x = year, y = milk_produced)) +
-    geom_point(color = 'grey',
-      size = 2, alpha = 0.9) +
-    geom_smooth(color = 'steelblue',
-      size = 1, se = FALSE) +
-    theme_half_open(font_size = 18) +
-    labs(
-      x = 'Year',
-      y = 'Milk produced (billion lbs)',
-      title = 'Milk production in California')
-```
-
-```{r ref.label='milk_ca_smooth_points', echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
-```
-
 ### Bars
 
 Bars are useful when emphasizing the **data points**<br>rather than the **slope between them**
 
-```{r hotdog_bar_record, echo=FALSE, fig.height=5.5, fig.width=6.5, fig.align='center'}
+```{r}
+#| label: hotdog_bar_record
+#| echo: false
+#| fig-height: 5.5
+#| fig-width: 6.5
+#| fig-align: center
+
 ggplot(hotdogs_mens) +
     geom_col(
       aes(x = Year, y = dogs, fill = record),
@@ -288,7 +215,13 @@ ggplot(hotdogs_mens) +
          title = "Record-breaking wins in Nathan's hot dog\neating competition, men's division")
 ```
 
-```{r hotdog_bar_winner, echo=FALSE, fig.height=5.5, fig.width=6.5, fig.align='center'}
+```{r}
+#| label: hotdog_bar_winner
+#| echo: false
+#| fig-height: 5.5
+#| fig-width: 6.5
+#| fig-align: center
+
 ggplot(hotdogs_mens) +
     geom_col(
       aes(x = Year, y = dogs, fill = Winner),
@@ -309,7 +242,13 @@ ggplot(hotdogs_mens) +
 
 **With multiple categories, points & lines can get messy**
 
-```{r milk_region_dot, echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+```{r}
+#| label: milk_region_dot
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7.5
+#| fig-align: center
+
 ggplot(milk_region,
     aes(x = year, y = milk_produced,
         color = region)) +
@@ -323,7 +262,13 @@ ggplot(milk_region,
          title = 'Milk production in four US regions')
 ```
 
-```{r milk_region_dot_line, echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+```{r}
+#| label: milk_region_dot_line
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7.5
+#| fig-align: center
+
 ggplot(milk_region,
     aes(x = year, y = milk_produced,
         color = region)) +
@@ -342,7 +287,13 @@ ggplot(milk_region,
 
 **Better**: Lines alone makes distinguishing trends easier
 
-```{r milk_region_line, echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+```{r}
+#| label: milk_region_line
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7.5
+#| fig-align: center
+
 ggplot(milk_region,
     aes(x = year, y = milk_produced,
         color = region)) +
@@ -360,7 +311,13 @@ ggplot(milk_region,
 
 **Even better**: Directly label lines to remove legend
 
-```{r milk_region_line_label, echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+```{r}
+#| label: milk_region_line_label
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7.5
+#| fig-align: center
+
 ggplot(milk_region,
     aes(x = year, y = milk_produced,
         color = region)) +
@@ -387,7 +344,9 @@ How to:<br>**Directly label lines**
 
 Make the basic line chart first
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 # Format the data
 milk_region <- milk_production %>%
   filter(region %in% c(
@@ -410,8 +369,12 @@ ggplot(milk_region,
     color = 'Region',
     title = 'Milk production in four US regions')
 ```
+```{r}
+#| label: milk_region_line_label,
+#| fig-height: 5
+#| fig-width: 7.5
+#| fig-align: center
 
-```{r, eval=FALSE}
 # Format the data
 milk_region <- milk_production %>%
   filter(region %in% c(
@@ -446,12 +409,15 @@ ggplot(milk_region,
        title = 'Milk production in four US regions')
 ```
 
-```{r ref.label='milk_region_line_label', echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
-```
-
 Alternative: **Embed the labels!**
 
-```{r milk_region_line_label2, fig.show='hide'}
+```{r}
+#| label: milk_region_line_label2
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7.5
+#| fig-align: center
+
 library(geomtextpath)
 
 # Format the data
@@ -484,16 +450,19 @@ Use `{geomtextpath}` package
 
 (see [this SO issue](https://stackoverflow.com/questions/29357612/plot-labels-at-ends-of-lines/60217854) for other strategies)
 
-```{r ref.label='milk_region_line_label2', echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
-```
-
 ### Stacked Line/Area Chart
 
 If your goal is to communicate the **overall / total** trend,consider a stacked area chart.
 
 Highlights **regional** trends:
 
-```{r internet_region_line_label, echo=FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+```{r}
+#| label: internet_region_line_label
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7.5
+#| fig-align: center
+
 ggplot(internet_region_summary,
     aes(x = year, y = numUsers,
         color = region)) +
@@ -515,7 +484,13 @@ ggplot(internet_region_summary,
 
 Highlights **overall / total** trend:
 
-```{r internet_region_area, echo=FALSE, fig.height=5, fig.width=8, fig.align='center'}
+```{r}
+#| label: internet_region_area
+#| echo: false
+#| fig-height: 5
+#| fig-width: 8
+#| fig-align: center
+
 internet_region %>%
   mutate(numUsers = numUsers / 10^9) %>%
   ggplot() +
@@ -562,7 +537,13 @@ If you have **lots** of categories:
 
 Measles in **California**:
 
-```{r measles_line_ca, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: measles_line_ca
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(measles_ca) +
     geom_line(aes(x = year, y = rate)) +
     geom_vline(
@@ -578,7 +559,13 @@ ggplot(measles_ca) +
 
 Measles in **all 50 states**:
 
-```{r measles_line_us, echo=FALSE, fig.height=5, fig.width=6, fig.align='center'}
+```{r}
+#| label: measles_line_us
+#| echo: false
+#| fig-height: 5
+#| fig-width: 6
+#| fig-align: center
+
 ggplot(measles) +
     geom_line(
         aes(x = year, y = rate, group = state),
@@ -666,7 +653,13 @@ ggplot(measles) +
 
 **2) Plot all the data with a heat map**
 
-```{r measles_heat_map, echo=FALSE, fig.height=6, fig.width=8, fig.align='center'}
+```{r}
+#| label: measles_heat_map
+#| echo: false
+#| fig-height: 6
+#| fig-width: 8
+#| fig-align: center
+
 ggplot(measles) +
     geom_tile(aes(x = year, y = state, fill = rate),
               color = 'grey80') +
@@ -704,7 +697,11 @@ Check out this heat map on [Traffic fatalities](https://flowingdata.com/2017/04/
 
 Create main grid with `geom_tile()`
 
-```{r measles_grid, fig.height=5, fig.width=4, fig.show='hide'}
+```{r}
+#| label: measles_grid
+#| fig-height: 8
+#| fig-width: 8
+
 ggplot(measles) +
   geom_tile(
     aes(x = year, y = state, fill = rate),
@@ -718,12 +715,14 @@ ggplot(measles) +
     color = 'blue')
 ```
 
-```{r ref.label='measles_grid', echo=FALSE, fig.height=8, fig.width=8, fig.align='center'}
-```
-
 Adjust scales and adjust theme
 
-```{r measles_heat_map_linear, fig.show='hide'}
+```{r}
+#| label: measles_heat_map_linear
+#| fig-height: 7
+#| fig-width: 8
+#| fig-align: center
+
 ggplot(measles) +
   geom_tile(aes(x = year, y = state, fill = rate),
     color = 'grey80') +
@@ -752,12 +751,14 @@ ggplot(measles) +
 
 Color scale is linear in this chart:
 
-```{r ref.label='measles_heat_map_linear', echo=FALSE, fig.height=7, fig.width=8, fig.align='center'}
-```
-
 Adjust scales and adjust theme
 
-```{r, eval=FALSE}
+```{r}
+#| label: measles_heat_map_adjust
+#| fig-height: 7
+#| fig-width: 8
+#| fig-align: center
+
 ggplot(measles) +
   geom_tile(aes(x = year, y = state, fill = rate),
     color = 'grey80') +
@@ -789,9 +790,6 @@ ggplot(measles) +
 ```
 
 Non-linear color scale helps with large variations:
-
-```{r ref.label='measles_heat_map', echo=FALSE, fig.height=7, fig.width=8, fig.align='center'}
-```
 
 ### Two Additional Examples
 

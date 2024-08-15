@@ -4,10 +4,8 @@
 #| echo: false
 #| message: false
 #| include: false
-source("_common.R")
 
-wildlife_impacts <- read_csv(here('data', 'wildlife_impacts.csv'))
-gapminder <- read_csv(here('data', 'gapminder.csv'))
+suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
 <center>

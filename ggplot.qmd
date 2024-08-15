@@ -5,16 +5,7 @@
 #| message: false
 #| include: false
 
-source("_common.R")
-
-# Load packages
-library(tidyverse)
-library(here)
-library(cowplot)
-
-# Read in data sets for chapter
-wildlife_impacts <- read_csv(here('data', 'wildlife_impacts.csv'))
-gapminder <- read_csv(here('data', 'gapminder.csv'))
+suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
 > ### Learning Objectives {.unnumbered}

@@ -5,24 +5,7 @@
 #| message: false
 #| include: false
 
-source("_common.R")
-
-# Load packages
-library(tidyverse)
-library(HistData)
-library(kableExtra)
-
-# Read in data sets
-milk_production <- read_csv(here::here('data', 'milk_production.csv'))
-lotr_words <- read_csv(here::here('data', 'lotr_words.csv'))
-marathon <- read_csv(here::here('data', 'marathon.csv'))
-tb_cases <- read_csv(here::here('data', 'tb_cases.csv'))
-wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
-daysToShip <- data.frame(
-    order = seq(12),
-    warehouseA = c(3,3,3,4,4,4,5,5,5,5,5,5),
-    warehouseB = c(1,1,1,3,3,4,5,5,5,6,7,10)
-)
+suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
 ## Types of Data

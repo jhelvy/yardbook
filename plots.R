@@ -2,62 +2,14 @@
 # that are not written in code chunks. This just speeds
 # things up when rendering the book.
 
-# Install packages
-
-# install.packages(
-#   "HistData", "GGally", "palmerpenguins", "lubridate", 
-#   "countdown", "knitr", "cowplot", "tidyverse", "here", 
-#   "ggrepel", "RColorBrewer", "scales", "MASS", "viridis", 
-#   "ggforce", "jph", "fontawesome", "metathis", "janitor", 
-#   "maps", "mapproj", "sf", "rnaturalearth", "remotes"
-# )
-# remotes::install_github("ropensci/rnaturalearthhires")
-# remotes::install_github("ropensci/rnaturalearthdata")
+suppressWarnings(suppressMessages(source("_common.R")))
 
 # summarizing-data ----
-
-library(HistData)
-library(GGally)
-library(palmerpenguins)
-library(lubridate)
-library(countdown)
-library(knitr)
-library(cowplot)
-library(tidyverse)
-library(here)
-library(ggrepel)
-library(RColorBrewer)
-library(scales)
-library(MASS)
-library(viridis)
-library(ggforce)
-library(jph)
-library(fontawesome)
-library(metathis)
-library(janitor)
-library(maps)
-library(mapproj)
-library(sf)
-library(rnaturalearth)
-library(rnaturalearthdata)
-library(rnaturalearthhires)
-
-set.seed(42)
 
 # Set main theme settings
 theme_set(theme_gray(base_size = 18))
 
 # Read in data
-wildlife_impacts <- read_csv(here::here('data', 'wildlife_impacts.csv'))
-msleep           <- read_csv(here::here('data', 'msleep.csv'))
-marathon <- read_csv(here::here('data', 'marathon.csv'))
-tb_cases <- read_csv(here::here('data', 'tb_cases.csv'))
-daysToShip <- data.frame(
-    order = seq(12),
-    warehouseA = c(3,3,3,4,4,4,5,5,5,5,5,5),
-    warehouseB = c(1,1,1,3,3,4,5,5,5,6,7,10)
-)
-
 cor_w <- 5
 cor_h <- 4
 
@@ -837,16 +789,6 @@ ggsave(here('figs', 'engagement_final.png'),
        engagement_final, width = 6, height = 5)
 
 ## Milk region ----
-
-milk_production  <- read_csv(here::here('data', 'milk_production.csv'))
-
-milk_region <- milk_production %>%
-    filter(region %in% c(
-        'Pacific', 'Northeast', 'Lake States', 'Mountain')) %>%
-    group_by(year, region) %>%
-    summarise(milk_produced = sum(milk_produced)) %>%
-    ungroup() %>%
-    mutate(label = ifelse(year == max(year), region, NA))
 
 milk_region <- ggplot(milk_region,
     aes(x = year, y = milk_produced,
@@ -1703,8 +1645,6 @@ ggsave(here('figs', 'jr_circle.png'),
 
 ## Making a GOOD plot ----
 
-wildlife_impacts <- read_csv(here('data', 'wildlife_impacts.csv'))
-
 birds_before <- wildlife_impacts %>%
   count(operator) %>%
   ggplot() +
@@ -1790,18 +1730,10 @@ ggsave(here('figs', 'cowplot_themes.png'),
 
 # maps ----
 
-# Read in data
-milk_production <- read_csv(here::here('data', 'milk_production.csv'))
-internet_users  <- read_csv(here::here('data', 'internet_users_country.csv'))
-us_coffee_shops <- read_csv(here::here('data', 'us_coffee_shops.csv'))
-
 # Filter out coffee shops to continental 48 states
 us_coffee_shops <- us_coffee_shops %>%
   filter(lat > 22,    lat < 50,
          long > -150, long < -66)
-
-# Load state_abbs data frame, containing state abbreviations 
-source(here::here('data', 'state_abbs.R'))
 
 # Projections 
 
@@ -2030,12 +1962,6 @@ ggsave(here::here('images', 'plots', 'sf_china_proj.png'),
 ## Choropleth milk ----
 
 # https://www.r-graph-gallery.com/327-chloropleth-map-from-geojson-with-ggplot2.html
-
-# Milk 2017
-milk_2017 <- milk_production %>% 
-  filter(year == 2017) %>% 
-  dplyr::select(name = state, milk_produced) %>% 
-  mutate(milk_produced = milk_produced / 10^9)
 
 # US States, continental data
 us_states <- ne_states(
@@ -2543,9 +2469,6 @@ ggplot(county_full,
 
 
 ## Animation reprex ----
-
-library(ggplot2)
-library(gganimate)
 
 us_states <- ne_states(
   country = 'united states of america',
