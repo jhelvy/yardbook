@@ -11,7 +11,6 @@ Depends: R (>= 4.0.2)
 License: CC-BY-SA
 Encoding: UTF-8
 Imports:
-    colorblindr,
     countdown,
     cowplot,
     fontawesome,
@@ -45,5 +44,3 @@ Imports:
     viridis,
     waffle,
     xaringanExtra
-Remotes:
-    clauswilke/colorblindr

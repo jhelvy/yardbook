@@ -2499,6 +2499,27 @@ ggplot(us_states) +
 
 # aesthetics ----
 
+mpg_plot <- ggplot(mtcars, aes(x = mpg, y = hp)) +
+    geom_point(
+        aes(color = as.factor(cyl)),
+        alpha = 0.8, size = 3) +
+    theme_half_open(font_size = 16) +
+    labs(x = "Fuel efficiency (mpg)",
+         y = "Power (hp)",
+         color = '# cylinders',
+         title = "Vehicle fuel efficiency vs. power",
+         caption = "Source: 1974 Motor Trend U.S. magazine.")
+mpg_plot_mycolors <- mpg_plot +
+    theme_half_open(font_size = 10) +
+    scale_color_manual(values = c(
+        '#a0522d', '#522da0', '#2da052'))
+mpg_plot_mycolors <- cvd_grid(mpg_plot_mycolors)
+
+ggsave(
+    here::here('figs', 'mpg_plot_mycolors.png'),
+    mpg_plot_mycolors, width = 8, height = 7
+)
+
 # anim ----
 
 # interact  ----

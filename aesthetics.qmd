@@ -413,12 +413,18 @@ mpg_plot_mycolors <- mpg_plot +
 
 Simulate color blindness with [colorblindr](https://github.com/clauswilke/colorblindr)
 
-```{r, mpg_plot_mycolors, fig.height=7, fig.width=8, fig.align='center'}
+```{r}
+#| eval: false
+
 # remotes::install_github("clauswilke/colorblindr")
 library(colorblindr)
 
 cvd_grid(mpg_plot_mycolors)
 ```
+
+<center>
+<img src="figs/mpg_plot_mycolors.png" width=100%>
+</center>
 
 **Use palettes**
 
