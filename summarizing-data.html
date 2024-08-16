@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="John Paul Helveston">
+
+<title>7&nbsp; Summarizing Data – Yet Another R Dataviz Book</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./part3-data-viz.html" rel="next">
+<link href="./good-practices.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part2-exploring.html">Exploring Data</a></li><li class="breadcrumb-item"><a href="./summarizing-data.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Summarizing Data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Yet Another R Dataviz Book</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/jhelvy/yardbook/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part1-getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Quarto Basics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Ggplot Basics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part2-exploring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploring Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tidy-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tidy Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cleaning-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Tidy Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./good-practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Good Data Practices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summarizing-data.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Summarizing Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part3-data-viz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Visualization</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./effective-data-viz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Effective Charts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./trends.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Plotting Trends</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./amounts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Amounts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Proportions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./comparisons.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Comparisons</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./maps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Maps</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Adjusting Scales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./aesthetics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Plot Aesthetics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anim.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Animation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./interact.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Interactivity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#types-of-data" id="toc-types-of-data" class="nav-link active" data-scroll-target="#types-of-data"><span class="header-section-number">7.1</span> Types of Data</a>
+  <ul class="collapse">
+  <li><a href="#key-questions" id="toc-key-questions" class="nav-link" data-scroll-target="#key-questions"><span class="header-section-number">7.1.1</span> Key Questions</a></li>
+  <li><a href="#variable-encoding" id="toc-variable-encoding" class="nav-link" data-scroll-target="#variable-encoding"><span class="header-section-number">7.1.2</span> Variable Encoding</a></li>
+  <li><a href="#time" id="toc-time" class="nav-link" data-scroll-target="#time"><span class="header-section-number">7.1.3</span> Time</a></li>
+  </ul></li>
+  <li><a href="#summary-measures" id="toc-summary-measures" class="nav-link" data-scroll-target="#summary-measures"><span class="header-section-number">7.2</span> Summary Measures</a>
+  <ul class="collapse">
+  <li><a href="#centrality-a.k.a.-the-average-value" id="toc-centrality-a.k.a.-the-average-value" class="nav-link" data-scroll-target="#centrality-a.k.a.-the-average-value"><span class="header-section-number">7.2.1</span> <span style="color:red;">Centrality (a.k.a. The “Average” Value)</span></a></li>
+  <li><a href="#variability-spread" id="toc-variability-spread" class="nav-link" data-scroll-target="#variability-spread"><span class="header-section-number">7.2.2</span> <span style="color:blue;">Variability (“Spread”)</span></a></li>
+  </ul></li>
+  <li><a href="#summarizingvisualizing-data-by-type" id="toc-summarizingvisualizing-data-by-type" class="nav-link" data-scroll-target="#summarizingvisualizing-data-by-type"><span class="header-section-number">7.3</span> Summarizing/Visualizing Data by Type</a>
+  <ul class="collapse">
+  <li><a href="#the-data-type-determines-how-to-summarize-and-visualize-it." id="toc-the-data-type-determines-how-to-summarize-and-visualize-it." class="nav-link" data-scroll-target="#the-data-type-determines-how-to-summarize-and-visualize-it."><span class="header-section-number">7.3.1</span> The data <em>type</em> determines how to summarize and visualize it.</a></li>
+  <li><a href="#summarizing-nominal-data" id="toc-summarizing-nominal-data" class="nav-link" data-scroll-target="#summarizing-nominal-data"><span class="header-section-number">7.3.2</span> Summarizing <strong>Nominal</strong> data</a></li>
+  <li><a href="#summarizing-ordinal-data" id="toc-summarizing-ordinal-data" class="nav-link" data-scroll-target="#summarizing-ordinal-data"><span class="header-section-number">7.3.3</span> Summarizing <strong>Ordinal</strong> data</a></li>
+  <li><a href="#summarizing-numerical-continuous-variables" id="toc-summarizing-numerical-continuous-variables" class="nav-link" data-scroll-target="#summarizing-numerical-continuous-variables"><span class="header-section-number">7.3.4</span> Summarizing <strong>Numerical (continuous)</strong> variables</a></li>
+  </ul></li>
+  <li><a href="#visualizing-variation" id="toc-visualizing-variation" class="nav-link" data-scroll-target="#visualizing-variation"><span class="header-section-number">7.4</span> Visualizing Variation</a>
+  <ul class="collapse">
+  <li><a href="#two-categorical-variables" id="toc-two-categorical-variables" class="nav-link" data-scroll-target="#two-categorical-variables"><span class="header-section-number">7.4.1</span> Two <strong>Categorical</strong> Variables</a></li>
+  <li><a href="#one-continuous-one-categorical" id="toc-one-continuous-one-categorical" class="nav-link" data-scroll-target="#one-continuous-one-categorical"><span class="header-section-number">7.4.2</span> One <strong>Continuous</strong>, One <strong>Categorical</strong></a></li>
+  </ul></li>
+  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation"><span class="header-section-number">7.5</span> Correlation</a>
+  <ul class="collapse">
+  <li><a href="#how-do-you-measure-correlation-pearson" id="toc-how-do-you-measure-correlation-pearson" class="nav-link" data-scroll-target="#how-do-you-measure-correlation-pearson"><span class="header-section-number">7.5.1</span> How do you measure correlation? (<strong>Pearson</strong>)</a></li>
+  <li><a href="#how-do-you-interpret-r" id="toc-how-do-you-interpret-r" class="nav-link" data-scroll-target="#how-do-you-interpret-r"><span class="header-section-number">7.5.2</span> How do you <em>interpret</em> <span class="math inline">\(r\)</span>?</a></li>
+  <li><a href="#what-does-r-mean" id="toc-what-does-r-mean" class="nav-link" data-scroll-target="#what-does-r-mean"><span class="header-section-number">7.5.3</span> What does <span class="math inline">\(r\)</span> mean?</a></li>
+  <li><a href="#correlation-causation" id="toc-correlation-causation" class="nav-link" data-scroll-target="#correlation-causation"><span class="header-section-number">7.5.4</span> Correlation != Causation</a></li>
+  <li><a href="#outliers" id="toc-outliers" class="nav-link" data-scroll-target="#outliers"><span class="header-section-number">7.5.5</span> Outliers</a></li>
+  <li><a href="#spearmans-rank-order-correlation" id="toc-spearmans-rank-order-correlation" class="nav-link" data-scroll-target="#spearmans-rank-order-correlation"><span class="header-section-number">7.5.6</span> <strong>Spearman</strong>’s rank-order correlation</a></li>
+  <li><a href="#summary-of-correlation" id="toc-summary-of-correlation" class="nav-link" data-scroll-target="#summary-of-correlation"><span class="header-section-number">7.5.7</span> Summary of correlation</a></li>
+  <li><a href="#scatterplots-the-correlation-workhorse" id="toc-scatterplots-the-correlation-workhorse" class="nav-link" data-scroll-target="#scatterplots-the-correlation-workhorse"><span class="header-section-number">7.5.8</span> <strong>Scatterplots</strong>: The correlation workhorse</a></li>
+  <li><a href="#adding-a-correlation-label-to-a-chart" id="toc-adding-a-correlation-label-to-a-chart" class="nav-link" data-scroll-target="#adding-a-correlation-label-to-a-chart"><span class="header-section-number">7.5.9</span> Adding a correlation label to a chart</a></li>
+  <li><a href="#visualize-all-the-correlations-ggcorr" id="toc-visualize-all-the-correlations-ggcorr" class="nav-link" data-scroll-target="#visualize-all-the-correlations-ggcorr"><span class="header-section-number">7.5.10</span> Visualize all the correlations: <code>ggcorr()</code></a></li>
+  <li><a href="#correlograms-ggpairs" id="toc-correlograms-ggpairs" class="nav-link" data-scroll-target="#correlograms-ggpairs"><span class="header-section-number">7.5.11</span> Correlograms: <code>ggpairs()</code></a></li>
+  <li><a href="#simpsons-paradox-when-correlation-betrays-you" id="toc-simpsons-paradox-when-correlation-betrays-you" class="nav-link" data-scroll-target="#simpsons-paradox-when-correlation-betrays-you"><span class="header-section-number">7.5.12</span> <strong>Simpson’s Paradox</strong>: when correlation betrays you</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/summarizing-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part2-exploring.html">Exploring Data</a></li><li class="breadcrumb-item"><a href="./summarizing-data.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Summarizing Data</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-chapter" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Summarizing Data</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="types-of-data" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="types-of-data"><span class="header-section-number">7.1</span> Types of Data</h2>
+<p><strong>Categorical</strong></p>
+<p>Subdivide things into <em>groups</em></p>
+<ul>
+<li>What type?</li>
+<li>Which category?</li>
+</ul>
+<p><strong>Numerical</strong></p>
+<p>Measure things with numbers</p>
+<ul>
+<li>How many?</li>
+<li>How much?</li>
+</ul>
+<section id="categorical-discrete-variables" class="level4" data-number="7.1.0.1">
+<h4 data-number="7.1.0.1" class="anchored" data-anchor-id="categorical-discrete-variables"><span class="header-section-number">7.1.0.1</span> Categorical (discrete) variables:</h4>
+<p><strong>Nominal</strong></p>
+<ul>
+<li>Order doesn’t matter</li>
+<li>Differ in “name” (nominal) only</li>
+</ul>
+<p>e.g.&nbsp;<code>country</code> in TB case data:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 6 × 4
+#&gt;   country      year  cases population
+#&gt;   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+#&gt; 1 Afghanistan  1999    745   19987071
+#&gt; 2 Afghanistan  2000   2666   20595360
+#&gt; 3 Brazil       1999  37737  172006362
+#&gt; 4 Brazil       2000  80488  174504898
+#&gt; 5 China        1999 212258 1272915272
+#&gt; 6 China        2000 213766 1280428583</code></pre>
+</div>
+</div>
+<p><strong>Ordinal</strong></p>
+<ul>
+<li>Order matters</li>
+<li>Distance between units not equal</li>
+</ul>
+<p>e.g.: <code>Placement</code> 2017 Boston marathon:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 6 × 3
+#&gt;   Placement `Official Time` Name            
+#&gt;       &lt;dbl&gt; &lt;time&gt;          &lt;chr&gt;           
+#&gt; 1         1 02:09:37        Kirui, Geoffrey 
+#&gt; 2         2 02:09:58        Rupp, Galen     
+#&gt; 3         3 02:10:28        Osako, Suguru   
+#&gt; 4         4 02:12:08        Biwott, Shadrack
+#&gt; 5         5 02:12:35        Chebet, Wilson  
+#&gt; 6         6 02:12:45        Abdirahman, Abdi</code></pre>
+</div>
+</div>
+</section>
+<section id="numerical-data" class="level4" data-number="7.1.0.2">
+<h4 data-number="7.1.0.2" class="anchored" data-anchor-id="numerical-data"><span class="header-section-number">7.1.0.2</span> Numerical data:</h4>
+<p><strong>Interval</strong></p>
+<ul>
+<li>Numerical scale with arbitrary starting point</li>
+<li>No “0” point</li>
+<li>Can’t say “x” is double “y”</li>
+</ul>
+<p>e.g.: <code>temp</code> in Beaver data</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   day time  temp activ
+#&gt; 1 346  840 36.33     0
+#&gt; 2 346  850 36.34     0
+#&gt; 3 346  900 36.35     0
+#&gt; 4 346  910 36.42     0
+#&gt; 5 346  920 36.55     0
+#&gt; 6 346  930 36.69     0</code></pre>
+</div>
+</div>
+<p><strong>Ratio</strong></p>
+<ul>
+<li>Has a “0” point</li>
+<li>Can be described as percentages</li>
+<li>Can say “x” is double “y”</li>
+</ul>
+<p>e.g.: <code>height</code> &amp; <code>speed</code> in wildlife impacts</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 6 × 3
+#&gt;   incident_date       height speed
+#&gt;   &lt;dttm&gt;               &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 2018-12-31 00:00:00    700   200
+#&gt; 2 2018-12-27 00:00:00    600   145
+#&gt; 3 2018-12-23 00:00:00      0   130
+#&gt; 4 2018-12-22 00:00:00    500   160
+#&gt; 5 2018-12-21 00:00:00    100   150
+#&gt; 6 2018-12-18 00:00:00   4500   250</code></pre>
+</div>
+</div>
+</section>
+<section id="key-questions" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="key-questions"><span class="header-section-number">7.1.1</span> Key Questions</h3>
+<p><strong>Categorical</strong></p>
+<p><span style="color:blue;">Does this work? Does the order matter?</span></p>
+<p>Yes: Ordinal</p>
+<p>No: Nominal</p>
+<p><strong>Numerical</strong></p>
+<p><span style="color:blue;">Is there a “baseline”?</span></p>
+<p>Yes: Ratio</p>
+<p>No: Interval</p>
+</section>
+<section id="variable-encoding" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="variable-encoding"><span class="header-section-number">7.1.2</span> Variable Encoding</h3>
+<p><strong>Be careful of how variables are encoded!</strong></p>
+<p>When numbers are categories</p>
+<ul>
+<li>“Dummy coding”: e.g., <code>passedTest</code> = <code>1</code> or <code>0</code>)</li>
+<li>“North”, “South”, “East”, “West” = <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code></li>
+</ul>
+<p>When ratio data are discrete (i.e.&nbsp;counts)</p>
+<ul>
+<li>Number of eggs in a carton, heart beats per minute, etc.</li>
+<li>Continuous variables measured discretely (e.g.&nbsp;age)</li>
+</ul>
+</section>
+<section id="time" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="time"><span class="header-section-number">7.1.3</span> Time</h3>
+<ul>
+<li>As <em>ordinal</em> categories: “Jan.”, “Feb.”, “Mar.”, etc.</li>
+<li>As <em>interval</em> scale: “Jan.&nbsp;1”, “Jan.&nbsp;2”, “Jan.&nbsp;3”, etc.</li>
+<li>As <em>ratio</em> scale: “30 sec”, “60 sec”, “70 sec”, etc.</li>
+</ul>
+</section>
+</section>
+<section id="summary-measures" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="summary-measures"><span class="header-section-number">7.2</span> Summary Measures</h2>
+<p><strong>Single variables: <span style="color:red;">Centrality</span> &amp; <span style="color:blue;">Variability</span></strong></p>
+<p><strong>Two variables: <span style="color:green;">Correlation</span></strong></p>
+<section id="centrality-a.k.a.-the-average-value" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="centrality-a.k.a.-the-average-value"><span class="header-section-number">7.2.1</span> <span style="color:red;">Centrality (a.k.a. The “Average” Value)</span></h3>
+<p><strong>A single number representing the <em>middle</em> of a set of numbers]</strong></p>
+<p><strong>Mean</strong>: <span class="math inline">\(\frac{\text{Sum of values}}{\text{\# of values}}\)</span></p>
+<p><strong>Median</strong>: “Middle” value (50% of data above &amp; below)</p>
+<p><strong><em>Mean isn’t always the “best” choice</em></strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>wildlife_impacts <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span> <span class="fu">is.na</span>(height)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(height),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">median</span>(height)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 1 × 2
+#&gt;    mean median
+#&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+#&gt; 1  984.     50</code></pre>
+</div>
+</div>
+<p>Percent of data below mean:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "73.9%"</code></pre>
+</div>
+</div>
+<p><strong>On average, at what height do planes hit birds?</strong></p>
+<p><img src="figs/wildlife-hist.png" width="700"></p>
+<p>On average, where do planes hit birds? Saying ~1000 ft is misleading. It’s much more likely to be under 100 ft.</p>
+<p><strong>Beware the “flaw of averages”</strong></p>
+<p><em>What happened to the statistician that crossed a river with an average depth of 3 feet?</em></p>
+<p><em>…he drowned</em></p>
+<p><img src="images/foa.jpg" width="700"></p>
+</section>
+<section id="variability-spread" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="variability-spread"><span class="header-section-number">7.2.2</span> <span style="color:blue;">Variability (“Spread”)</span></h3>
+<p><strong>Standard deviation</strong>: distribution of values relative to the mean <span class="math inline">\(s = \sqrt{\frac{\sum_{i=1}^{N}(x_i - \bar{x})^2}{N - 1}}\)</span></p>
+<p><strong>Interquartile range (IQR)</strong>: <span class="math inline">\(Q_3 - Q_1\)</span> (middle 50% of data)</p>
+<p><strong>Range</strong>: max - min</p>
+<p>Example: Days to ship</p>
+<p>Complaints are coming in about orders shipped from warehouse B, so you collect some data:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>daysToShip</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    order warehouseA warehouseB
+#&gt; 1      1          3          1
+#&gt; 2      2          3          1
+#&gt; 3      3          3          1
+#&gt; 4      4          4          3
+#&gt; 5      5          4          3
+#&gt; 6      6          4          4
+#&gt; 7      7          5          5
+#&gt; 8      8          5          5
+#&gt; 9      9          5          5
+#&gt; 10    10          5          6
+#&gt; 11    11          5          7
+#&gt; 12    12          5         10</code></pre>
+</div>
+</div>
+<p>Here, <strong>averages</strong> are misleading:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>daysToShip <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(warehouse, days, warehouseA<span class="sc">:</span>warehouseB) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(warehouse) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean   =</span> <span class="fu">mean</span>(days),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">median</span>(days)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 2 × 3
+#&gt;   warehouse   mean median
+#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;
+#&gt; 1 warehouseA  4.25    4.5
+#&gt; 2 warehouseB  4.25    4.5</code></pre>
+</div>
+</div>
+<p><strong>Variability</strong> reveals difference in days to ship:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>daysToShip <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(warehouse, days, warehouseA<span class="sc">:</span>warehouseB) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(warehouse) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean   =</span> <span class="fu">mean</span>(days),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">median</span>(days),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">range  =</span> <span class="fu">max</span>(days) <span class="sc">-</span> <span class="fu">min</span>(days),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd     =</span> <span class="fu">sd</span>(days)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 2 × 5
+#&gt;   warehouse   mean median range    sd
+#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 warehouseA  4.25    4.5     2 0.866
+#&gt; 2 warehouseB  4.25    4.5     9 2.70</code></pre>
+</div>
+</div>
+<center>
+<img src="figs/days-to-ship.png" width="700">
+</center>
+<p><strong>Interpreting the standard deviation</strong></p>
+<p><span class="math inline">\(s = \sqrt{\frac{\sum_{i=1}^{N}(x_i - \bar{x})^2}{N - 1}}\)</span></p>
+<center>
+<img src="figs/days-to-ship-sd.png" width="380">
+</center>
+<p><img src="images/sd.png"></p>
+<p><strong>Mean</strong> &amp; <strong>Standard Deviation</strong> are sensitive to outliers</p>
+<p><strong>Outliers</strong>: <span class="math inline">\(Q_1 - 1.5 IQR\)</span> or <span class="math inline">\(Q_3 + 1.5 IQR\)</span></p>
+<p><strong>Extreme values</strong>: <span class="math inline">\(Q_1 - 3 IQR\)</span> or <span class="math inline">\(Q_3 + 3 IQR\)</span></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Mean: 5.6</li>
+<li>Standard Deviation: 2.01</li>
+<li>Median: 5.5</li>
+<li>IQR: 2.5</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><span style="color:red;">Mean: 6.7</span></li>
+<li><span style="color:red;">Standard Deviation: 4.95</span></li>
+<li><span style="color:blue;">Median: 5.5</span></li>
+<li><span style="color:blue;">IQR: 2.5</span></li>
+</ul>
+<p>Robust statistics for continuous data (less sensitive to outliers):</p>
+<p><span style="color:red;">Centrality</span>: Use <em>median</em> rather than <em>mean</em></p>
+<p><span style="color:blue;">Variability</span>: Use <em>IQR</em> rather than <em>standard deviation</em></p>
+</section>
+</section>
+<section id="summarizingvisualizing-data-by-type" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="summarizingvisualizing-data-by-type"><span class="header-section-number">7.3</span> Summarizing/Visualizing Data by Type</h2>
+<p><strong>“Visualizing data helps us think”</strong></p>
+<p>One great example of the importance of visualizing data would be Anscombe’s Quartet. Anscombe’s quartet is comprised of the four datasets shown below. Although these four datasets have identical summary statistics, their graphs reveal their varying data points. Similarly, the Datasaurus dataset seems like an ordinary dataset when looking at the summary statistics. However, plotting the dataset reveals a dinosaur. Inspired by the Anscombe’s Quartet and Datasaurus datasets, the Datasaurus Dozon has 12 datasets with identical summary statistics and differing imagery in their graphs.</p>
+<p><strong>Anscombe’s Quartet</strong></p>
+<p><img src="images/anscombe_data.png" width="700"> <span class="footer-small">Stephen Few (2009, pg. 6)</span></p>
+<p><img src="figs/anscombe-quartet.png" width="700"></p>
+<p><span class="footer-small">Stephen Few (2009, pg. 6)</span></p>
+<p><strong>The Datasaurus and the Datasaurus Dozon</strong></p>
+<p>(More <a href="https://www.autodeskresearch.com/publications/samestats">here</a>)</p>
+<p><img src="images/datasaurus.png" width="700"></p>
+<section id="the-data-type-determines-how-to-summarize-and-visualize-it." class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="the-data-type-determines-how-to-summarize-and-visualize-it."><span class="header-section-number">7.3.1</span> The data <em>type</em> determines how to summarize and visualize it.</h3>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<h3 class="anchored">
+<strong>Nominal<br>(Categorical)</strong>
+</h3>
+<p>
+<strong>Measures:</strong>
+</p>
+<ul>
+<li>
+Frequency counts /<br>Proportions
+</li>
+</ul>
+<br><br><br><br>
+<p>
+<strong>Charts:</strong>
+</p>
+<ul>
+<li>
+Bars
+</li>
+</ul>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<h3 class="anchored">
+<strong>Ordinal<br>(Categorical)</strong>
+</h3>
+<p>
+<strong>Measures:</strong>
+</p>
+<ul>
+<li>
+Frequency counts /<br>Proportions
+</li>
+<li>
+<span style="color: red;">Centrality</span>:<br>Median, Mode
+</li>
+<li>
+<span style="color: blue;">Variability</span>: IQR
+</li>
+</ul>
+<br>
+<p>
+<strong>Charts:</strong>
+</p>
+<ul>
+<li>
+Bars
+</li>
+</ul>
+</div>
+<div style="flex: 1;">
+<h3 class="anchored">
+<strong>Numerical<br>(Continuous)</strong>
+</h3>
+<p>
+<strong>Measures:</strong>
+</p>
+<ul>
+<li>
+<span style="color: red;">Centrality</span>:<br>Mean, median
+</li>
+<li>
+<span style="color: blue;">Variability</span>: Range, standard deviation, IQR
+</li>
+</ul>
+<br><br>
+<p>
+<strong>Charts:</strong>
+</p>
+<ul>
+<li>
+Histogram
+</li>
+<li>
+Boxplot
+</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="summarizing-nominal-data" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="summarizing-nominal-data"><span class="header-section-number">7.3.2</span> Summarizing <strong>Nominal</strong> data</h3>
+<p><strong>Summarize</strong>: Counts / percentages</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>wildlife_impacts <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(operator, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 4 × 3
+#&gt;   operator               n     p
+#&gt;   &lt;chr&gt;              &lt;int&gt; &lt;dbl&gt;
+#&gt; 1 SOUTHWEST AIRLINES 17970 0.315
+#&gt; 2 UNITED AIRLINES    15116 0.265
+#&gt; 3 AMERICAN AIRLINES  14887 0.261
+#&gt; 4 DELTA AIR LINES     9005 0.158</code></pre>
+</div>
+</div>
+<p><strong>Visualize</strong>: (usually sorted) Bars</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>wildlife_impacts <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(operator, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> <span class="fu">reorder</span>(operator, n)),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.7</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Count"</span>, <span class="at">y =</span> <span class="st">"Operator"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-operator-bars-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="summarizing-ordinal-data" class="level3" data-number="7.3.3">
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="summarizing-ordinal-data"><span class="header-section-number">7.3.3</span> Summarizing <strong>Ordinal</strong> data</h3>
+<p><strong>Summarize</strong>: Counts / percentages</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>wildlife_impacts <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(incident_month, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 12 × 3
+#&gt;   incident_month     n      p
+#&gt;            &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;
+#&gt; 1              9  7980 0.140 
+#&gt; 2             10  7754 0.136 
+#&gt; 3              8  7104 0.125 
+#&gt; 4              5  6161 0.108 
+#&gt; 5              7  6133 0.108 
+#&gt; 6              6  4541 0.0797
+#&gt; # ℹ 6 more rows</code></pre>
+</div>
+</div>
+<p><strong>Visualize</strong>: Bars</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>wildlife_impacts <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(incident_month, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(incident_month), <span class="at">y =</span> n),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.7</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Incident month"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-months-bar-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="summarizing-numerical-continuous-variables" class="level3" data-number="7.3.4">
+<h3 data-number="7.3.4" class="anchored" data-anchor-id="summarizing-numerical-continuous-variables"><span class="header-section-number">7.3.4</span> Summarizing <strong>Numerical (continuous)</strong> variables</h3>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<strong>Histograms:</strong>
+<ul>
+<li>
+Skewness
+</li>
+<li>
+Number of modes
+</li>
+</ul>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<strong>Boxplots:</strong>
+<ul>
+<li>
+Outliers
+</li>
+<li>
+Comparing variables
+</li>
+</ul>
+</div>
+</div>
+<p><img src="images/eda-boxplot.png" width="700"></p>
+<section id="histogram-identify-skewness-of-modes" class="level4" data-number="7.3.4.1">
+<h4 data-number="7.3.4.1" class="anchored" data-anchor-id="histogram-identify-skewness-of-modes"><span class="header-section-number">7.3.4.1</span> <strong>Histogram</strong>: Identify Skewness &amp; # of Modes</h4>
+<p><strong>Summarise</strong>: Mean, median, sd, range, &amp; IQR:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wildlife_impacts<span class="sc">$</span>height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#&gt;     0.0     0.0    50.0   983.8  1000.0 25000.0   18038</code></pre>
+</div>
+</div>
+<p><strong>Visualize</strong>: Histogram (identify skewness &amp; modes)</p>
+<p><strong>Height</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wildlife_impacts) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> height), <span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Height (ft)'</span>, <span class="at">y =</span> <span class="st">'Count'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-height-hist-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Speed</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wildlife_impacts) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> speed), <span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'speed (mph)'</span>, <span class="at">y =</span> <span class="st">'Count'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-speed-hist-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="boxplot-identify-outliers" class="level4" data-number="7.3.4.2">
+<h4 data-number="7.3.4.2" class="anchored" data-anchor-id="boxplot-identify-outliers"><span class="header-section-number">7.3.4.2</span> <strong>Boxplot</strong>: Identify outliers</h4>
+<p><strong>Height</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wildlife_impacts) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> height)) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Height (ft)'</span>, <span class="at">y =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-height-boxplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Speed</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wildlife_impacts) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> speed)) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Speed (mph)'</span>, <span class="at">y =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-speed-boxplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="visualizing-variation" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="visualizing-variation"><span class="header-section-number">7.4</span> Visualizing Variation</h2>
+<p>Ask yourself:</p>
+<ul>
+<li>What type of <strong>variation</strong> occurs within my variables?</li>
+<li>What type of <strong>covariation</strong> occurs between my variables?</li>
+</ul>
+<p>Check out <a href="https://eda.seas.gwu.edu/2023-Fall/references.html#choosing-the-right-chart">these guides</a></p>
+<center>
+<img src="images/plots-table.png" width="800">
+</center>
+<section id="two-categorical-variables" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="two-categorical-variables"><span class="header-section-number">7.4.1</span> Two <strong>Categorical</strong> Variables</h3>
+<p>Summarize with a table of counts</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>wildlife_impacts <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(operator, time_of_day)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 20 × 3
+#&gt;   operator          time_of_day     n
+#&gt;   &lt;chr&gt;             &lt;chr&gt;       &lt;int&gt;
+#&gt; 1 AMERICAN AIRLINES Dawn          458
+#&gt; 2 AMERICAN AIRLINES Day          7809
+#&gt; 3 AMERICAN AIRLINES Dusk          584
+#&gt; 4 AMERICAN AIRLINES Night        3710
+#&gt; 5 AMERICAN AIRLINES &lt;NA&gt;         2326
+#&gt; 6 DELTA AIR LINES   Dawn          267
+#&gt; # ℹ 14 more rows</code></pre>
+</div>
+</div>
+<p>Convert to “wide” format with <code>pivot_wider()</code> to make it easier to compare values</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>wildlife_impacts <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(operator, time_of_day) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> time_of_day, <span class="at">values_from =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 4 × 6
+#&gt;   operator            Dawn   Day  Dusk Night  `NA`
+#&gt;   &lt;chr&gt;              &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+#&gt; 1 AMERICAN AIRLINES    458  7809   584  3710  2326
+#&gt; 2 DELTA AIR LINES      267  4846   353  2090  1449
+#&gt; 3 SOUTHWEST AIRLINES   394  9109   599  5425  2443
+#&gt; 4 UNITED AIRLINES      151  3359   181  1510  9915</code></pre>
+</div>
+</div>
+<p>Visualize with bars:<br>map <strong>fill</strong> to denote 2nd categorical var</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>wildlife_impacts <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(operator, time_of_day) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">reorder</span>(operator, n),</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="fu">reorder</span>(time_of_day, n)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    ), </span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.7</span>,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">'dodge'</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Time of day"</span>, </span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Airline"</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-two-var-bars-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Visualize with scatterplot - looking for <em>clustering</em> and/or <em>correlational</em> relationship</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wildlife_impacts) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> speed, <span class="at">y =</span> height),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.5</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">'Speed (mph)'</span>,</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">'Height (f)'</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-scatterplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="one-continuous-one-categorical" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="one-continuous-one-categorical"><span class="header-section-number">7.4.2</span> One <strong>Continuous</strong>, One <strong>Categorical</strong></h3>
+<p>Visualize with <strong>boxplot</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wildlife_impacts) <span class="sc">+</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> speed, <span class="at">y =</span> operator)) <span class="sc">+</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">'Speed (mph)'</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">'Airline'</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/wildlife-two-var-boxplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="correlation" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="correlation"><span class="header-section-number">7.5</span> Correlation</h2>
+<p>There are some pretty racist origins in <a href="https://en.wikipedia.org/wiki/Eugenics">eugenics</a>. This included the notion of being ‘well born’ and possessing ‘superior’ genetics, frequently associated with race. The beautiful irony is that human genetics was also the field that conclusively demonstrated the biological falsity of race. It also advanced our understanding of correlation with the works of these two people:</p>
+<p><strong><a href="https://en.wikipedia.org/wiki/Francis_Galton">Sir Francis Galton</a> (1822 - 1911)</strong></p>
+<ul>
+<li>Charles Darwin’s cousin.</li>
+<li>“Father” of <a href="https://en.wikipedia.org/wiki/Eugenics">eugenics</a>.</li>
+<li>Interested in heredity.</li>
+</ul>
+<p><img src="images/Francis_Galton_1850s.jpg" width="400"></p>
+<p><strong><a href="https://en.wikipedia.org/wiki/Karl_Pearson">Karl Pearson</a> (1857 - 1936)</strong></p>
+<ul>
+<li>Galton’s (<a href="https://en.wikipedia.org/wiki/Apotheosis">hero-worshiping</a>) protégé.</li>
+<li>Defined correlation equation.</li>
+<li>“Father” of mathematical statistics.</li>
+</ul>
+<p><img src="images/Karl_Pearson.jpg" width="400"></p>
+<p><strong>Galton’s family data</strong></p>
+<p>Galton, F. (1886). <a href="http://www.stat.ucla.edu/~nchristo/statistics100C/history_regression.pdf">“Regression towards mediocrity in hereditary stature”</a>. <em>The Journal of the Anthropological Institute of Great Britain and Ireland</em> 15: 246-263.</p>
+<p><strong>Galton’s question</strong>: Does marriage selection indicate a relationship between the heights of husbands and wives?<br>(He called this “assortative mating”)</p>
+<p>“midparent height” is just a scaled mean:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>midparentHeight <span class="ot">=</span>  (father <span class="sc">+</span> <span class="fl">1.08</span><span class="sc">*</span>mother)<span class="sc">/</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HistData)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>galtonScatterplot <span class="ot">&lt;-</span> GaltonFamilies <span class="sc">%&gt;%</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> midparentHeight, <span class="at">y =</span> childHeight),</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">'Midparent height (inches)'</span>,</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">'Child height (inches)'</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>galtonScatterplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/galton-scatterplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="how-do-you-measure-correlation-pearson" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="how-do-you-measure-correlation-pearson"><span class="header-section-number">7.5.1</span> How do you measure correlation? (<strong>Pearson</strong>)</h3>
+<p>Pearson came up with this:</p>
+<section id="r-fractextcovx-ytextsdx-textsdy" class="level5" data-number="7.5.1.0.1">
+<h5 data-number="7.5.1.0.1" class="anchored" data-anchor-id="r-fractextcovx-ytextsdx-textsdy"><span class="header-section-number">7.5.1.0.1</span> <span class="math inline">\(r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}\)</span></h5>
+<p>Assumptions: <br> 1. Variables must be interval or ratio <br> 2. Linear relationship <br></p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/cor_vstrong_p.png" width="350"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/cor_quad.png" width="350"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="how-do-you-interpret-r" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="how-do-you-interpret-r"><span class="header-section-number">7.5.2</span> How do you <em>interpret</em> <span class="math inline">\(r\)</span>?</h3>
+<section id="r-fractextcovx-ytextsdx-textsdy-1" class="level5" data-number="7.5.2.0.1">
+<h5 data-number="7.5.2.0.1" class="anchored" data-anchor-id="r-fractextcovx-ytextsdx-textsdy-1"><span class="header-section-number">7.5.2.0.1</span> <span class="math inline">\(r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}\)</span></h5>
+<p>Interpretation: - <span class="math inline">\(-1 \le r \le 1\)</span> - Closer to 1 is stronger correlation - Closer to 0 is weaker correlation</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> GaltonFamilies<span class="sc">$</span>midparentHeight,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> GaltonFamilies<span class="sc">$</span>childHeight,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">'pearson'</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.3209499</code></pre>
+</div>
+</div>
+<p><img src="figs/galtonScatterplot.png" width="700"></p>
+</section>
+</section>
+<section id="what-does-r-mean" class="level3" data-number="7.5.3">
+<h3 data-number="7.5.3" class="anchored" data-anchor-id="what-does-r-mean"><span class="header-section-number">7.5.3</span> What does <span class="math inline">\(r\)</span> mean?</h3>
+<ul>
+<li><span class="math inline">\(\pm 0.1 - 0.3\)</span>: Weak</li>
+<li><span class="math inline">\(\pm 0.3 - 0.5\)</span>: Moderate</li>
+<li><span class="math inline">\(\pm 0.5 - 0.8\)</span>: Strong</li>
+<li><span class="math inline">\(\pm 0.8 - 1.0\)</span>: Very strong</li>
+</ul>
+<p><img src="figs/cor_p.png" width="700"></p>
+<p>Test your understanding of <span class="math inline">\(r\)</span> here: <a href="http://guessthecorrelation.com/">guessthecorrelation.com</a></p>
+<p><strong>Coefficient of determination: <span class="math inline">\(r^2\)</span></strong> Percent of variance in one variable that is explained by the other variable</p>
+<p><img src="images/rsquared_venn.png" width="700"></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(r\)</span></th>
+<th><span class="math inline">\(r^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.1</td>
+<td>0.01</td>
+</tr>
+<tr class="even">
+<td>0.2</td>
+<td>0.04</td>
+</tr>
+<tr class="odd">
+<td>0.3</td>
+<td>0.09</td>
+</tr>
+<tr class="even">
+<td>0.4</td>
+<td>0.16</td>
+</tr>
+<tr class="odd">
+<td>0.5</td>
+<td>0.25</td>
+</tr>
+<tr class="even">
+<td>0.6</td>
+<td>0.36</td>
+</tr>
+<tr class="odd">
+<td>0.7</td>
+<td>0.49</td>
+</tr>
+<tr class="even">
+<td>0.8</td>
+<td>0.64</td>
+</tr>
+<tr class="odd">
+<td>0.9</td>
+<td>0.81</td>
+</tr>
+<tr class="even">
+<td>1.0</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+<p><strong>You should report both <span class="math inline">\(r\)</span> and <span class="math inline">\(r^2\)</span></strong> If correlation between parent and child height is 0.32, then 10% of the variance in the child height is explained by the parent height.</p>
+</section>
+<section id="correlation-causation" class="level3" data-number="7.5.4">
+<h3 data-number="7.5.4" class="anchored" data-anchor-id="correlation-causation"><span class="header-section-number">7.5.4</span> Correlation != Causation</h3>
+<p><strong>X causes Y</strong></p>
+<ul>
+<li>Training causes improved performance</li>
+</ul>
+<p><strong>Y causes X</strong></p>
+<ul>
+<li>Good (bad) performance causes people to train harder (less hard).</li>
+</ul>
+<p>–</p>
+<p><strong>Z causes both X &amp; Y</strong></p>
+<ul>
+<li>Commitment and motivation cause increased training and better performance.</li>
+</ul>
+<p><strong>Be weary of dual axes!</strong></p>
+<p>(<a href="https://www.tylervigen.com/spurious-correlations">They can cause spurious correlations</a>)</p>
+Dual Axes: <img src="images/hbr_two_axes1.png" width="700">
+
+<p>Single Axis: <img src="images/hbr_two_axes2.png" width="700"></p>
+</section>
+<section id="outliers" class="level3" data-number="7.5.5">
+<h3 data-number="7.5.5" class="anchored" data-anchor-id="outliers"><span class="header-section-number">7.5.5</span> Outliers</h3>
+<center>
+<img src="images/outliers.jpeg" width="680">
+</center>
+<p><strong>Pearson</strong> correlation is highly sensitive to outliers</p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/pearson_base.png" width="260"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/pearson1.png" width="260"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/pearson2.png" width="260"></p>
+</div>
+</div>
+<p><img src="figs/pearson_grid.png" width="700"></p>
+</section>
+<section id="spearmans-rank-order-correlation" class="level3" data-number="7.5.6">
+<h3 data-number="7.5.6" class="anchored" data-anchor-id="spearmans-rank-order-correlation"><span class="header-section-number">7.5.6</span> <strong>Spearman</strong>’s rank-order correlation</h3>
+<section id="r-fractextcovx-ytextsdx-textsdy-2" class="level4" data-number="7.5.6.1">
+<h4 data-number="7.5.6.1" class="anchored" data-anchor-id="r-fractextcovx-ytextsdx-textsdy-2"><span class="header-section-number">7.5.6.1</span> <span class="math inline">\(r = \frac{\text{Cov}(x, y)}{\text{sd}(x) * \text{sd}(y)}\)</span></h4>
+<ul>
+<li>Separately rank the values of X &amp; Y.</li>
+<li>Use Pearson’s correlation on the <em>ranks</em> instead of the <span class="math inline">\(x\)</span> &amp; <span class="math inline">\(y\)</span> values.</li>
+</ul>
+<p>Assumptions:</p>
+<ul>
+<li>Variables can be ordinal, interval or ratio</li>
+<li>Relationship must be monotonic (i.e.&nbsp;does not require linearity)</li>
+</ul>
+<p><strong>Spearman correlation more robust to outliers</strong></p>
+<p><img src="figs/spearman_grid.png" width="700"></p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/pearson_grid.png" width="300"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pearson</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Spearman</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-0.56</td>
+<td style="text-align: right;">0.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.69</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">0.81</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">0.79</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.70</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.81</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-0.56</td>
+<td style="text-align: right;">0.53</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/outlier_compare.png" width="300"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="summary-of-correlation" class="level3" data-number="7.5.7">
+<h3 data-number="7.5.7" class="anchored" data-anchor-id="summary-of-correlation"><span class="header-section-number">7.5.7</span> Summary of correlation</h3>
+<ul>
+<li><strong>Pearson’s correlation</strong>: Described the strength of a <strong>linear</strong> relationship between two variables that are interval or ratio in nature.</li>
+<li><strong>Spearman’s rank-order correlation</strong>: Describes the strength of a <strong>monotonic</strong> relationship between two variables that are ordinal, interval, or ratio. <strong>It is more robust to outliers</strong>.</li>
+<li>The <strong>coefficient of determination</strong> ( <span class="math inline">\(r^2\)</span> ) describes the amount of variance in one variable that is explained by the other variable.</li>
+<li><strong>Correlation != Causation</strong></li>
+</ul>
+<p>R command (hint: add <code>use = "complete.obs"</code> to drop NA values)</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>pearson  <span class="ot">&lt;-</span> <span class="fu">cor</span>(x, y, <span class="at">method =</span> <span class="st">"pearson"</span>, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>spearman <span class="ot">&lt;-</span> <span class="fu">cor</span>(x, y, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="scatterplots-the-correlation-workhorse" class="level3" data-number="7.5.8">
+<h3 data-number="7.5.8" class="anchored" data-anchor-id="scatterplots-the-correlation-workhorse"><span class="header-section-number">7.5.8</span> <strong>Scatterplots</strong>: The correlation workhorse</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>scatterplot <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> hp),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">'Fuel economy (mpg)'</span>,</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">'Engine power (hp)'</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>scatterplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<center>
+<img src="figs/mtcarsScatterplotBase.png" width="700">
+</center>
+</section>
+<section id="adding-a-correlation-label-to-a-chart" class="level3" data-number="7.5.9">
+<h3 data-number="7.5.9" class="anchored" data-anchor-id="adding-a-correlation-label-to-a-chart"><span class="header-section-number">7.5.9</span> Adding a correlation label to a chart</h3>
+<p>Make the correlation label</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>corr <span class="ot">&lt;-</span> <span class="fu">cor</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>hp, <span class="at">method =</span> <span class="st">'pearson'</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>corrLabel <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">'r = '</span>, <span class="fu">round</span>(corr, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Add label to the chart with <code>annotate()</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>scatterplot <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">'text'</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="dv">25</span>, <span class="at">y =</span> <span class="dv">310</span>,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> corrLabel,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">7</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="figs/mtcarsScatterplot.png" width="700"></p>
+</section>
+<section id="visualize-all-the-correlations-ggcorr" class="level3" data-number="7.5.10">
+<h3 data-number="7.5.10" class="anchored" data-anchor-id="visualize-all-the-correlations-ggcorr"><span class="header-section-number">7.5.10</span> Visualize all the correlations: <code>ggcorr()</code></h3>
+<center>
+<img src="images/all-the-correlations.jpeg" width="700">
+</center>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">'GGally'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggcorr</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<img src="figs/ggcor_mtcars.png" width="700">
+
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">'GGally'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggcorr</span>(</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_size =</span> <span class="dv">3</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_round =</span> <span class="dv">2</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="figs/ggcor_mtcars_labels.png" width="700"></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>ggcor_mtcars_final <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggcorr</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_size =</span> <span class="dv">3</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_round =</span> <span class="dv">2</span>,</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_color =</span> <span class="st">'white'</span>,</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">nbreaks =</span> <span class="dv">5</span>,</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"RdBu"</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="figs/ggcor_mtcars_final.png" width="700"></p>
+<p><strong>Pearson</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggcorr</span>(</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_size =</span> <span class="dv">3</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_round =</span> <span class="dv">2</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"pairwise"</span>, <span class="st">"pearson"</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="figs/ggcor_mtcars_pearson.png" width="700"></p>
+<p><strong>Spearman</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggcorr</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_size =</span> <span class="dv">3</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label_round =</span> <span class="dv">2</span>,</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"pairwise"</span>, <span class="st">"spearman"</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="figs/ggcor_mtcars_spearman.png" width="700"></p>
+</section>
+<section id="correlograms-ggpairs" class="level3" data-number="7.5.11">
+<h3 data-number="7.5.11" class="anchored" data-anchor-id="correlograms-ggpairs"><span class="header-section-number">7.5.11</span> Correlograms: <code>ggpairs()</code></h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">'GGally'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mpg, cyl, disp, hp, wt) <span class="sc">%&gt;%</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Look for linear relationships</li>
+<li>View distribution of each variable</li>
+</ul>
+<p><img src="figs/ggpairs_mtcars.png" width="700"></p>
+</section>
+<section id="simpsons-paradox-when-correlation-betrays-you" class="level3" data-number="7.5.12">
+<h3 data-number="7.5.12" class="anchored" data-anchor-id="simpsons-paradox-when-correlation-betrays-you"><span class="header-section-number">7.5.12</span> <strong>Simpson’s Paradox</strong>: when correlation betrays you</h3>
+<p>At first glance, it seems that body mass and bill depth are negatively correlated. However, if we measure the correlation by species, we find that body mass and bill depth are positively correlated.</p>
+<p><strong>Body mass vs.&nbsp;Bill depth</strong></p>
+<p><img src="figs/simpson_penguins.png" width="700"></p>
+<p><strong>Body mass vs.&nbsp;Bill depth</strong></p>
+<p><img src="figs/simpson_penguins_good.png" width="700"></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/yardbook\.jhelvy\.com\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./good-practices.html" class="pagination-link" aria-label="Good Data Practices">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Good Data Practices</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./part3-data-viz.html" class="pagination-link" aria-label="Data Visualization">
+        <span class="nav-page-text">Data Visualization</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Yet Another R Dataviz Book was written by John Paul Helveston &amp; Lola Nurullaeva</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/summarizing-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

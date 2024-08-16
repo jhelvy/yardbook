@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="John Paul Helveston">
+
+<title>8&nbsp; Effective Charts – Yet Another R Dataviz Book</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./trends.html" rel="next">
+<link href="./part3-data-viz.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part3-data-viz.html">Data Visualization</a></li><li class="breadcrumb-item"><a href="./effective-data-viz.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Effective Charts</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Yet Another R Dataviz Book</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/jhelvy/yardbook/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part1-getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Quarto Basics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Ggplot Basics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part2-exploring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploring Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tidy-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tidy Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cleaning-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Tidy Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./good-practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Good Data Practices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summarizing-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Summarizing Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part3-data-viz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Visualization</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./effective-data-viz.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Effective Charts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./trends.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Plotting Trends</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./amounts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Amounts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Proportions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./comparisons.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Comparisons</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./maps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Maps</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Adjusting Scales</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./aesthetics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Plot Aesthetics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anim.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Animation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./interact.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Interactivity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-human-visual-memory-system" id="toc-the-human-visual-memory-system" class="nav-link active" data-scroll-target="#the-human-visual-memory-system"><span class="header-section-number">8.1</span> The Human Visual-Memory System</a>
+  <ul class="collapse">
+  <li><a href="#pre-attentive-processing" id="toc-pre-attentive-processing" class="nav-link" data-scroll-target="#pre-attentive-processing"><span class="header-section-number">8.1.1</span> Pre-Attentive Processing</a></li>
+  </ul></li>
+  <li><a href="#the-psychology-of-data-vis" id="toc-the-psychology-of-data-vis" class="nav-link" data-scroll-target="#the-psychology-of-data-vis"><span class="header-section-number">8.2</span> The Psychology of Data Vis</a>
+  <ul class="collapse">
+  <li><a href="#clevelands-operations-of-pattern-perception" id="toc-clevelands-operations-of-pattern-perception" class="nav-link" data-scroll-target="#clevelands-operations-of-pattern-perception"><span class="header-section-number">8.2.1</span> Cleveland’s operations of pattern perception:</a></li>
+  </ul></li>
+  <li><a href="#data-viz-best-practices" id="toc-data-viz-best-practices" class="nav-link" data-scroll-target="#data-viz-best-practices"><span class="header-section-number">8.3</span> 10 Data Viz Best Practices</a>
+  <ul class="collapse">
+  <li><a href="#remove-chart-chunk" id="toc-remove-chart-chunk" class="nav-link" data-scroll-target="#remove-chart-chunk"><span class="header-section-number">8.3.1</span> Remove chart chunk</a></li>
+  <li><a href="#dont-make-3d-plots-most-of-the-time" id="toc-dont-make-3d-plots-most-of-the-time" class="nav-link" data-scroll-target="#dont-make-3d-plots-most-of-the-time"><span class="header-section-number">8.3.2</span> Don’t make 3D plots (most of the time)</a></li>
+  <li><a href="#dont-lie" id="toc-dont-lie" class="nav-link" data-scroll-target="#dont-lie"><span class="header-section-number">8.3.3</span> Don’t lie</a></li>
+  <li><a href="#dont-use-pie-charts-for-proportions-most-of-the-time" id="toc-dont-use-pie-charts-for-proportions-most-of-the-time" class="nav-link" data-scroll-target="#dont-use-pie-charts-for-proportions-most-of-the-time"><span class="header-section-number">8.3.4</span> Don’t use pie charts for proportions (most of the time)</a></li>
+  <li><a href="#dont-stack-bars-most-of-the-time" id="toc-dont-stack-bars-most-of-the-time" class="nav-link" data-scroll-target="#dont-stack-bars-most-of-the-time"><span class="header-section-number">8.3.5</span> Don’t stack bars (most of the time)</a></li>
+  <li><a href="#rotate-and-sort-categorical-axes-most-of-the-time" id="toc-rotate-and-sort-categorical-axes-most-of-the-time" class="nav-link" data-scroll-target="#rotate-and-sort-categorical-axes-most-of-the-time"><span class="header-section-number">8.3.6</span> Rotate and sort categorical axes (most of the time)</a></li>
+  <li><a href="#eliminate-legends-directly-label-geoms-most-of-the-time" id="toc-eliminate-legends-directly-label-geoms-most-of-the-time" class="nav-link" data-scroll-target="#eliminate-legends-directly-label-geoms-most-of-the-time"><span class="header-section-number">8.3.7</span> Eliminate legends &amp; directly label geoms (most of the time)</a></li>
+  <li><a href="#dont-use-pattern-fills" id="toc-dont-use-pattern-fills" class="nav-link" data-scroll-target="#dont-use-pattern-fills"><span class="header-section-number">8.3.8</span> Don’t use pattern fills</a></li>
+  <li><a href="#dont-use-red-green-together" id="toc-dont-use-red-green-together" class="nav-link" data-scroll-target="#dont-use-red-green-together"><span class="header-section-number">8.3.9</span> Don’t use red &amp; green together</a></li>
+  <li><a href="#consider-tables-for-small-data-sets" id="toc-consider-tables-for-small-data-sets" class="nav-link" data-scroll-target="#consider-tables-for-small-data-sets"><span class="header-section-number">8.3.10</span> Consider tables for small data sets</a></li>
+  <li><a href="#more-bad-graphs" id="toc-more-bad-graphs" class="nav-link" data-scroll-target="#more-bad-graphs"><span class="header-section-number">8.3.11</span> More Bad Graphs</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">8.4</span> References</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/effective-data-viz.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part3-data-viz.html">Data Visualization</a></li><li class="breadcrumb-item"><a href="./effective-data-viz.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Effective Charts</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-chapter" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Effective Charts</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<center>
+<img src="figs/graphQuality.png" width="700">
+</center>
+<center>
+<img src="images/chart-quality.jpg" width="700">
+</center>
+<p>From <a href="https://psyteachr.github.io/msc-data-skills/ggplot.html">here</a></p>
+<section id="the-human-visual-memory-system" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="the-human-visual-memory-system"><span class="header-section-number">8.1</span> The Human Visual-Memory System</h2>
+<p>We don’t write paragraphs *like this:</p>
+<center>
+<img src="images/bad_text.png" width="750">
+</center>
+<div style="text-align: center; font-size: 80%;">
+<p>Image from Few (2012, pg. 227)</p>
+</div>
+<p>So don’t make graphs like this:</p>
+<center>
+<img src="images/bad_3d_bars.png" width="750">
+</center>
+<div style="text-align: left; font-size: 80%;">
+<p>Image from excelcharts.com</p>
+</div>
+<p><strong>Good visualizations optimize for the human visual-memory system</strong></p>
+<p>A (very) simplified model of the visual-memory system:</p>
+<center>
+<img src="images/effective-charts-4.png" width="1000">
+</center>
+<p><strong>Two objectives of effective charts:</strong> 1. Grab &amp; direct attention (iconic memory) 2. Reduce processing demands (working memory)</p>
+<section id="pre-attentive-processing" class="level3" data-number="8.1.1">
+<h3 data-number="8.1.1" class="anchored" data-anchor-id="pre-attentive-processing"><span class="header-section-number">8.1.1</span> Pre-Attentive Processing</h3>
+<p><strong>The power of pre-attentive processing</strong></p>
+Count all the “5”’s
+<center>
+<img src="images/fives-1.png" width="500">
+</center>
+<p>Tricky, isn’t it?</p>
+<center>
+<img src="images/fives-2.png" width="500">
+</center>
+<p>How about now? This picture was easier thanks to the power of pre-attentive processing.</p>
+<p><strong>Pre-attentive attributes</strong></p>
+<p>These are pre-attentive attributes</p>
+<center>
+<img src="images/preattentive-attributes-1.png">
+</center>
+<center>
+<img src="figs/mtCarsScatterColor.png" width="500">
+</center>
+<p>The attributes presented in this graph correspond to <span style="color: red;">Numerical (ratio) data</span> and <span style="color: blue;">Categorical (ordinal) data</span>.</p>
+<center>
+<img src="images/preattentive-attributes-3.png">
+</center>
+<p><strong>Not all pre-attentive attributes are equal</strong></p>
+<p>For categorical data: <br> 1. Hue (color) &gt; shape <br> 2. Less is more (stay in working memory!)</p>
+<p>Try to find the red dot in these three pictures to see this in play.</p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/preattentive1.png" width="230"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/preattentive2.png" width="230"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/preattentive3.png" width="230"></p>
+</div>
+</div>
+<p>Similarly, the graph on the right is more favorable than the one on the left.</p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/preattentive-bad.png" width="350"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/preattentive-good.png" width="350"></p>
+</div>
+</div>
+<!-- Trump photo was here -->
+</section>
+</section>
+<section id="the-psychology-of-data-vis" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="the-psychology-of-data-vis"><span class="header-section-number">8.2</span> The Psychology of Data Vis</h2>
+<p><strong>Much of the content in this section is from<br>John Rauser’s <a href="https://www.youtube.com/watch?v=fSgEeI2Xpdc">talk</a> on YouTube</strong> (Always cite your sources)</p>
+<center>
+<img src="images/cleveland-pub.png" width="600">
+</center>
+<div style="text-align: center; font-size: 80%;">
+<p>Cleveland, W. S., &amp; McGill, R. (1985). Graphical perception and graphical methods for analyzing scientific data. Science, New Series, 229(4716), 828-833.</p>
+</div>
+<section id="clevelands-operations-of-pattern-perception" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="clevelands-operations-of-pattern-perception"><span class="header-section-number">8.2.1</span> Cleveland’s operations of pattern perception:</h3>
+<ol type="1">
+<li>Estimation</li>
+<li>Assembly</li>
+<li>Detection</li>
+</ol>
+<section id="estimation" class="level4" data-number="8.2.1.1">
+<h4 data-number="8.2.1.1" class="anchored" data-anchor-id="estimation"><span class="header-section-number">8.2.1.1</span> Estimation</h4>
+<p>-<strong>Discrimination</strong> (X equal to Y?)<br> -<strong>Ranking</strong> (X greater than Y?)<br> -<strong>Ratioing</strong> (X double Y?)<br></p>
+<strong>Estimation: Hierarchy for <em>numerical</em> data</strong>
+<center>
+<img src="images/cleveland-hierarchy.png" width="700">
+</center>
+<div style="display: flex; justify-content: space-between;">
+<div style="text-align: left;">
+<em>More Accurate</em>
+</div>
+<div style="text-align: right;">
+<em>Less Accurate</em>
+</div>
+</div>
+<p><strong>Example: Life expectancy in countries in Asia</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;               country lifeExp
+#&gt; 1         Afghanistan  43.828
+#&gt; 2                Iraq  59.545
+#&gt; 3            Cambodia  59.723
+#&gt; 4             Myanmar  62.069
+#&gt; 5         Yemen, Rep.  62.698
+#&gt; 6               Nepal  63.785
+#&gt; 7          Bangladesh  64.062
+#&gt; 8               India  64.698
+#&gt; 9            Pakistan  65.483
+#&gt; 10           Mongolia  66.803
+#&gt; 11   Korea, Dem. Rep.  67.297
+#&gt; 12           Thailand  70.616
+#&gt; 13          Indonesia  70.650
+#&gt; 14               Iran  70.964
+#&gt; 15        Philippines  71.688
+#&gt; 16            Lebanon  71.993
+#&gt; 17             Jordan  72.535
+#&gt; 18       Saudi Arabia  72.777
+#&gt; 19              China  72.961
+#&gt; 20 West Bank and Gaza  73.422</code></pre>
+</div>
+</div>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li>Color saturation</li>
+<li><span style="color: red;">Color hue</span></li>
+</ol>
+<center>
+<img src="images/hue.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li>Color saturation</li>
+<li><span style="color: red;">Color hue</span></li>
+</ol>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_hue.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li>Color saturation</li>
+<li><span style="color: red;">Color hue</span></li>
+</ol>
+<p>Sorting helps a bit…</p>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_hue_ordered.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li><span style="color: red;">Color saturation</span></li>
+<li>Color hue</li>
+</ol>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_saturation_ordered.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li><span style="color: red;">Color saturation</span></li>
+<li>Color hue</li>
+</ol>
+<p>Align to 0 scale:</p>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_saturation_ordered_zero.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li><span style="color: red;">Area</span></li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_area.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li><span style="color: red;">Area</span></li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+Area works okay for “bubble” charts
+<center>
+<img src="images/gapminder_bubbles.jpg" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li><span style="color: red;">Angle</span></li>
+<li>Area</li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_angle.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li>Length</li>
+<li><span style="color: red;">Angle</span></li>
+<li>Area</li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+<center>
+<img src="figs/statesPie.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li>Position on<br>non-aligned scales</li>
+<li><span style="color: red;">Length</span></li>
+<li>Angle</li>
+<li>Area</li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_length.png" width="750">
+</center>
+<ol type="1">
+<li>Position on a common scale</li>
+<li><span style="color: red;">Position on non-aligned scales</span></li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> / <svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:red;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_position_non_aligned.png" width="750">
+</center>
+<ol type="1">
+<li><span style="color: red;">Position on a common scale</span></li>
+<li>Position on non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+<ul>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> <strong>Discriminate</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> <strong>Rank</strong></li>
+<li><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:green;overflow:visible;position:relative;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> <strong>Ratio</strong></li>
+</ul>
+<center>
+<img src="figs/jr_position_aligned_ordered.png" width="750">
+</center>
+<ol type="1">
+<li><span style="color: red;">Position on a common scale</span></li>
+<li>Position on non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+<p><strong>No need to scale to 0:</strong> - Lowers resolution - Isn’t needed for accurate ratioing</p>
+<center>
+<img src="figs/jr_position_aligned_ordered_zero.png" width="750">
+</center>
+<ol type="1">
+<li><span style="color: red;">Position on a common scale</span></li>
+<li>Position on non-aligned scales</li>
+<li>Length</li>
+<li>Angle</li>
+<li>Area</li>
+<li>Color saturation</li>
+<li>Color hue</li>
+</ol>
+<p><strong>Sorting still matters!</strong></p>
+<center>
+<img src="figs/jr_position_aligned.png" width="750">
+</center>
+</section>
+<section id="assembly" class="level4" data-number="8.2.1.2">
+<h4 data-number="8.2.1.2" class="anchored" data-anchor-id="assembly"><span class="header-section-number">8.2.1.2</span> Assembly</h4>
+<p><strong>The grouping of graphical elements</strong></p>
+<p><strong>Assembly: Gestalt Psychology</strong> <em>The whole has a reality that is entirely separate from the parts</em></p>
+<center>
+<img src="images/gestalt-panda.png" width="600">
+</center>
+<strong>Reification: Thinking or treating something abstract as a concrete object</strong>
+<center>
+<img src="images/gestalt-f1-logo.jpg" width="600">
+</center>
+<strong>Emergence: The process of something coming into view</strong>
+<center>
+<img src="images/gestalt-dog.jpg" width="600">
+</center>
+<strong>Law of Closure: Our minds fill in the missing information</strong>
+<center>
+<img src="figs/jr_circle.png" width="600">
+</center>
+<p><strong>Prägnanz: We strongly prefer to interpret stimuli as regular, simple, and orderly</strong></p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/unsatisfying-pie.gif" width="230"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/unsatisfying-paper.gif" width="230"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/unsatisfying-lines.gif" width="230"></p>
+</div>
+</div>
+This should cause you cognitive pain.
+<center>
+<img src="figs/jr_position_aligned.png" width="750">
+</center>
+It’s the graphical equivalent of this:
+<center>
+<img src="images/unsatisfying-pie.gif" width="500">
+</center>
+This makes our brains happy.
+<center>
+<img src="figs/jr_position_aligned_ordered.png" width="750">
+</center>
+<p><strong>Law of Continuity: We will group together objects that follow an established direction</strong></p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/mtCarsScatter.png" width="300"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/mtCarsScatterSmooth.png" width="300"></p>
+</div>
+</div>
+<p><strong>Law of Similarity: We see elements that are <em>physically similar</em> as part of the same object</strong></p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/mtCarsScatterColor.png" width="300"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/mtCarsScatterShape1.png" width="300"></p>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/mtCarsScatterShape2.png" width="300"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/mtCarsScatterShape3.png" width="300"></p>
+</div>
+</div>
+<p><strong>Law of Proximity: We tend to see elements that are <em>physically near</em> each other as part of the same object</strong></p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/jr_diamonds_bars_dodged.png" width="230"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/jr_diamonds_line_total.png" width="230"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="figs/jr_diamonds_line_cut.png" width="230"></p>
+</div>
+</div>
+</section>
+<section id="detection" class="level4" data-number="8.2.1.3">
+<h4 data-number="8.2.1.3" class="anchored" data-anchor-id="detection"><span class="header-section-number">8.2.1.3</span> Detection</h4>
+<p><strong>Detection: Recognizing that a geometric object encodes a physical value</strong></p>
+<center>
+<img src="images/norman_door.gif" width="900">
+</center>
+<p><strong>Norman door (n.):</strong> <br> 1. A door where the design tells you to do the opposite of what you’re actually supposed to do. <br> 2. A door that gives the wrong signal and needs a sign to correct it.</p>
+<center>
+<img src="images/design_of_everyday_things.jpg" width="400">
+</center>
+Norman Door:
+<center>
+<img src="images/norman_door.jpg" width="600">
+</center>
+Non-Norman door:
+<center>
+<img src="images/non-norman-door.jpg" width="600">
+</center>
+<!-- removed the scatterplot transition although we can squeeze it back in-->
+The white circles you see at the intersections is called the <strong>“Hermann Grid illusion”</strong>
+<center>
+<img src="figs/mtCarsScatterGrid4.png" width="700">
+</center>
+</section>
+</section>
+</section>
+<section id="data-viz-best-practices" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="data-viz-best-practices"><span class="header-section-number">8.3</span> 10 Data Viz Best Practices</h2>
+<p><strong>“<em>Erase non-data ink.</em>”<br>— Ed Tufte</strong></p>
+<ol type="1">
+<li>Remove chart chunk</li>
+<li>Don’t make 3D plots*</li>
+<li>Don’t lie</li>
+<li>Don’t use pie charts for proportions*</li>
+<li>Don’t stack bars*</li>
+<li>Rotate and sort categorical axes*</li>
+<li>Eliminate legends &amp; directly label geoms*</li>
+<li>Don’t use pattern fills</li>
+<li>Don’t use red &amp; green together</li>
+<li>Consider tables for small data sets *(most of the time)</li>
+</ol>
+<section id="remove-chart-chunk" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="remove-chart-chunk"><span class="header-section-number">8.3.1</span> Remove chart chunk</h3>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/check-bad.png" width="80"> <img src="images/monsterBars.png" width="350"> Figure 1.6: `Monstrous Costs’ by Nigel Holmes, in Healy, 2018</p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/check-good.png" width="80"> <img src="figs/monsterBars.png" width="350"></p>
+</div>
+</div>
+<center>
+<img src="images/less-is-more-darkhorse-analytics.gif" width="800">
+</center>
+<p>Figure 24.1: From Data Looks Better Naked by Darkhorse Analytics</p>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/check-bad.png" width="80"> <img src="images/less-is-more-darkhorse-analytics-before.png" width="350"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/check-good.png" width="100"> <img src="images/less-is-more-darkhorse-analytics-after.png" width="350"></p>
+</div>
+</div>
+</section>
+<section id="dont-make-3d-plots-most-of-the-time" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="dont-make-3d-plots-most-of-the-time"><span class="header-section-number">8.3.2</span> Don’t make 3D plots (most of the time)</h3>
+<strong>Humans aren’t good at distinguishing 3D space</strong>
+<center>
+<img src="images/penrose-stairs.png" width="600">
+</center>
+<p><a href="https://en.wikipedia.org/wiki/Penrose_stairs">Penrose Stairs</a>, made famous by<br>M.C. Escher (1898-1972)</p>
+<p><strong>Ink proportions != true proportions</strong></p>
+<center>
+<img src="images/3dpies.png" width="600">
+</center>
+<strong>Occlusion: geoms are obscured</strong>
+<center>
+<img src="images/3d-occlusion.png" width="600">
+</center>
+<strong>Multiple interpretations</strong>
+<center>
+<img src="images/3dbad.jpeg" width="100%">
+</center>
+<div style="display: flex; justify-content: space-between;">
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/check-bad.png" width="80"> <img src="images/3d-occlusion.png" width="350"></p>
+</div>
+<div style="flex: 1; margin-right: 10px;">
+<p><img src="images/check-good.png" width="80"> <img src="figs/facetedBars.png" width="350"></p>
+</div>
+</div>
+<p><strong>The third dimension distracts from the data.</strong> (this is what Tufte calls “chart junk”)</p>
+<center>
+<img src="images/3d-chart-junk.png" width="700">
+</center>
+This is better:
+<center>
+<img src="figs/simpleBars.png" width="700">
+</center>
+</section>
+<section id="dont-lie" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="dont-lie"><span class="header-section-number">8.3.3</span> Don’t lie</h3>
+<p><strong>“Lie Factor” = <span class="math inline">\(\frac{\text{Size of effect in graphic}}{\text{Size of effect in data}}\)</span></strong></p>
+<p>“Lie Factor” = <span class="math inline">\(\frac{\text{Size of effect in graphic}}{\text{Size of effect in data}} = \frac{\frac{5.3 - 0.6}{0.6}}{\frac{27.5 - 18}{18}} = \frac{7.83}{0.53} = 14.8\)</span></p>
+<center>
+<img src="images/tufte-fuel-economy-bad.png">
+</center>
+<p>Edward Tufte (2001) “The Visual Display of Quantitative Information”, 2nd Edition, pg. 57-58.</p>
+Here is the same information without the “Lie Factor”.
+<center>
+<img src="images/tufte-fuel-economy-good.png" width="370">
+</center>
+<strong>Bar charts should always start at 0</strong>
+<center>
+<img src="images/check-bad.png" width="80"> <img src="images/fox-news-bars.png" width="700">
+</center>
+<p>.left[Image from http://livingqlikview.com/the-9-worst-data-visualizations-ever-created/]</p>
+<center>
+<img src="images/check-good.png" width="100"> <img src="figs/barchart_zero.png" width="700">
+</center>
+<strong>Don’t cherry-pick your data</strong>
+<center>
+<img src="images/check-bad.png" width="80"> <img src="images/fox-news-immigration-bars-bad.jpg" width="700">
+</center>
+<p>Image from https://www.mediamatters.org/fox-news/fox-news-newest-dishonest-chart-immigration-enforcement</p>
+<center>
+<img src="images/check-good.png" width="100"> <img src="images/fox-news-immigration-bars-good.jpg" width="700">
+</center>
+<strong>Make sure your chart makes sense</strong>
+<center>
+<img src="images/fox-news-piechart.png" width="700">
+</center>
+<p>Image from Image from http://livingqlikview.com/the-9-worst-data-visualizations-ever-created/</p>
+</section>
+<section id="dont-use-pie-charts-for-proportions-most-of-the-time" class="level3" data-number="8.3.4">
+<h3 data-number="8.3.4" class="anchored" data-anchor-id="dont-use-pie-charts-for-proportions-most-of-the-time"><span class="header-section-number">8.3.4</span> Don’t use pie charts for proportions (most of the time)</h3>
+<center>
+<img src="images/check-bad.png" width="80"> <img src="figs/statesPie.png" width="700">
+</center>
+<center>
+<img src="images/check-good.png" width="80"> <img src="figs/statesBar.png" width="700">
+</center>
+<p><strong>Exceptions:</strong> <br> - Small data - Simple fractions - If sum of parts matters</p>
+<center>
+<img src="images/bundestag-pie-1.png">
+</center>
+<strong>Best pie chart of all time</strong>
+<center>
+<img src="images/pie-pyramid.png" width="700">
+</center>
+</section>
+<section id="dont-stack-bars-most-of-the-time" class="level3" data-number="8.3.5">
+<h3 data-number="8.3.5" class="anchored" data-anchor-id="dont-stack-bars-most-of-the-time"><span class="header-section-number">8.3.5</span> Don’t stack bars (most of the time)</h3>
+<strong>Stacked bars are rarely a good idea</strong>
+<center>
+<img src="figs/jr_diamonds_bars_stacked.png" width="700">
+</center>
+<p><strong>“Parallel coordinates” plot usually works better</strong></p>
+<center>
+<img src="figs/jr_diamonds_line_cut.png" width="700">
+</center>
+<center>
+<img src="figs/jr_diamonds_line_total.png" width="700">
+</center>
+<p><strong>Exception:</strong><br>When you care about the <em>total</em> more than the categories</p>
+<center>
+<img src="figs/jr_phones_area.png" width="700">
+</center>
+<center>
+<img src="figs/backgroundChecks.png" width="700">
+</center>
+</section>
+<section id="rotate-and-sort-categorical-axes-most-of-the-time" class="level3" data-number="8.3.6">
+<h3 data-number="8.3.6" class="anchored" data-anchor-id="rotate-and-sort-categorical-axes-most-of-the-time"><span class="header-section-number">8.3.6</span> Rotate and sort categorical axes (most of the time)</h3>
+<p><strong>Rotate axes if you can’t read them</strong></p>
+<center>
+<img src="images/check-bad.png" width="80"> .border[<img src="figs/mpg_bars_bad.png" width="700">]
+</center>
+<center>
+<img src="images/check-good.png" width="80"> .border[<img src="figs/mpg_bars_flipped.png" width="700">]
+</center>
+<p><strong>Default order is almost always wrong</strong></p>
+<center>
+<img src="images/check-bad.png" width="80"> Ordered by alphabet (default) <img src="figs/mpg_bars_flipped.png" width="700">
+</center>
+<center>
+<img src="images/check-good.png" width="80"> Ordered by count <img src="figs/mpg_bars_flipped_sorted.png" width="700">
+</center>
+<p><strong>Exception:</strong> Ordinal variables</p>
+<center>
+<img src="images/wildlife-months-bar-1.png" width="700">
+</center>
+</section>
+<section id="eliminate-legends-directly-label-geoms-most-of-the-time" class="level3" data-number="8.3.7">
+<h3 data-number="8.3.7" class="anchored" data-anchor-id="eliminate-legends-directly-label-geoms-most-of-the-time"><span class="header-section-number">8.3.7</span> Eliminate legends &amp; directly label geoms (most of the time)</h3>
+<strong>Directly label geoms</strong>
+<center>
+<img src="images/check-bad.png" width="80"> <img src="figs/milk_region.png" width="700">
+</center>
+<center>
+<img src="images/check-good.png" width="80"> <img src="figs/milk_region_label.png" width="700">
+</center>
+<p><strong>Exception:</strong> When you have repeated categories</p>
+<center>
+<img src="images/pattern_fills2.png" width="700">
+</center>
+</section>
+<section id="dont-use-pattern-fills" class="level3" data-number="8.3.8">
+<h3 data-number="8.3.8" class="anchored" data-anchor-id="dont-use-pattern-fills"><span class="header-section-number">8.3.8</span> Don’t use pattern fills</h3>
+<center>
+<img src="images/pattern_fills3.png" width="600">
+</center>
+<center>
+<img src="images/check-bad.png" width="80"> <img src="images/pattern_fills1.png" width="700">
+</center>
+<center>
+<img src="images/check-good.png" width="80"> <img src="images/pattern_fills2.png" width="700">
+</center>
+</section>
+<section id="dont-use-red-green-together" class="level3" data-number="8.3.9">
+<h3 data-number="8.3.9" class="anchored" data-anchor-id="dont-use-red-green-together"><span class="header-section-number">8.3.9</span> Don’t use red &amp; green together</h3>
+<p><strong>10% of males and 1% of females are color blind</strong></p>
+<center>
+&lt;img src=“figs/colorBlindBad1.png”, width = 700&gt;
+</center>
+<center>
+&lt;img src=“figs/colorBlindBad2.png”, width = 700&gt;
+</center>
+<p><strong>Facets can be used to avoid color altogether</strong></p>
+<center>
+<img src="images/check-bad.png" width="80"> <img src="figs/colorBlindBad1.png" width="700">
+</center>
+<center>
+<img src="images/check-good.png" width="80"> <img src="figs/colorBlindBad3.png" width="700">
+</center>
+</section>
+<section id="consider-tables-for-small-data-sets" class="level3" data-number="8.3.10">
+<h3 data-number="8.3.10" class="anchored" data-anchor-id="consider-tables-for-small-data-sets"><span class="header-section-number">8.3.10</span> Consider tables for small data sets</h3>
+<center>
+<img src="images/pole-pie1.png" width="700">
+</center>
+<center>
+<img src="images/pole-pie2.png" width="700">
+</center>
+<p><strong>Who do you think did a better job in tonight’s debate?</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Clinton</th>
+<th>Trump</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Among Democrats</td>
+<td>99%</td>
+<td>1%</td>
+</tr>
+<tr class="even">
+<td>Among Republicans</td>
+<td>53%</td>
+<td>47%</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="more-bad-graphs" class="level3" data-number="8.3.11">
+<h3 data-number="8.3.11" class="anchored" data-anchor-id="more-bad-graphs"><span class="header-section-number">8.3.11</span> More Bad Graphs</h3>
+<center>
+<img src="images/bad-viz/army_budget.jpg" width="700">
+</center>
+<center>
+<img src="images/bad-viz/prisoners.png" width="700">
+</center>
+<center>
+<img src="figs/prisoner_bars.png" width="700">
+</center>
+<center>
+<img src="images/bad-viz/junk-life-expectancy-bad.png" width="700">
+</center>
+<center>
+<img src="images/bad-viz/junk-life-expectancy-good1.png" width="700"> <img src="images/bad-viz/junk-life-expectancy-good2.png" width="700">
+</center>
+<center>
+<img src="images/bad-viz/bears-bad.png" width="700">
+</center>
+<center>
+<img src="images/bad-viz/bears-good.jpeg" width="700">
+</center>
+<center>
+<img src="images/bad-viz/clinton-tweet-venn-1.png" width="700">
+</center>
+<center>
+<img src="images/bad-viz/clinton-tweet-venn-2.jpg" width="700">
+</center>
+<center>
+<img src="figs/backgroundChecks.png" width="700">
+</center>
+</section>
+</section>
+<section id="references" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="references"><span class="header-section-number">8.4</span> References</h2>
+<ul>
+<li><p><a href="https://github.com/emse-eda-gwu/2023-Fall/raw/main/content/cheatsheet-dataviz.pdf">Data Viz “Cheat Sheet”</a></p></li>
+<li><p><a href="https://eda.seas.gwu.edu/2023-Fall/references.html#visualizing-data">Data Viz Reference Page</a></p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/yardbook\.jhelvy\.com\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./part3-data-viz.html" class="pagination-link" aria-label="Data Visualization">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Data Visualization</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./trends.html" class="pagination-link" aria-label="Plotting Trends">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Plotting Trends</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Yet Another R Dataviz Book was written by John Paul Helveston &amp; Lola Nurullaeva</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/effective-data-viz.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
