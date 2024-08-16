@@ -41,7 +41,6 @@ Imports:
     quarto,
     readxl,
     rmarkdown,
-    rnaturalearth,
     rvest,
     sf,
     tidyverse,
