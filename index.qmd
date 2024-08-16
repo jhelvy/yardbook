@@ -1,5 +1,3 @@
 # Preface {#sec-preface .unnumbered}
 
-This is a Quarto book.
-
-Some text here
+This book is still very much in development, but we're actively editing it in preparation for the Fall 2024 semester, so come back soon for an updated version!
