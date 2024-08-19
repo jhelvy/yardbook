@@ -36,6 +36,12 @@ library(magick)
 library(ggridges)
 library(hrbrthemes)
 library(RColorBrewer)
+library(plotly)
+library(leaflet)
+library(DT)
+library(reactable)
+library(reactablefmtr)
+library(sparkline)
 
 # Data packages
 library(HistData)
