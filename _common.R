@@ -8,7 +8,7 @@
 #     "maps", "mapproj", "sf", "rnaturalearth", "remotes",
 #     geomtextpath", "gsheet", "hrbrthemes",
 #     "magick", "quarto", "readxl", "rmarkdown", "rvest",
-#     "waffle", "xaringanExtra")
+#     "waffle", "xaringanExtra", 'reactable', 'reactablefmtr', 'sparkline')
 # )
 # remotes::install_github("ropensci/rnaturalearthhires")
 # remotes::install_github("ropensci/rnaturalearthdata")
@@ -37,11 +37,6 @@ library(ggridges)
 library(hrbrthemes)
 library(RColorBrewer)
 library(plotly)
-library(leaflet)
-library(DT)
-library(reactable)
-library(reactablefmtr)
-library(sparkline)
 
 # Data packages
 library(HistData)

@@ -15,7 +15,11 @@ suppressWarnings(suppressMessages(source("_common.R")))
 
 Turn any ggplot into an interactive chart with `ggplotly()`
 
-```{r gapminder, fig.show='hide'}
+```{r}
+#| label: gapminder
+#| fig-width: 7
+#| fig-height: 5
+
 plot <- gapminder %>%
   filter(year == 2007) %>%
   ggplot(aes(x = gdpPercap, y = lifeExp,
@@ -34,16 +38,18 @@ plot <- gapminder %>%
 plot
 ```
 
-```{r gapminder-2, ref.label="gapminder", fig.width=7, fig.height=5, echo=FALSE}
-```
-
 ### Turn any ggplot into an interactive chart with `ggplotly()`
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ggplotly(plot)
 ```
 
-```{r gapminder_plotly, echo=FALSE}
+```{r}
+#| label: gapminder_plotly
+#| echo: false
+
 # Embedding as a iframe since direct rendering produces poor results, see
 # https://github.com/rstudio/htmltools/issues/90
 htmltools::tags$iframe(
@@ -58,14 +64,19 @@ htmltools::tags$iframe(
 
 Modify the data shown with `tooltip` argument
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ggplotly(
   plot,
   tooltip = c("country", "pop") #<<
 )
 ```
 
-```{r gapminder_plotly_tooltip, echo=FALSE}
+```{r}
+#| label: gapminder_plotly_tooltip
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_tooltip.html'),
   width       = "100%",
@@ -78,7 +89,9 @@ htmltools::tags$iframe(
 
 Modify other features by piping on `plotly` [functions](https://plotly.com/r/plotly-fundamentals/)
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ggplotly(
   plot,
   tooltip = c("country", "pop")
@@ -87,7 +100,10 @@ ggplotly(
     orientation = "h", x = 0, y = -0.3)) #<<
 ```
 
-```{r gapminder_plotly_legend, echo=FALSE}
+```{r}
+#| label: gapminder_plotly_legend
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_legend.html'),
   width       = "100%",
@@ -98,14 +114,15 @@ htmltools::tags$iframe(
 )
 ```
 
-
 *Reference guide: https://plotly.com/ggplot2/*
 
 ### Make interactive charts with `plot_ly()`
 
 (More examples here: https://plotly.com/r/)
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 plot_ly( #<<
   data = gapminder %>% filter(year == 2007),
   type = 'scatter',
@@ -122,7 +139,10 @@ plot_ly( #<<
   layout(xaxis = list(type = "log"))
 ```
 
-```{r plot_ly, echo=FALSE}
+```{r}
+#| label: plot_ly
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_plot_ly.html'),
   width       = "100%",
@@ -135,7 +155,9 @@ htmltools::tags$iframe(
 
 Animation is relatively easy with `plot_ly()`
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 plot_ly(
   data = gapminder, #<<
   type = 'scatter',
@@ -153,7 +175,10 @@ plot_ly(
   layout(xaxis = list(type = "log"))
 ```
 
-```{r plot_ly_anim, echo=FALSE}
+```{r}
+#| label: plot_ly_anim
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_plot_ly_anim.html'),
   width       = "100%",
@@ -166,7 +191,9 @@ htmltools::tags$iframe(
 
 Save as html page
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 htmlwidgets::saveWidget(
   ggplotly(plot),
   file = here::here('figs', 'gapminder.html')
@@ -175,7 +202,9 @@ htmlwidgets::saveWidget(
 
 Insert using iframe
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 htmltools::tags$iframe(
   src         = here::here('figs', 'gapminder.html'),
   width       = "100%",
@@ -200,7 +229,7 @@ One more option: https://g2r.opifex.org/index.html
 library(knitr)
 
 gapminder %>%
-  kable() #<<
+  kable() 
 ```
 
 Behind the scenes:
@@ -211,28 +240,40 @@ Behind the scenes:
 gapminder %>%
   kable(format = "pipe") #<<
 ```
-```{r, results='asis', echo=FALSE}
+```{r}
+#| results: 'asis'
+#| echo: false
+
 cat(knitr::kable(gapminder, format = "pipe"))
 ```
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 gapminder %>%
   kable(format = "html") #<<
 ```
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+
 cat(kable(gapminder, format = "html"))
 ```
 
 ### Make _interactive_ tables with: `DT::datatable()`
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library(DT)
 
 gapminder %>%
   datatable() #<<
 ```
 
-```{r gapminder_dt, echo=FALSE}
+```{r}
+#| label: gapminder_dt
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_dt.html'),
   width       = "100%",
@@ -243,7 +284,9 @@ htmltools::tags$iframe(
 )
 ```
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 gapminder %>%
   datatable(
     options = list( #<<
@@ -252,7 +295,10 @@ gapminder %>%
   )
 ```
 
-```{r gapminder_dt_pages, echo=FALSE}
+```{r}
+#| label: gapminder_dt_pages
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_dt_pages.html'),
   width       = "100%",
@@ -267,7 +313,9 @@ htmltools::tags$iframe(
 
 <!-- Weird rendering of graphs in this chapter, even on the slides. Chose not to mess with it too much. -->
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 gapminder %>%
   datatable() %>%
   formatCurrency('gdpPercap') %>%  #<<
@@ -278,7 +326,10 @@ gapminder %>%
     fontWeight = 'bold') #<<
 ```
 
-```{r gapminder_dt_style, echo=FALSE}
+```{r}
+#| label: gapminder_dt_style
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_dt_style.html'),
   width       = "100%",
@@ -289,7 +340,9 @@ htmltools::tags$iframe(
 )
 ```
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 gapminder %>%
   datatable() %>%
   formatCurrency('gdpPercap') %>%
@@ -307,7 +360,10 @@ gapminder %>%
     backgroundPosition = 'center')  #<<
 ```
 
-```{r gapminder_dt_bars, echo=FALSE}
+```{r}
+#| label: gapminder_dt_bars
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_dt_bars.html'),
   width       = "100%",
@@ -320,14 +376,19 @@ htmltools::tags$iframe(
 
 ### Make _interactive_ tables with: `reactable::reactable()`
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library(reactable)
 
 gapminder %>%
   reactable() #<<
 ```
 
-```{r gapminder_reactable, echo=FALSE}
+```{r}
+#| label: gapminder_reactable
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_reactable.html'),
   width       = "100%",
@@ -340,7 +401,9 @@ htmltools::tags$iframe(
 
 `reactable()` has some nice [options](https://glin.github.io/reactable/articles/examples.html)!
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library(reactable)
 
 gapminder %>%
@@ -354,7 +417,10 @@ gapminder %>%
   )
 ```
 
-```{r gapminder_reactable_options, echo=FALSE}
+```{r}
+#| label: gapminder_reactable_options
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_reactable_options.html'),
   width       = "100%",
@@ -367,9 +433,11 @@ htmltools::tags$iframe(
 
 Add more features with  [reactablefmtr](https://kcuilla.github.io/reactablefmtr/index.html) library
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library(reactable)
-library(reactablefmtr) #<<
+library(reactablefmtr) 
 
 gapminder %>%
   reactable(
@@ -379,15 +447,18 @@ gapminder %>%
     defaultPageSize = 5,
     showPageSizeOptions = TRUE,
     pageSizeOptions = c(5, 10, 15)
-    columns = list( #<<
-      lifeExp = colDef(cell = data_bars_pos_neg( #<<
-        gapminder, #<<
-        colors = c("#d7191c", "#ffffbf", "#1a9641")), #<<
-      align = "center")) ## align column header #<<
-  ) #<<
+    columns = list( 
+      lifeExp = colDef(cell = data_bars_pos_neg( 
+        gapminder, 
+        colors = c("#d7191c", "#ffffbf", "#1a9641")), 
+      align = "center")) ## align column header 
+  ) 
 ```
 
-```{r gapminder_reactable_bars, echo=FALSE}
+```{r}
+#| label: gapminder_reactable_bars
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_reactable_bars.html'),
   width       = "100%",
@@ -400,9 +471,11 @@ htmltools::tags$iframe(
 
 Add more features with `sparkline` library [(example)](https://glin.github.io/reactable/articles/examples.html#embedding-html-widgets)
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library(reactable)
-library(sparkline) #<<
+library(sparkline) 
 
 gapminder_summary <- gapminder %>%
   group_by(country) %>%
@@ -416,21 +489,24 @@ gapminder_reactable_sparkline <- gapminder_summary %>%
     filterable = TRUE,
     defaultPageSize = 5,
     showPageSizeOptions = TRUE,
-    columns = list( #<<
-      lifeExp = colDef( #<<
-        cell = function(values) { #<<
-          sparkline( #<<
-            values, type = "bar", chartRangeMin = 0,  #<<
-            chartRangeMax = max(gapminder$lifeExp)) #<<
-        }), #<<
-      leftExpTrend = colDef( #<<
-        cell = function(value, index) { #<<
-          sparkline(gapminder_summary$lifeExp[[index]]) #<<
-        }) #<<
-  )) #<<
+    columns = list( 
+      lifeExp = colDef( 
+        cell = function(values) { 
+          sparkline( 
+            values, type = "bar", chartRangeMin = 0,  
+            chartRangeMax = max(gapminder$lifeExp)) 
+        }), 
+      leftExpTrend = colDef( 
+        cell = function(value, index) { 
+          sparkline(gapminder_summary$lifeExp[[index]]) 
+        }) 
+  )) 
 ```
 
-```{r gapminder_reactable_sparkline, echo=FALSE}
+```{r}
+#| label: gapminder_reactable_sparkline
+#| echo: false
+
 htmltools::tags$iframe(
   src         = file.path('figs', 'gapminder_reactable_sparkline.html'),
   width       = "100%",
@@ -458,7 +534,9 @@ This work is licensed under a</br>[Creative Commons Attribution-ShareAlike 4.0](
 
 To use shiny apps, install the following libraries:
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 install.packages('shiny')
 install.packages('shinyWidgets')
 install.packages('rsconnect')
@@ -474,7 +552,12 @@ Check out the [Shiny Gallery](https://shiny.rstudio.com/gallery/) to see example
 
 A Shiny app is a web page (UI) connected to a computer running a live R session (Server)
 
-```{r init, echo=FALSE, fig.align="center", out.width='80%'}
+```{r}
+#| label: init
+#| echo: false
+#| fig.align: center
+#| out.width: 80%
+
 knitr::include_graphics("images/cheat1.png")
 ```
 
@@ -484,11 +567,19 @@ You can insert all the code at once with the shinyapp snippet!
 
 Just start typing `shiny`...
 
-```{r init2, echo=FALSE, fig.align="center", out.width='80%'}
+```{r}
+#| label: init2
+#| echo: false
+#| fig.align: center
+#| out.width: 80%
+
 knitr::include_graphics("images/snippet_2.png")
 ```
 
-```{r eval=FALSE, tidy=FALSE}
+```{r}
+#| eval: false
+#| tidy: false
+
 library(shiny)
 
 ui <- fluidPage(
@@ -504,7 +595,12 @@ shinyApp(ui, server)
 
 ### Building a shiny app
 
-```{r shiny, echo=FALSE, fig.align="center", out.width='50%'}
+```{r}
+#| label: shiny
+#| echo: false
+#| fig.align: center
+#| out.width: 50%
+
 knitr::include_graphics("images/cheat1.png")
 ```
 
@@ -528,7 +624,12 @@ knitr::include_graphics("images/cheat1.png")
 
 - **Option 1**: Click the "Run App" button in the toolbar:
 
-```{r run_app1, echo=FALSE, fig.align="center", out.width='25%'}
+```{r}
+#| label: run_app1
+#| echo: false
+#| fig.align: center
+#| out.width: 25%
+
 knitr::include_graphics("images/run_app.png")
 ```
 
@@ -538,7 +639,12 @@ knitr::include_graphics("images/run_app.png")
 
 ### User Interface (UI)
 
-```{r mamus, echo=FALSE, fig.align="center", out.width='70%'}
+```{r}
+#| label: mamus
+#| echo: false
+#| fig.align: center
+#| out.width: 70%
+
 knitr::include_graphics("images/mamu_4.jpg")
 ```
 
@@ -548,17 +654,29 @@ Organize panels and elements into a layout with a **layout function**
 
 Top level is usually `fluidPage()`
 
-```{r init3, echo=FALSE, fig.align="center", out.width='80%'}
+```{r}
+#| label: init3
+#| echo: false
+#| fig.align: center
+#| out.width: 80%
+
 knitr::include_graphics("images/layout.png")
 ```
 
-```{r, echo=FALSE, fig.align="center", out.width='100%'}
+```{r}
+#| label: slide_mamu1
+#| echo: false
+#| fig.align: center
+#| out.width: 100%
+
 knitr::include_graphics("images/slide_mamu1.png")
 ```
 
 `sidebarLayout()`
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ui <- fluidPage(
 
   titlePanel("Hello Shiny!"),
@@ -579,7 +697,12 @@ ui <- fluidPage(
 )
 ```
 
-```{r init5, echo=FALSE, fig.align="center", out.width='100%'}
+```{r}
+#| label: init5
+#| echo: false
+#| fig.align: center
+#| out.width: 100%
+
 knitr::include_graphics("images/sidebarLayout.png")
 ```
 
@@ -587,21 +710,30 @@ knitr::include_graphics("images/sidebarLayout.png")
 
 Think of each `tabPanel()` as it's own `fluidPage()`
 
-```{r, eval=FALSE}
-ui <- navbarPage("My Application", #<<
+```{r}
+#| eval: false
+
+ui <- navbarPage("My Application", 
   tabPanel("Component 1"),
   tabPanel("Component 2"),
   tabPanel("Component 3")
 )
 ```
 
-```{r, echo=FALSE, fig.align="center", out.width='100%'}
+```{r}
+#| label: navbarPage
+#| echo: false
+#| fig.align: center
+#| out.width: 100%
+
 knitr::include_graphics("images/navbarPage.png")
 ```
 
 Use `navbarMenu()` to create a nested menu item
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ui <- navbarPage("My Application",
   tabPanel("Component 1"),
   tabPanel("Component 2"),
@@ -611,7 +743,12 @@ ui <- navbarPage("My Application",
 )
 ```
 
-```{r, echo=FALSE, fig.align="center", out.width='100%'}
+```{r}
+#| label: navbarMenu
+#| echo: false
+#| fig.align: center
+#| out.width: 100%
+
 knitr::include_graphics("images/navbarMenu.png")
 ```
 
@@ -623,13 +760,20 @@ knitr::include_graphics("images/navbarMenu.png")
 
 **Inputs**: collect values from the user
 
-```{r init4, echo=FALSE, fig.align="center", out.width='100%'}
+```{r}
+#| label: init4
+#| echo: false
+#| fig.align: center
+#| out.width: 100%
+
 knitr::include_graphics("images/inputs.png")
 ```
 
 Example Input: Radio buttons in the sidebar
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
@@ -640,15 +784,30 @@ ui <- fluidPage(
 )
 ```
 
-```{r radiobut, echo=FALSE, fig.align="center", out.width='100%'}
+```{r}
+#| label: radiobut
+#| echo: false
+#| fig.align: center
+#| out.width: 100%
+
 knitr::include_graphics("images/slide_mamu2.png")
 ```
 
-```{r init7, echo=FALSE, fig.align="center", out.width='70%'}
+```{r}
+#| label: init7
+#| echo: false
+#| fig.align: center
+#| out.width: 70%
+
 knitr::include_graphics("images/parentesis.png")
 ```
 
-```{r ini3, echo=FALSE, fig.align="center", out.width='90%'}
+```{r}
+#| label: init8
+#| echo: false
+#| fig.align: center
+#| out.width: 90%
+
 knitr::include_graphics("images/closing_par.png")
 ```
 
@@ -656,7 +815,9 @@ knitr::include_graphics("images/closing_par.png")
 
 Example Output: Put a plot in the main panel
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
@@ -669,7 +830,12 @@ ui <- fluidPage(
 )
 ```
 
-```{r, echo=FALSE, fig.align="center", out.width='100%'}
+```{r}
+#| label: slide_mamu3
+#| echo: false
+#| fig.align: center
+#| out.width: 100%
+
 knitr::include_graphics("images/slide_mamu3.png")
 ```
 
@@ -682,13 +848,23 @@ Output function  | Description
 `textOutput()`   | Display reactive _text_
 `imageOutput()`  | Display an image
 
-```{r out, echo=FALSE, fig.align="center", out.width='90%'}
+```{r}
+#| label: out
+#| echo: false
+#| fig.align: center
+#| out.width: 90%
+
 knitr::include_graphics("images/outputs.png")
 ```
 
 #### Using `renderPlot()`: make a plot
 
-```{r mpg, echo=TRUE, fig.show='hide', fig.width=7, fig.height=5, fig.align = "center" }
+```{r}
+#| label: mpg
+#| fig-align: center
+#| fig-width: 7
+#| fig-height: 5
+
 library(ggplot2)
 
 ggplot(mpg) +
@@ -696,13 +872,13 @@ ggplot(mpg) +
     aes(x = displ, y = hwy, color = class))
 ```
 
-```{r, ref.label="mpg", echo=FALSE, fig.width=7, fig.height=5, fig.align = "center" }
-```
-
 Link plot to output with `output$<id>`
 
 `ui`
-```{r, eval=FALSE}
+
+```{r}
+#| eval: false
+
 ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
@@ -718,7 +894,9 @@ ui <- fluidPage(
 ```
 
 `server`
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 server <- function(input, output, session) {
   output$mpg_plot <- renderPlot({ #<<
     ggplot(mpg) +
@@ -731,7 +909,9 @@ server <- function(input, output, session) {
 Link user inputs to plot with `input$<id>`
 
 `ui`
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
@@ -755,7 +935,9 @@ ui <- fluidPage(
 ```
 
 `server`
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 server <- function(input, output, session) {
   output$mpg_plot <- renderPlot({ 
     ggplot(mpg) +
@@ -774,17 +956,24 @@ server <- function(input, output, session) {
 
 ### Add a theme with ["shinythemes"](https://rstudio.github.io/shinythemes/) package
 
-```{r theme, echo=FALSE, fig.align="center", out.width='60%'}
+```{r}
+#| label: theme
+#| echo: false
+#| fig.align: center
+#| out.width: 60%
+
 knitr::include_graphics("images/shinythemes.png")
 ```
 
 Insert theme at top of main `ui` layout function
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library(shinythemes)
 
 ui <- fluidPage(
-  theme = shinytheme("sandstone"), #<<
+  theme = shinytheme("sandstone"),
   sidebarLayout(
     sidebarPanel(
       <insert widgets>
@@ -796,7 +985,12 @@ ui <- fluidPage(
 )
 ```
 
-```{r, echo=FALSE, fig.align="center", out.width='100%'}
+```{r}
+#| label: theme2
+#| echo: false
+#| fig.align: center
+#| out.width: 100%
+
 knitr::include_graphics("https://rstudio.github.io/shinythemes/images/sandstone.png")
 ```
 
@@ -821,7 +1015,9 @@ Follow [this guide](https://shiny.posit.co/r/articles/share/shinyapps/)
 3. Run the code in RStudio 
 4. Deploy your app:
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 library(rsconnect)
 deployApp()
 ```

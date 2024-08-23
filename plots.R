@@ -3066,6 +3066,8 @@ htmlwidgets::saveWidget(
 
 # Tables - DT 
 
+library(DT)
+
 dt_options <- list(
   autoWidth = TRUE,
   columnDefs = list(
@@ -3076,7 +3078,8 @@ dt_options <- list(
 gapminder_dt <- gapminder %>% 
   datatable(
     width = 700,
-    options = dt_options)
+    options = dt_options
+  )
 
 gapminder_dt_pages <- gapminder %>% 
   datatable(
@@ -3135,6 +3138,10 @@ htmlwidgets::saveWidget(
 )
 
 # Tables - reactable 
+
+library(reactable)
+library(reactablefmtr)
+library(sparkline)
 
 gapminder_reactable <- gapminder %>% 
   reactable()

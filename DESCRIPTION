@@ -38,6 +38,7 @@ Imports:
     maps,
     metathis,
     palmerpenguins,
+    plotly,
     quarto,
     readxl,
     rmarkdown,
