@@ -7,6 +7,6 @@
 suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
-## Getting Started
+This section offers a quick introduction to the [{ggplot2}](https://ggplot2.tidyverse.org/) package for making charts and [Quarto](https://quarto.org/) for making reproducible reports. 
 
-text
+We like using Quarto for exploring data and making data visualizations because it allows us to easily blend code, text, and charts, enabling us to document our entire analysis from start to finish.

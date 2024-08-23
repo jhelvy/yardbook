@@ -34,7 +34,6 @@ book:
 
   chapters:
     - index.qmd
-    - intro.qmd
     - part: part1-getting-started.qmd
       chapters:
         - quarto.qmd
@@ -68,3 +67,7 @@ format:
 
     author-meta: "John Paul Helveston"
     callout-appearance: simple
+
+exclude:
+  cache: true
+  

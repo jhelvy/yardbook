@@ -12,122 +12,103 @@ suppressWarnings(suppressMessages(source("_common.R")))
 
 **Text is usually the single most important component on your chart**
 
-As seen below, text is what catches your attention first.
+As seen from an eye-tracking experiment below, text is what catches your attention first, so make sure to use text to tell the story about your chart.
 
 <center>
 <img src="images/eye_tracking.gif" width=700>
 </center>
 
+<aside>
+
 Michelle Borkin, et al. (2015) [Beyond Memorability: Visualization Recognition and Recall](https://ieeexplore.ieee.org/document/7192646)
+
+</aside>
+
+<br>
 
 **Titles matter**
 
-Below is an example of a chart with an incorrect title.
+Since titles are usually the first thing people read on a chart, it is critically important to think carefully about what message you want to convey. Below is an example of a chart with a rather ridiculous title considering the 2020 COVID-19 pandemic. Are Americans falling out of love with the cinema, or are they trying to avoid a deadly virus?
 
 <center>
-<img src="images/titles_matter.jpg" width = 700>
+<img src="images/titles_matter.jpg" width = 500>
 </center>
 
-Source: https://www.reddit.com/r/dataisugly/comments/odk65x/this_was_not_the_right_headline_to_go_along_with
+<aside>
+
+[Source](https://www.reddit.com/r/dataisugly/comments/odk65x/this_was_not_the_right_headline_to_go_along_with)
+
+</aside>
+
+<br>
 
 **Good annotations should tell a story**
+
+While titles should tell the conclusion / main point, other annotations should tell a story that points to that conclusion. In the example below, the title asks a question about the carbon intensity of different proteins, and the detailed annotations provide a lot of context that help answer that question.
 
 <center>
 <img src="images/protein.png" width = 700>
 </center>
 
-Source: https://ourworldindata.org/less-meat-or-sustainable-meat
+<aside>
 
-**Use captions as a way to annotate**
+[Source](https://ourworldindata.org/less-meat-or-sustainable-meat)
 
-```{r}
-#| eval: false
+</aside>
 
-labs(
-  x = 'Year',
-  y = 'Cost of incident repairs ($ millions)',
-  title = 'Repair costs of aircraft impacts with wildlife',
-  subtitle = 'Top 4 airlines',
-  caption = 'Source: https://wildlife.faa.gov/home'
-)
-```
+<br>
 
-```{r, ref.label='wildlife_costs', echo=FALSE, fig.height=5, fig.width=7, fig.align='center'}
-```
+**Chart labels are annotations**
 
-**Use mapped variables in `aes()` in `labs()`**
+In ggplot2, the `labs()` function is used to add chart labels, which are a good starting point for adding annotations to your chart.
+
+For example, the chart below tells the reader a variety of things, including that the data only include the top 4 airlines, that the y-axis is the cost of incident repairs in millions of dollars, and the data source is the FAA.
 
 ```{r}
-#| label: milk_bars
+#| label: wildlife_costs
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
+#| out-width: 70%
 
-milk_production %>%
-  filter(year %in% c(1970, 2017)) %>%
-  group_by(year, region) %>%
-  summarise(milk_produced = sum(milk_produced) / 10^9) %>%
-  ungroup() %>%
-  mutate(
-    region = fct_reorder2(region, year, desc(milk_produced))) %>%
-  ggplot() +
-  geom_col(
-    aes(x = milk_produced,
-        y = region,
-        fill = as.factor(year)),
-    position = "dodge") +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
-  theme_minimal_vgrid() +
+ggplot(wildlife_costs) +
+  geom_point(aes(x = incident_date, y = cost)) +
+  scale_x_date(
+    date_breaks = '3 years',
+    date_labels = "'%y") +
+  scale_y_continuous(
+    breaks = seq(0, 16, 4),
+    labels = scales::dollar) +
+  theme_minimal_grid(font_size = 16) +
   labs(
-    x = 'Milk produced (billions lbs)',
-    y = 'Region',
-    title = 'Milk production by region',
-    subtitle = '1970 & 2017')
+    x = 'Year',
+    y = 'Cost of incident repairs ($ millions)',
+    title = 'Repair costs of aircraft impacts with wildlife',
+    subtitle = 'Top 4 airlines',
+    caption = 'Source: https://wildlife.faa.gov/home'
+  )
 ```
 
-Use `labs()` to label everything.
-
-```{r}
-#| label: milk_bars2
-#| fig-height: 5
-#| fig-width: 7
-#| fig-align: center
-
-milk_production %>%
-  filter(year %in% c(1970, 2017)) %>%
-  group_by(year, region) %>%
-  summarise(milk_produced = sum(milk_produced) / 10^9) %>%
-  ungroup() %>%
-  mutate(
-    region = fct_reorder2(region, year, desc(milk_produced))) %>%
-  ggplot() +
-  geom_col(
-    aes(x = milk_produced,
-        y = region,
-        fill = as.factor(year)),
-    position = "dodge") +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
-  theme_minimal_vgrid() +
-  labs(
-    x = 'Milk produced (billions lbs)',
-    y = 'Region',
-    title = 'Milk production by region',
-    subtitle = '1970 & 2017',
-    fill = "Year")
-```
+<br>
 
 **Legends suck**
 
-<div style="display: flex; justify-content: space-between;">
+Legends require look-up task and should be avoided if possible.
 
-<div style="flex: 1; margin-right: 10px;">
-Legends require look-up task
+Direct labeling is much better.
+
+::: {.grid}
+
+::: {.g-col-6}
+
+## Legend 
 
 ```{r}
 #| label: milk_region_line
 #| fig-height: 5
 #| fig-width: 7.5
 #| fig-align: center
+#| echo: false
 
 ggplot(milk_region,
     aes(x = year, y = milk_produced,
@@ -142,11 +123,18 @@ ggplot(milk_region,
          title = 'Milk production in four US regions')
 ```
 
+:::
+
+::: {.g-col-6}
+
+## Direct labeling
+
 ```{r}
 #| label: fed_spending_legend
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
+#| echo: false
 
 ggplot(federal_spending_summary) +
   geom_area(
@@ -162,10 +150,10 @@ ggplot(federal_spending_summary) +
     title = 'Federal R&D spending, 1976 - 2017',
     subtitle = 'Source: AAAS Historical Trends')
 ```
-</div>
 
-<div style="flex: 1; margin-right: 10px;">
-Direct labeling is much better
+:::
+
+:::
 
 ```{r}
 #| label: milk_region_line_label
@@ -218,9 +206,6 @@ dod_spending <- ggplot(federal_spending_summary) +
 
 dod_spending
 ```
-</div>
-
-</div>
 
 **Use `annotate()` to add text to chart**
 
@@ -957,7 +942,8 @@ mpg_plot <- ggplot(mtcars) +
     y = "Power (hp)",
     title = "Vehicle fuel efficiency vs. power",
     subtitle = "Select makes and models",
-    caption = "Source: 1974 Motor Trend U.S. magazine.")
+    caption = "Source: 1974 Motor Trend U.S. magazine."
+  )
 ```
 
 ```{r}
@@ -977,13 +963,15 @@ mpg_plot <- ggplot(mtcars) +
   geom_point(aes(x = mpg, y = hp)) +
   theme_minimal(
     base_family = 'Source Sans Pro',
-    base_size = 15) +
+    base_size = 15
+  ) +
   labs(
     x = "Fuel efficiency (mpg)",
     y = "Power (hp)",
     title = "Vehicle fuel efficiency vs. power",
     subtitle = "Select makes and models",
-    caption = "Source: 1974 Motor Trend U.S. magazine.")
+    caption = "Source: 1974 Motor Trend U.S. magazine."
+  )
 ```
 
 ```{r}
@@ -1067,11 +1055,11 @@ of fuel economy."
 
 mpg_plot +
     geom_label(
-      data = data.frame(
-        x = 17, y = 270, label = label),
+      data = data.frame(x = 17, y = 270, label = label),
       aes(x = x, y = y, label = label),
       lineheight = .8, hjust = 0,
-      family = 'Roboto Condensed')
+      family = 'Roboto Condensed'
+    )
 ```
 
 **The [hrbrthemes](https://github.com/hrbrmstr/hrbrthemes) package:**
@@ -1093,7 +1081,8 @@ mpg_plot <- ggplot(mtcars) +
     y = "Power (hp)",
     title = "Vehicle fuel efficiency vs. power",
     subtitle = "Select makes and models",
-    caption = "Source: 1974 Motor Trend U.S. magazine.")
+    caption = "Source: 1974 Motor Trend U.S. magazine."
+  )
 
 mpg_plot +
   theme_ipsum()

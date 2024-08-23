@@ -7,6 +7,3 @@
 suppressWarnings(suppressMessages(source("_common.R")))
 ```
 
-## Data Visualization
-
-text
