@@ -1,3 +1,13 @@
 # Preface {#sec-preface .unnumbered}
 
-This book is still very much in development, but we're actively editing it in preparation for the Fall 2024 semester, so come back soon for an updated version!
+**Welcome to Yet Another R Dataviz Book!**
+
+This book aims to provide a simple, easy-to-follow guide for making effective data visualizations in {{< fa brands r-project >}}.
+
+The book leverages the [{ggplot2}](https://ggplot2.tidyverse.org/) package for making charts and [Quarto](https://quarto.org/) for making reproducible reports, and th book includes two introductory chapters on using these tools.
+
+The book also includes a section on [Exploring Data](part2-exploring.qmd), including chapters on data cleaning, data transformation, and summarizing data using the [Tidyverse](https://www.tidyverse.org/).
+
+Finally, the last section of the book is on [Data Visualization](part3-data-viz.qmd). Each chapter in this section includes examples of effective strategies for visualizing specific types of data and relationships.
+
+This book is still very much in development, so if something seems off please feel free to [post an issue](https://github.com/jhelvy/yardbook/issues) on the GitHub repo and we'll address it ASAP.
