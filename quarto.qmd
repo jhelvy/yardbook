@@ -1,4 +1,4 @@
-# Quarto Basics {#sec-chapter}
+# Introduction to Quarto {#sec-chapter}
 
 ```{r}
 #| echo: false
@@ -17,24 +17,69 @@ suppressWarnings(suppressMessages(source("_common.R")))
 
 ## Working with Quarto
 
-Quarto is a multilingual version of RMarkdown built on Pandoc that allows us to seamlessly combine text and code to create dynamic outputs. Like RMarkdown, it utilizes Knittr to render outputs in the form of documents, web pages, and more.  
+Quarto is a multilingual version of RMarkdown built on Pandoc that allows us to seamlessly combine text and code to create dynamic outputs. Like RMarkdown, it uses knitr to render outputs in the form of documents, web pages, and more.  
 
 <center>
 <img src="images/how-qmd-works.png" width=100%>
 </center>
+<br>
 
-Use R Projects (.Rproj files) to organize your analysis - **don't double-click .R files**!
+Use R Projects (`.Rproj` files) to organize your analysis. When you double-click a `.Rproj` file, RStudio will open an set the working directory to the project folder. 
+
+::: {.callout-important}
+
+**Do not double-click `.R` files**! If you do so, RStudio may open to a different project directory, and it won't know where your files live.
+
+:::
+
+So open files that look like this:
 
 <center>
 <img src = "images/rproj.png" width = "75">
 </center>
 
-### Render to multiple outputs
+## Anatomy of a Quarto Markdown Document
 
-PDF uses LaTeX:
+A Quarto Markdown document (.qmd) has three main parts:
+
+* Header
+* Markdown text
+* R code
+
+### Header
+
+You control the overall document settings in the YAML header (the parts between the `---` symbols at the top of the `.qmd` file. ). Things like the `title` and `author` can be set here. 
+
+You can also define the output type with `format`. The default output is an html page, which you can open in a web browser:
 
 ```{r}
 #| eval: false 
+---
+title: Your title
+author: Author name
+format: html 
+---
+```
+
+Add table of contents with `toc`, or change the theme under the `format` setting (More on themes at [https://quarto.org/docs/output-formats/html-themes.html](https://quarto.org/docs/output-formats/html-themes.html)):
+
+```{r}
+#| eval: false 
+---
+title: Your title
+author: Author name
+toc: true 
+format:
+  html:
+    theme: united
+---
+```
+
+You can also rende to other formats, like PDF with `format: pdf`, which leverages LaTex to render:
+
+```{r}
+#| eval: false 
+
 ---
 title: Your title
 author: Author name
@@ -50,10 +95,11 @@ If you don't have LaTeX on your computer, install tinytex in R:
 tinytex::install_tinytex()
 ```
 
-Microsoft Word:
+You can also render to Microsoft Word:
 
 ```{r}
 #| eval: false 
+
 ---
 title: Your title
 author: Author name
@@ -61,44 +107,15 @@ format: docx
 ---
 ```
 
-## Anatomy of a Quarto Markdown Document
-
-A Quarto Markdown document (.qmd) has three main parts:
-
-* Header
-* Markdown text
-* R code
-
-### Header
-
-Define overall document options in the header
-
-```{r}
-#| eval: false 
----
-title: Your title
-author: Author name
-format: html
----
-```
-
-Add table of contents, change theme
-
-```{r}
-#| eval: false 
----
-title: Your title
-author: Author name
-toc: true 
-format:
-  html:
-    theme: united
----
-```
-
 ### Markdown Text
 
-This
+Use the `#` symbol to create headers.
+
+::: {.grid}
+
+::: {.g-col-6}
+
+**Type this...**
 
 ```markdown
 # HEADER 1
@@ -113,13 +130,24 @@ This
 
 ###### HEADER 6
 ```
-Gives us this
+
+:::
+
+::: {.g-col-6}
+
+**..to get this**
 
 <img src = "images/headers.png" width = 1000>
 
---------------------------------------------------------------------------------
+:::
 
-Type this...
+:::
+
+::: {.grid}
+
+::: {.g-col-6}
+
+**Type this...**
 
 - `normal text`
 - `_italic text_`
@@ -129,7 +157,11 @@ Type this...
 - `~~strikethrough~~`
 - `` `code text` ``
 
-..to get this
+:::
+
+::: {.g-col-6}
+
+**..to get this**
 
 - normal text
 - _italic text_
@@ -139,7 +171,17 @@ Type this...
 - ~~strikethrough~~
 - `code text`
 
-Bullet list:
+:::
+
+:::
+
+Use `-` to make a bullet list:
+
+::: {.grid}
+
+::: {.g-col-6}
+
+**Type this...**
 
 ```{r, eval=FALSE}
 - first item
@@ -147,9 +189,27 @@ Bullet list:
 - third item
 ```
 
+:::
+
+::: {.g-col-6}
+
+**..to get this**
+
 - first item
 - second item
 - third item
+
+:::
+
+:::
+
+Use numbers to make a numbered list.
+
+::: {.grid}
+
+::: {.g-col-6}
+
+**Type this...**
 
 Numbered list:
 
@@ -159,9 +219,19 @@ Numbered list:
 3. third item
 ```
 
+:::
+
+::: {.g-col-6}
+
+**..to get this**
+
 1. first item
 2. second item
 3. third item
+
+:::
+
+:::
 
 Simple **url link** to another site:
 

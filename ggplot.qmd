@@ -1,4 +1,4 @@
-# Ggplot Basics {#sec-chapter}
+# Introduction to ggplot {#sec-chapter}
 
 ```{r}
 #| echo: false
