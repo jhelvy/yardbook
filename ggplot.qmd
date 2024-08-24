@@ -6,6 +6,15 @@
 #| include: false
 
 suppressWarnings(suppressMessages(source("_common.R")))
+theme_set(theme_gray(base_size = 14))
+
+knitr::opts_chunk$set(
+  fig.path = "figs/",
+  fig.width = 7.252,
+  fig.height = 4.5,
+  fig.retina = 3, 
+  out.width = "70%"
+)
 ```
 
 > ### Learning Objectives {.unnumbered}
@@ -26,15 +35,15 @@ path <- here::here("folder", "file.csv")
 
 Import data with these functions:
 
-File type  | Function       | Library
+File type  | Function       | Package
 -----------|----------------|----------
 `.csv`     | `read_csv()`   | **readr**
 `.txt`     | `read.table()` | **utils**
 `.xlsx`    | `read_excel()` | **readxl**
 
-#### Importing Comma Separated Values (.csv)
+### Importing Comma Separated Values (.csv)
 
-Read in `.csv` files with `read_csv()`:
+Read in `.csv` files with `read_csv()`. These usually read in well and the function assumes the first row is the header.
 
 ```{r}
 library(tidyverse)
@@ -46,9 +55,25 @@ milk_production <- read_csv(csvPath)
 head(milk_production)
 ```
 
-#### Importing Text Files (.txt)
+### Importing Text Files (.txt)
 
-Read in `.txt` files with `read.table()`:
+Read in `.txt` files with `read.table()`. These kinds of files are a little more "raw", and you may need to specify the `skip` argument (how many rows to skip before you get to the header row) and `header` arguments (whether the first row is the header or not). In this example, the data looks like this:
+
+```{r}
+#| eval: false
+
+Land-Ocean Temperature Index (C)
+--------------------------------
+
+Year No_Smoothing  Lowess(5)
+----------------------------
+1880     -0.15     -0.08
+1881     -0.07     -0.12
+1882     -0.10     -0.15
+1883     -0.16     -0.19
+```
+
+So we need to skip the first 5 rows and then set the header to `FALSE`:
 
 ```{r}
 txtPath <- here('data', 'nasa_global_temps.txt')
@@ -57,40 +82,26 @@ global_temps <- read.table(txtPath, skip = 5, header = FALSE)
 head(global_temps)
 ```
 
-#### Importing Text Files (.txt)
+### Importing Excel Files (.xlsx)
 
-Read in `.txt` files with `read.table()`:
-
-```{r}
-txtPath <- here('data', 'nasa_global_temps.txt')
-global_temps <- read.table(txtPath, skip = 5, header = FALSE)
-names(global_temps) <- c('year', 'no_smoothing', 'loess') # Add header
-
-head(global_temps)
-```
-
-#### Importing Excel Files (.xlsx)
-
-Read in `.xlsx` files with `read_excel()`:
+Read in `.xlsx` files with `read_excel()`. With Excel files it's a good idea to specify the sheet to read in using the `sheet` argument:
 
 ```{r}
 library(readxl)
 
 xlsxPath <- here('data', 'pv_cell_production.xlsx')
 pv_cells <- read_excel(xlsxPath, sheet = 'Cell Prod by Country', skip = 2)
-```
 
-```{r}
-glimpse(pv_cells)
+head(pv_cells)
 ```
 
 ## Basic plots in R
 
-R has a number of built-in tools for basic graph types. Let's start with two basic functions for scatter plots and histograms.
+R has a number of built-in tools for basic graph types. Usually we use these for quick plots just to get a sense of the data I'm working with. We almost never use these for final charts that we want to show others (for that we use `ggplot2`). While there are other built in chart types, we will only show the two we find most useful for quickly exploring data: scatter plots and histograms.
 
 ### Scatter plots with `plot()`
 
-A scatter plot provides a graphical view of the relationship between two variables. Typically these are used for "continuous" variables, like _time_, _age_, _money_, etc...things that are not categorical in nature (as opposed to "discrete" variables, like _nationality_). Here's a scatterplot of the fuel efficiency (miles per gallon) of cars over their respective horsepower using the `mtcars` dataset:
+A scatter plot helps us see if there is any correlational relationship between two numeric variables. These need to be two "continuous" variables, like _time_, _age_, _money_, etc...things that are not categorical in nature (as opposed to "discrete" variables, like _nationality_). Here's a scatterplot of the fuel efficiency (miles per gallon) of cars over their respective horsepower using the `mtcars` dataset:
 
 ```{r}
 #| label: 'scatter-basic'
@@ -122,7 +133,7 @@ From this scatter plot, we can observe the relationship between a car's horsepow
 
 ### Histograms with `hist()`
 
-The [histogram](https://en.wikipedia.org/wiki/Histogram) is one of the most common ways to visualize the _distribution_ of a variable. The `hist()` function takes just one variable: `x`. Here's a histogram of the `waiting` variable showing the wait times between eruptions of the Old Faithful geyser:
+The [histogram](https://en.wikipedia.org/wiki/Histogram) is one of the most common ways to visualize the _distribution_ of a single, continuous, numeric variable. The `hist()` function takes just one variable: `x`. Here's a histogram of the `waiting` variable showing the wait times between eruptions of the Old Faithful geyser:
 
 ```{r}
 #| label: 'hist-basic'
@@ -151,41 +162,57 @@ hist(
 
 With our changes, the chart is cleaner and it is clearer which waiting times the were most common.
 
-## Advanced figures with `ggplot2`
+## Better figures with `ggplot2`
 
-![](images/horst_monsters_ggplot2.png){ width=500 }
 [Art by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)]{.aside}
+```{r}
+#| label: ggplot-monsters
+#| out-width: "500"
+#| echo: false
+#| fig-align: "center"
+#| fig-alt: "Colorful illustration promoting ggplot2 data visualization. The text 'ggplot2: Build a data MASTERPIECE' is prominently displayed. Various framed charts and graphs are shown, including line plots, bar charts, and scatter plots. Three cute, fuzzy cartoon creatures resembling paint brushes or mops are walking across the bottom. They're carrying boxes labeled 'themes', 'geoms', and 'scales'. An easel with a bar chart stands to the right. The overall style is whimsical and artistic, emphasizing the creative aspect of data visualization."
 
-While Base R plot functions are useful for making simple, quick plots, many R users have adopted the `ggplot2` package as their primary tool for visualizing data.
+knitr::include_graphics("images/horst_monsters_ggplot2.png")
+```
 
+While Base R plot functions are useful for making simple, quick plots, many R users have adopted the `ggplot2` package as their primary tool for visualizing data given its flexibility, customization, and ease of use.
 
 ## Layering with ggplot
 
-#### "Grammar of Graphics"
+### "Grammar of Graphics"
 
 The ggplot2 library is built on the “Grammar of Graphics” concept developed by Leland Wilkinson (1999). A “grammar of graphics” (that’s what the “gg” in “ggplot2” stands for) is a framework that uses layers to describe and construct visualizations or graphics in a structured manner. Here’s a visual summary of the concept:
 
-<center>
-<img src="images/making_a_ggplot.jpeg" width=600>
-</center>
+[[Image Source](https://r.qcbs.ca/workshop03/book-en/grammar-of-graphics-gg-basics.html)]{.aside}
+```{r}
+#| label: ggplot-layers
+#| out-width: "600"
+#| echo: false
+#| fig-align: "center"
+#| fig-alt: "Diagram showing the layers of a ggplot2 plot. It has four columns labeled 'Aesthetics', 'Axis', 'Theme', and 'Output'. The 'Aesthetics' column shows a scatter plot with points transitioning from blue to red as they move up and right. The 'Axis' column displays the same plot with labeled axes: 'Variable 1' (x-axis) and 'Variable 2' (y-axis). The 'Theme' column shows a gray rectangle representing the plot background. The 'Output' column combines all elements, showing the scatter plot with axes and a gray background. Below, the columns are labeled 'Layer 1', 'Layer 2', and 'Layer 3' respectively. Plus signs between columns indicate the additive nature of these layers."
 
-**ggplot2** package developed by Hadley Wickham (2005)
+knitr::include_graphics("images/ggplot-layers.png")
+```
 
-#### Making plot layers with ggplot2
+### Making plot layers with ggplot2
 
-##### 1. The data
-##### 2. The aesthetic mapping (what goes on the axes?)
-##### 3. The geometries (points? bars? etc.)
-##### 4. The annotations / labels
-##### 5. The theme
+Every ggplot is built with several layers. At a minimum, you need to specify the data, the aesthetic mapping, and the geometry. We also like to add labels and a theme, so my basic ggplot "recipe" usually contains at least five layers:
+
+1. The data
+2. The aesthetic mapping (what goes on the axes?)
+3. The geometries (points? bars? etc.)
+4. The annotations / labels
+5. The theme
 
 #### Layer 1: The data
+
+For this example, we'll use the `mpg` dataset, which contains information on the fuel efficiency of various cars:
 
 ```{r}
 head(mpg)
 ```
 
-The `ggplot()` function initializes the plot with whatever data you're using
+The `ggplot()` function initializes the plot with whatever data you're using. When you run this, you'll get a blank plot because you haven't told ggplot what to do with the data yet:
 
 ```{r}
 #| label: ggblank
@@ -198,7 +225,7 @@ mpg %>%
 
 #### Layer 2: The aesthetic mapping
 
-The `aes()` function determines which variables will be _mapped_ to the geometries<br>(e.g. the axes)
+The `aes()` function determines which variables will be _mapped_ to the geometries (e.g. the axes). Here I'll map the `displ` variable to the x-axis and the `hwy` variable to the y-axis. Still you don't see much, but at least you can now see that the variables are there along the axes.
 
 ```{r}
 #| label: ggaes
@@ -211,7 +238,7 @@ mpg %>%
 
 #### Layer 3: The geometries
 
-Use `+` to add geometries, e.g. `geom_points()` for points
+The geometries are the visual representations of the data. Here I'll use `geom_point()` to create a scatter plot. Now this is starting to look like what we saw before with the simple `plot()` function:
 
 ```{r}
 #| label: ggpoint
@@ -225,7 +252,7 @@ mpg %>%
 
 #### Layer 4: The annotations / labels
 
-Use `labs()` to modify most labels
+Use `labs()` to modify the plot labels. The arguments in the `labs()` function match those from the `aes()` mapping, so `x` refers to `displ` and `y` refers to `hwy`. We also added a title:
 
 ```{r}
 #| label: gglabs
@@ -244,6 +271,8 @@ mpg %>%
 
 #### Layer 5: The theme
 
+The theme controls the overall look of the plot. Here I'll use `theme_bw()` (black and white theme) to make the plot look a little nicer:
+
 ```{r}
 #| label: ggtheme_bw
 #| fig.height: 5
@@ -260,14 +289,22 @@ mpg %>%
   theme_bw()
 ```
 
-##### Common themes
+#### Common themes
+
+There are LOTS of ggplot themes. Here are a few we use the most:
+
+::: {.grid}
+
+::: {.g-col-4}
 
 `theme_bw()`
 
 ```{r}
 #| label: ggtheme_bw2
+#| echo: false
 #| fig.height: 4
 #| fig.width: 6
+#| out-width: "100%"
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -275,12 +312,18 @@ mpg %>%
   theme_bw()
 ```
 
+:::
+
+::: {.g-col-4}
+
 `theme_minimal()`
 
 ```{r}
 #| label: ggtheme_minimal
 #| fig.height: 4
 #| fig.width: 6
+#| echo: false
+#| out-width: "100%"
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -288,12 +331,18 @@ mpg %>%
   theme_minimal()
 ```
 
+:::
+
+::: {.g-col-4}
+
 `theme_classic()`
 
 ```{r}
 #| label: ggtheme_classic
 #| fig.height: 4
 #| fig.width: 6
+#| echo: false
+#| out-width: "100%"
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -301,30 +350,27 @@ mpg %>%
   theme_classic()
 ```
 
-`theme_void()`
+:::
 
-```{r}
-#| label: ggtheme_void
-#| fig.height: 4
-#| fig.width: 6
+::: 
 
-mpg %>% 
-  ggplot(aes(x = displ, y = hwy)) +
-  geom_point() +
-  theme_void()
-```
+## Making a *good* ggplot
 
-## Making a (good) ggplot
+The 5-step recipe above is a good start, but to make a _good_ ggplot from the raw data, we suggest a slightly modified 7-step recipe:
 
 1. Format data frame
 2. Add geoms
-3. Flip coordinates?
-4. Reorder factors?
+3. Can you read the labels?
+4. Do you need to rearrange the categories?
 5. Adjust scales
 6. Adjust theme
 7. Annotate
 
-#### 1) Format data frame
+### Step 1. Format the data frame
+
+One of the most common mistakes people make is not formatting the data frame correctly. If you want to map variables to axes on a plot, you need to make sure those variables are in the data frame!
+
+In this example, we'll just plot a bar chart of the number of wildlife impacts by operator. We can obtain this summary data with the `count()` function, which is kind of like calling `nrow()` except for each group in the data frame:
 
 ```{r}
 # Format the data frame
@@ -332,7 +378,9 @@ wildlife_impacts %>%
   count(operator)
 ```
 
-#### 2) Add geoms
+### Step 2. Add geoms
+
+For a bar chart, we use `geom_col()`, mapping `operator` to the `x` axis and `n` to the `y` axis:
 
 ```{r}
 #| label: birds_before
@@ -351,7 +399,13 @@ ggplot() +
   )
 ```
 
-#### 3) Flip coordinates - can you read the labels?
+### Step 3. Can you read the labels?
+
+One of the biggest mistakes when making a bar chart is failing to check if you can read the labels. Overlapping labels is a common problem, just like in the chart above.
+
+Often times, if the category labels overlap or are difficult to read, people will rotate the labels vertically or at an angle, which makes you tilt your head to read them. 
+
+A better solutions is to just flip the coordinates with `coord_flip()`:
 
 ```{r}
 #| label: birds_coord_flip
@@ -365,12 +419,15 @@ wildlife_impacts %>%
 # Add geoms
  ggplot() +
   geom_col(
-      aes(x = operator, y = n),
-      width = 0.7, alpha = 0.8) +
+    aes(x = operator, y = n),
+    width = 0.7, alpha = 0.8
+  ) +
 
 # Flip coordinates
   coord_flip()
 ```
+
+Or better yet, just reverse the `x` and `y` mapping:
 
 ```{r}
 #| label: birds_coord_flip2
@@ -389,7 +446,11 @@ ggplot() +
   )
 ```
 
-#### 4) Reorder factors with `reorder()`
+### Step 4. Do you need to rearrange the categories?
+
+By default, `ggplot` will arrange the bars in alphabetical order, which is almost never what you want. 
+
+If you want to sort the bars in descending order, you can use the `reorder()` function to reorder them based on another variable. Here we'll sort the bars based on the `n` variable:
 
 ```{r}
 #| label: birds_fct_reorder
@@ -402,11 +463,16 @@ wildlife_impacts %>%
 # Add geoms
 ggplot() +
   geom_col(
-      aes(x = n, y = reorder(operator, n)),
-      width = 0.7, alpha = 0.8)
+    aes(x = n, y = reorder(operator, n)),
+    width = 0.7, alpha = 0.8
+  )
 ```
 
-#### 5) Adjust scales
+### Step 5. Adjust scales
+
+Do you need to adjust the scales on any of the axes?
+
+One slightly annoying feature of `ggplot` is that the bars are not flush against the axes by default. You can adjust this with the `expand` argument in `scale_x_continuous()`. The `mult = c(0, 0.05))` part is saying to make the bars flush on the left side of the bars and add 5% more space on the right side.
 
 ```{r}
 #| label: birds_scales1
@@ -420,15 +486,15 @@ wildlife_impacts %>%
 # Add geoms
 ggplot() +
   geom_col(
-      aes(x = n, y = reorder(operator, n)),
-      width = 0.7, alpha = 0.8) +
+    aes(x = n, y = reorder(operator, n)),
+    width = 0.7, alpha = 0.8
+  ) +
 
 # Adjust x axis scale
-  scale_x_continuous(
-    expand = expansion(mult = c(0, 0.05)))
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)))
 ```
 
-##### Customize break points (if you want)
+You can also change the break points and limits of the bars with `breaks` and `limits`:
 
 ```{r}
 #| label: birds_scales2
@@ -442,25 +508,27 @@ wildlife_impacts %>%
 # Add geoms
 ggplot() +
   geom_col(
-      aes(x = n, y = reorder(operator, n)),
-      width = 0.7, alpha = 0.8) +
+    aes(x = n, y = reorder(operator, n)),
+    width = 0.7, alpha = 0.8
+  ) +
 
 # Adjust x axis scale
   scale_x_continuous(
     expand = expansion(mult = c(0, 0.05)),
     breaks = c(0, 10000, 20000),
-    limits = c(0, 20000))
+    limits = c(0, 20000)
+  )
 ```
 
-#### 6) Adjust theme
+### Step 6. Adjust theme
 
-##### Four `cowplot` themes you should know
+While the three themes shown before are nice built-in themes, I often use one of four themes from the [`cowplot` package](https://wilkelab.org/cowplot/index.html):
 
 <center>
 <img src="images/cowplot_themes.png" width=700>
 </center>
 
-For horizontal bars, add only vertical grid
+For horizontal bars, add only a vertical grid (the horizontal grid is distracting and not needed). Likewise, for vertical bars, add only a horizontal grid.
 
 ```{r}
 #| label: birds_theme
@@ -474,18 +542,20 @@ wildlife_impacts %>%
 # Add geoms
   ggplot() +
   geom_col(
-      aes(x = n, y = reorder(operator, n)),
-      width = 0.7, alpha = 0.8) +
+    aes(x = n, y = reorder(operator, n)),
+    width = 0.7, alpha = 0.8
+  ) +
 
 # Adjust x axis scale
-  scale_x_continuous(
-    expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
 
 # Adjust theme
   theme_minimal_vgrid()
 ```
 
-#### 7) Annotate
+### Step 7. Annotate
+
+At a minimum, you should add a title and axis labels to your charts. In the example below, we've also modified the `operator` variable to be title case to make the labels easier to read. You can set an axis label to `NULL` if you don't want to show it, which we'll often do if it's otehrwise redundant or obvious what it is (in this case, it's obvious that the y-axis is showing airlines).
 
 ```{r}
 #| label: birds_annotate
@@ -495,17 +565,18 @@ wildlife_impacts %>%
 # Format the data frame
 wildlife_impacts %>%
   count(operator) %>%
+  # Make the operator names title case
   mutate(operator = str_to_title(operator)) %>%
 
 # Add geoms
   ggplot() +
   geom_col(
-      aes(x = n, y = reorder(operator, n)),
-      width = 0.7, alpha = 0.8) +
+    aes(x = n, y = reorder(operator, n)),
+    width = 0.7, alpha = 0.8
+  ) +
 
 # Adjust x axis scale
-  scale_x_continuous(
-    expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
 
 # Adjust theme
   theme_minimal_vgrid() +
@@ -513,27 +584,11 @@ wildlife_impacts %>%
 # Annotate
   labs(
     x = 'Count',
-    y = NULL)
+    y = NULL, 
+    title = "Number of wildlife impacts by operator", 
+    subtitle = "Top four operating airlines",
+    caption = "Data from the FAA Wildlife Strike Database"
+  )
 ```
 
-#### Finished product
-
-```{r}
-#| label: birds_after
-#| fig.height: 4
-#| fig.width: 6
-
-wildlife_impacts %>%
-  count(operator) %>%
-  mutate(operator = str_to_title(operator)) %>%
-  ggplot() +
-  geom_col(
-      aes(x = n, y = reorder(operator, n)),
-      width = 0.7, alpha = 0.8) +
-  scale_x_continuous(
-    expand = expansion(mult = c(0, 0.05))) +
-  theme_minimal_vgrid() +
-  labs(
-    x = 'Count',
-    y = NULL)
-```
+And we're done! 🎉

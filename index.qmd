@@ -4,7 +4,9 @@
 
 This book aims to provide a simple, easy-to-follow guide for making effective data visualizations in {{< fa brands r-project >}}.
 
-The book leverages the [{ggplot2}](https://ggplot2.tidyverse.org/) package for making charts and [Quarto](https://quarto.org/) for making reproducible reports, and th book includes two introductory chapters on using these tools.
+Throughout the book, we keep the text to a minimum and focus on communicating key concepts as succinctly as possible. The general approach is to explain an idea in one or two sentences max, then provide an example with code so that you can see how to implement it.
+
+The book leverages the [{ggplot2}](https://ggplot2.tidyverse.org/) package for making charts and [Quarto](https://quarto.org/) for making reproducible reports, and the book includes two introductory chapters on using these tools.
 
 The book also includes a section on [Exploring Data](part2-exploring.qmd), including chapters on data cleaning, data transformation, and summarizing data using the [Tidyverse](https://www.tidyverse.org/).
 

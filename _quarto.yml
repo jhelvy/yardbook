@@ -38,24 +38,24 @@ book:
       chapters:
         - quarto.qmd
         - ggplot.qmd
-    - part: part2-exploring.qmd
-      chapters:
-        - tidy-data.qmd
-        - cleaning-data.qmd
-        - good-practices.qmd
-        - summarizing-data.qmd
-    - part: part3-data-viz.qmd
-      chapters:
-        - effective-data-viz.qmd
-        - trends.qmd
-        - amounts.qmd
-        - prop.qmd
-        - comparisons.qmd
-        - maps.qmd
-        - scales.qmd
-        - aesthetics.qmd
-        - anim.qmd
-        - interact.qmd
+    # - part: part2-exploring.qmd
+    #   chapters:
+    #     - tidy-data.qmd
+    #     - cleaning-data.qmd
+    #     - good-practices.qmd
+    #     - summarizing-data.qmd
+    # - part: part3-data-viz.qmd
+    #   chapters:
+    #     - effective-data-viz.qmd
+    #     - trends.qmd
+    #     - amounts.qmd
+    #     - prop.qmd
+    #     - comparisons.qmd
+    #     - maps.qmd
+    #     - scales.qmd
+    #     - aesthetics.qmd
+    #     - anim.qmd
+    #     - interact.qmd
     
 format:
   html:
@@ -70,4 +70,3 @@ format:
 
 exclude:
   cache: true
-  
