@@ -1,0 +1,9 @@
+# Data Visualization {#sec-part}
+
+```{r}
+#| echo: false
+#| message: false
+
+suppressWarnings(suppressMessages(source("_common.R")))
+```
+

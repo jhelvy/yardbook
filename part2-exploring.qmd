@@ -1,0 +1,10 @@
+# Exploring Data {#sec-part}
+
+```{r}
+#| echo: false
+#| message: false
+
+suppressWarnings(suppressMessages(source("_common.R")))
+```
+
+This section includes chapters on data cleaning, data transformation, and summarizing data using the [Tidyverse](https://www.tidyverse.org/). Most dataviz books typically focus on the visualization part of the data analysis process, but in practice making a good chart usually involves a lot of data cleaning and transformation. In fact, most people spend more time in the preparation phase than the actual chart-making phase when creating a chart, so we felt it was important to first emphasize some important data cleaning and transformation techniques.

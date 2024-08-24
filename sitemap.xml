@@ -2,82 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://yardbook.jhelvy.com/index.html</loc>
-    <lastmod>2024-08-23T20:26:46.583Z</lastmod>
+    <lastmod>2024-08-24T11:12:53.902Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/quarto.html</loc>
-    <lastmod>2024-08-23T20:26:46.584Z</lastmod>
+    <lastmod>2024-08-24T11:12:53.903Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/ggplot.html</loc>
-    <lastmod>2024-08-23T20:26:46.103Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/tidy-data.html</loc>
-    <lastmod>2024-08-23T20:26:46.584Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/cleaning-data.html</loc>
-    <lastmod>2024-08-23T20:26:45.794Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/good-practices.html</loc>
-    <lastmod>2024-08-23T20:26:46.103Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/summarizing-data.html</loc>
-    <lastmod>2024-08-23T20:26:46.584Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/effective-data-viz.html</loc>
-    <lastmod>2024-08-23T20:26:45.890Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/trends.html</loc>
-    <lastmod>2024-08-23T20:26:46.585Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/amounts.html</loc>
-    <lastmod>2024-08-23T20:26:45.794Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/prop.html</loc>
-    <lastmod>2024-08-23T20:26:46.584Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/comparisons.html</loc>
-    <lastmod>2024-08-23T20:26:45.795Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/maps.html</loc>
-    <lastmod>2024-08-23T20:26:46.583Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/scales.html</loc>
-    <lastmod>2024-08-23T20:26:46.584Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/aesthetics.html</loc>
-    <lastmod>2024-08-23T20:26:45.794Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/anim.html</loc>
-    <lastmod>2024-08-23T20:26:45.794Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/interact.html</loc>
-    <lastmod>2024-08-23T20:26:46.583Z</lastmod>
+    <lastmod>2024-08-24T11:12:53.568Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/part1-getting-started.html</loc>
-    <lastmod>2024-08-23T20:26:46.583Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/part2-exploring.html</loc>
-    <lastmod>2024-08-23T20:26:46.583Z</lastmod>
-  </url>
-  <url>
-    <loc>https://yardbook.jhelvy.com/part3-data-viz.html</loc>
-    <lastmod>2024-08-23T20:26:46.583Z</lastmod>
+    <lastmod>2024-08-24T11:12:53.902Z</lastmod>
   </url>
 </urlset>
