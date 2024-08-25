@@ -191,11 +191,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#working-with-quarto" id="toc-working-with-quarto" class="nav-link active" data-scroll-target="#working-with-quarto"><span class="header-section-number">1.1</span> Working with Quarto</a></li>
-  <li><a href="#anatomy-of-a-quarto-markdown-document" id="toc-anatomy-of-a-quarto-markdown-document" class="nav-link" data-scroll-target="#anatomy-of-a-quarto-markdown-document"><span class="header-section-number">1.2</span> Anatomy of a Quarto Markdown Document</a>
+  <li><a href="#anatomy-of-a-quarto-markdown-document" id="toc-anatomy-of-a-quarto-markdown-document" class="nav-link" data-scroll-target="#anatomy-of-a-quarto-markdown-document"><span class="header-section-number">1.2</span> Anatomy of a Quarto Markdown Document</a></li>
+  <li><a href="#header" id="toc-header" class="nav-link" data-scroll-target="#header"><span class="header-section-number">1.3</span> Header</a></li>
+  <li><a href="#markdown-text" id="toc-markdown-text" class="nav-link" data-scroll-target="#markdown-text"><span class="header-section-number">1.4</span> Markdown Text</a></li>
+  <li><a href="#r-code" id="toc-r-code" class="nav-link" data-scroll-target="#r-code"><span class="header-section-number">1.5</span> R Code</a>
   <ul class="collapse">
-  <li><a href="#header" id="toc-header" class="nav-link" data-scroll-target="#header"><span class="header-section-number">1.2.1</span> Header</a></li>
-  <li><a href="#markdown-text" id="toc-markdown-text" class="nav-link" data-scroll-target="#markdown-text"><span class="header-section-number">1.2.2</span> Markdown Text</a></li>
-  <li><a href="#r-code" id="toc-r-code" class="nav-link" data-scroll-target="#r-code"><span class="header-section-number">1.2.3</span> R Code</a></li>
+  <li><a href="#inline-r-code" id="toc-inline-r-code" class="nav-link" data-scroll-target="#inline-r-code"><span class="header-section-number">1.5.1</span> Inline R code</a></li>
+  <li><a href="#r-code-chunks" id="toc-r-code-chunks" class="nav-link" data-scroll-target="#r-code-chunks"><span class="header-section-number">1.5.2</span> R Code chunks</a></li>
+  <li><a href="#chunk-options" id="toc-chunk-options" class="nav-link" data-scroll-target="#chunk-options"><span class="header-section-number">1.5.3</span> Chunk Options</a></li>
+  <li><a href="#a-global-setup-chunk" id="toc-a-global-setup-chunk" class="nav-link" data-scroll-target="#a-global-setup-chunk"><span class="header-section-number">1.5.4</span> A Global <code>setup</code> Chunk 🌍</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/quarto.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -263,8 +267,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Markdown text</li>
 <li>R code</li>
 </ul>
-<section id="header" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="header"><span class="header-section-number">1.2.1</span> Header</h3>
+</section>
+<section id="header" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="header"><span class="header-section-number">1.3</span> Header</h2>
 <p>You control the overall document settings in the YAML header (the parts between the <code>---</code> symbols at the top of the <code>.qmd</code> file. ). Things like the <code>title</code> and <code>author</code> can be set here.</p>
 <p>You can also define the output type with <code>format</code>. The default output is an html page, which you can open in a web browser:</p>
 <div class="cell" data-layout-align="center">
@@ -306,8 +311,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="sc">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="markdown-text" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="markdown-text"><span class="header-section-number">1.2.2</span> Markdown Text</h3>
+<section id="markdown-text" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="markdown-text"><span class="header-section-number">1.4</span> Markdown Text</h2>
 <p>Use the <code>#</code> symbol to create headers.</p>
 <div class="grid">
 <div class="g-col-6">
@@ -378,7 +383,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="grid">
 <div class="g-col-6">
 <p><strong>Type this…</strong></p>
-<p>Numbered list:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> first item</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> second item</span>
@@ -395,24 +399,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Simple <strong>url link</strong> to another site:</p>
+<div class="grid">
+<div class="g-col-8">
+<p><strong>Type this…</strong></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>[Download R](http<span class="sc">:</span><span class="er">//</span>www.r<span class="sc">-</span>project.org<span class="sc">/</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<div class="g-col-4">
+<p><strong>..to get this</strong></p>
 <p><a href="http://www.r-project.org/">Download R</a></p>
-<section id="dont-want-to-use-markdown" class="level4" data-number="1.2.2.1">
-<h4 data-number="1.2.2.1" class="anchored" data-anchor-id="dont-want-to-use-markdown"><span class="header-section-number">1.2.2.1</span> Don’t want to use Markdown?</h4>
-</section>
-<section id="use-visual-mode" class="level4" data-number="1.2.2.2">
-<h4 data-number="1.2.2.2" class="anchored" data-anchor-id="use-visual-mode"><span class="header-section-number">1.2.2.2</span> <span style="color: red;">Use Visual Mode!</span></h4>
+</div>
+</div>
+<p>Don’t want to use Markdown? Use RStudio Visual Mode! This is a WYSIWYG editor that allows you to write like you would in Word, but then RStudio will convert it to Markdown for you.</p>
 <center>
-<img src="images/visual-mode.png" width="700">
+<img src="images/visual-mode.png" width="500">
 </center>
 </section>
-</section>
-<section id="r-code" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="r-code"><span class="header-section-number">1.2.3</span> R Code</h3>
-<section id="inline-r-code" class="level4" data-number="1.2.3.1">
-<h4 data-number="1.2.3.1" class="anchored" data-anchor-id="inline-r-code"><span class="header-section-number">1.2.3.1</span> Inline R code</h4>
+<section id="r-code" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="r-code"><span class="header-section-number">1.5</span> R Code</h2>
+<section id="inline-r-code" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="inline-r-code"><span class="header-section-number">1.5.1</span> Inline R code</h3>
+<p>Use backticks to insert R code into text, like this:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">r insert code here</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -422,20 +430,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Produces this:</p>
 <p>The sum of 3 and 4 is 7</p>
 </section>
-<section id="r-code-chunks" class="level4" data-number="1.2.3.2">
-<h4 data-number="1.2.3.2" class="anchored" data-anchor-id="r-code-chunks"><span class="header-section-number">1.2.3.2</span> R Code chunks</h4>
+<section id="r-code-chunks" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="r-code-chunks"><span class="header-section-number">1.5.2</span> R Code chunks</h3>
+<p>Insert R code into a chunk like this:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="in">insert code here</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="in">insert more code here</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This code chunk…</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<p>For example, the following code chunk will load the <code>palmerpenguins</code> package and print the first 6 rows of the <code>penguins</code> dataset:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="in">library(palmerpenguins)</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="in">head(penguins)</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>…will produce this when compiled:</p>
-<div class="cell" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 8
 #&gt;   species island   bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
@@ -450,72 +458,108 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="chunk-options" class="level4" data-number="1.2.3.3">
-<h4 data-number="1.2.3.3" class="anchored" data-anchor-id="chunk-options"><span class="header-section-number">1.2.3.3</span> Chunk Options</h4>
-<p>Control what chunks output using options</p>
-<p>All options <a href="https://quarto.org/docs/reference/cells/cells-knitr.html">here</a></p>
+<section id="chunk-options" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="chunk-options"><span class="header-section-number">1.5.3</span> Chunk Options</h3>
+<p>Use chunk options to control what code chunks output.</p>
+<p>See all options <a href="https://quarto.org/docs/reference/cells/cells-knitr.html">here</a></p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/chunks_options.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<p><img src="images/chunks_options.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>By default, code chunks print <strong>code</strong> + <strong>output</strong></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| echo: false</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="in">cat('hello world!')</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Prints only <strong>output</strong><br>(doesn’t show code)</p>
+<p>By default, code chunks print <strong>code</strong> + <strong>output</strong>, like this:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="in">cat('hello world!')</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; hello world!</code></pre>
+</div>
+</div>
+<p>Setting <code>echo: false</code> will print only the <strong>output</strong> but not the code.</p>
+<div class="grid">
+<div class="g-col-6">
+<p><strong>Code chunk</strong>:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| echo: false</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="in">cat('hello world!')</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="g-col-6">
+<p><strong>Output</strong>:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; hello world!</code></pre>
 </div>
 </div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="in">cat('hello world!')</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Prints only <strong>code</strong><br>(doesn’t run the code)</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'hello world!'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<p>Setting <code>eval: false</code> will print only the <strong>output</strong> but will not run the code.</p>
+<div class="grid">
+<div class="g-col-6">
+<p><strong>Code chunk</strong>:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| include: false</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="in">cat('hello world!')</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Runs, but doesn’t print anything</p>
+</div>
+<div class="g-col-6">
+<p><strong>Output</strong>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'hello world!'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>Setting <code>include: false</code> will run the code but not print anything.</p>
+<div class="grid">
+<div class="g-col-6">
+<p><strong>Code chunk</strong>:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| include: false</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="in">cat('hello world!')</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="g-col-6">
+<p><strong>Output</strong>:</p>
+</div>
+</div>
 </section>
-<section id="a-global-setup-chunk" class="level4" data-number="1.2.3.4">
-<h4 data-number="1.2.3.4" class="anchored" data-anchor-id="a-global-setup-chunk"><span class="header-section-number">1.2.3.4</span> A Global <code>setup</code> Chunk 🌍</h4>
-<div class="sourceCode" id="cb20"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: setup</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| include: false</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="in">knitr::opts_chunk$set(</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="in">    warning = FALSE,</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="in">    message = FALSE,</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="in">    fig.path = "figs/",</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="in">    fig.width = 7.252,</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="in">    fig.height = 4,</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="in">    comment = "#&gt;",</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="in">    fig.retina = 3</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="a-global-setup-chunk" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="a-global-setup-chunk"><span class="header-section-number">1.5.4</span> A Global <code>setup</code> Chunk 🌍</h3>
+<p>We typically use a <code>setup</code> chunk to set global chunk options at the top of the document, like this:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: setup</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| include: false</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="in">knitr::opts_chunk$set(</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="in">    warning = FALSE,</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="in">    message = FALSE,</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="in">    fig.path = "figs/",</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="in">    fig.width = 7.252,</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="in">    fig.height = 4,</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="in">    comment = "#&gt;",</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="in">    fig.retina = 3</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This chunk will set global chunk options for all following chunks in the document. You can still also use individual chunk options too.</p>
+<p>This setup chunk does the following:</p>
 <ul>
-<li>Typically the first chunk</li>
-<li>All following chunks will use these options (i.e., sets global chunk options)</li>
-<li>You can (and should) use individual chunk options too</li>
-<li>Often where we load libraries, etc.</li>
+<li>Any warnings will not be printed</li>
+<li>Any messages will not be printed</li>
+<li>Figures will be saved to the <code>figs/</code> folder</li>
+<li>Figures will be 7.252 inches wide and 4 inches tall</li>
+<li>Any code print out will start with <code>#&gt;</code></li>
+<li>The <code>fig.retina</code> setting improves overall figure resolution.</li>
 </ul>
 
 
-</section>
 </section>
 </section>
 
