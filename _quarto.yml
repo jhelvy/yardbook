@@ -38,9 +38,9 @@ book:
       chapters:
         - quarto.qmd
         - ggplot.qmd
-    # - part: part2-exploring.qmd
-    #   chapters:
-    #     - tidy-data.qmd
+    - part: part2-exploring.qmd
+      chapters:
+        - tidy-data.qmd
     #     - cleaning-data.qmd
     #     - good-practices.qmd
     #     - summarizing-data.qmd

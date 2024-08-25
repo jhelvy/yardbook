@@ -1,9 +1,3 @@
 # Data Visualization {#sec-part}
 
-```{r}
-#| echo: false
-#| message: false
-
-suppressWarnings(suppressMessages(source("_common.R")))
-```
-
+Yay, you've made it to the data visualization section! This is where all pretty charts happen, but it an also be a bit daunting given the sheer number of options we have for making charts. Don't worry - we'll walk through a bunch of examples and you'll be making beautiful charts in no time!
