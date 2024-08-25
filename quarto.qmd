@@ -46,7 +46,7 @@ A Quarto Markdown document (.qmd) has three main parts:
 * Markdown text
 * R code
 
-### Header
+## Header
 
 You control the overall document settings in the YAML header (the parts between the `---` symbols at the top of the `.qmd` file. ). Things like the `title` and `author` can be set here. 
 
@@ -107,7 +107,7 @@ format: docx
 ---
 ```
 
-### Markdown Text
+## Markdown Text
 
 Use the `#` symbol to create headers.
 
@@ -211,8 +211,6 @@ Use numbers to make a numbered list.
 
 **Type this...**
 
-Numbered list:
-
 ```{r, eval=FALSE}
 1. first item
 2. second item
@@ -235,29 +233,51 @@ Numbered list:
 
 Simple **url link** to another site:
 
-```{r, eval=FALSE}
+::: {.grid}
+
+::: {.g-col-8}
+
+**Type this...**
+
+```{r}
+#| eval: false
+
 [Download R](http://www.r-project.org/)
 ```
 
+:::
+
+::: {.g-col-4}
+
+**..to get this**
+
 [Download R](http://www.r-project.org/)
 
-#### Don't want to use Markdown?
+:::
 
-#### <span style="color: red;">Use Visual Mode!</span>
+:::
+
+Don't want to use Markdown? Use RStudio Visual Mode! This is a WYSIWYG editor that allows you to write like you would in Word, but then RStudio will convert it to Markdown for you.
 
 <center>
-<img src="images/visual-mode.png" width=700>
+<img src="images/visual-mode.png" width=500>
 </center>
 
-### R Code
+## R Code
 
-#### Inline R code
+### Inline R code
 
-```{r, eval=FALSE}
+Use backticks to insert R code into text, like this:
+
+```{r}
+#| eval: false
+
 `r insert code here`
 ```
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+
 The sum of 3 and 4 is `r 3 + 4`
 ```
 
@@ -265,7 +285,9 @@ Produces this:
 
 The sum of 3 and 4 is `r 3 + 4`
 
-#### R Code chunks
+### R Code chunks
+
+Insert R code into a chunk like this:
 
 ````markdown
 `r ''````{r}
@@ -274,36 +296,44 @@ insert more code here
 ```
 ````
 
-This code chunk...
+For example, the following code chunk will load the `palmerpenguins` package and print the first 6 rows of the `penguins` dataset:
 
-````markdown
-`r ''````{r}
+```{r}
+#| echo: fenced
+
 library(palmerpenguins)
 
 head(penguins)
 ```
-````
-...will produce this when compiled: 
 
-```{r} 
+### Chunk Options
+
+Use chunk options to control what code chunks output.
+
+See all options [here](https://quarto.org/docs/reference/cells/cells-knitr.html)
+
+```{r}
 #| echo: false
+#| out.width: 75%
 
-library(palmerpenguins)
-
-head(penguins)
-```
-
-#### Chunk Options
-
-Control what chunks output using options
-
-All options [here](https://quarto.org/docs/reference/cells/cells-knitr.html)
-
-```{r, echo=FALSE, out.width='60%'}
 knitr::include_graphics('images/chunks_options.png')
 ```
 
-By default, code chunks print **code** + **output**
+By default, code chunks print **code** + **output**, like this:
+
+```{r}
+#| echo: fenced
+
+cat('hello world!')
+```
+
+Setting `echo: false` will print only the **output** but not the code.
+
+::: {.grid}
+
+::: {.g-col-6}
+
+**Code chunk**:
 
 ````markdown
 `r ''````{r}
@@ -313,7 +343,11 @@ cat('hello world!')
 ```
 ````
 
-Prints only **output**<br>(doesn't show code)
+:::
+
+::: {.g-col-6}
+
+**Output**:
 
 ```{r}
 #| echo: false
@@ -321,6 +355,18 @@ Prints only **output**<br>(doesn't show code)
 cat('hello world!')
 ```
 
+:::
+
+:::
+
+Setting `eval: false` will print only the **output** but will not run the code.
+
+::: {.grid}
+
+::: {.g-col-6}
+
+**Code chunk**:
+
 ````markdown
 `r ''````{r}
 #| eval: false
@@ -329,13 +375,29 @@ cat('hello world!')
 ```
 ````
 
-Prints only **code**<br>(doesn't run the code)
+:::
+
+::: {.g-col-6}
+
+**Output**:
 
 ```{r}
 #| eval: false
 
 cat('hello world!')
 ```
+
+:::
+
+:::
+
+Setting `include: false` will run the code but not print anything.
+
+::: {.grid}
+
+::: {.g-col-6}
+
+**Code chunk**:
 
 ````markdown
 `r ''````{r}
@@ -345,7 +407,11 @@ cat('hello world!')
 ```
 ````
 
-Runs, but doesn't print anything
+:::
+
+::: {.g-col-6}
+
+**Output**:
 
 ```{r}
 #| include: false
@@ -353,7 +419,13 @@ Runs, but doesn't print anything
 cat('hello world!')
 ```
 
-#### A Global `setup` Chunk 🌍
+:::
+
+:::
+
+### A Global `setup` Chunk 🌍
+
+We typically use a `setup` chunk to set global chunk options at the top of the document, like this:
 
 ````markdown
 `r ''````{r}
@@ -372,7 +444,13 @@ knitr::opts_chunk$set(
 ```
 ````
 
-- Typically the first chunk
-- All following chunks will use these options (i.e., sets global chunk options)
-- You can (and should) use individual chunk options too
-- Often where we load libraries, etc.
+This chunk will set global chunk options for all following chunks in the document. You can still also use individual chunk options too.
+
+This setup chunk does the following:
+
+- Any warnings will not be printed
+- Any messages will not be printed
+- Figures will be saved to the `figs/` folder
+- Figures will be 7.252 inches wide and 4 inches tall
+- Any code print out will start with `#>`
+- The `fig.retina` setting improves overall figure resolution.
