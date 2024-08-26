@@ -105,8 +105,9 @@ A scatter plot helps us see if there is any correlational relationship between t
 
 ```{r}
 #| label: 'scatter-basic'
-#| fig.height: 5
-#| fig.width: 6
+#| fig-height: 5
+#| fig-width: 6
+#| fig-alt: "Scatter plot showing the relationship between horsepower (mtcars$hp) on the x-axis and miles per gallon (mtcars$mpg) on the y-axis. The plot displays a negative correlation, with mpg generally decreasing as horsepower increases. Data points are represented by open circles and are scattered across the plot, with horsepower values ranging from about 50 to 300, and mpg values ranging from about 10 to 35. The relationship appears to be non-linear, with a steeper decline in mpg at lower horsepower values."
 
 plot(x = mtcars$hp, y = mtcars$mpg)
 ```
@@ -115,8 +116,9 @@ The basic inputs to the `plot()` function are `x` and `y`, which must be vectors
 
 ```{r}
 #| label: 'scatter-basic-pretty'
-#| fig.height: 5
-#| fig.width: 6
+#| fig-height: 5
+#| fig-width: 6
+#| fig-alt: "Scatter plot showing the relationship between Horsepower (x-axis) and Miles Per Gallon (y-axis) for various cars. The plot displays a negative correlation, with fuel efficiency decreasing as horsepower increases. Data points are represented by solid blue circles. Horsepower values range from about 50 to 300, while Miles Per Gallon values range from approximately 10 to 35. The relationship appears non-linear, with a steeper decline in MPG at lower horsepower values."
 
 plot(
   x    = mtcars$hp,
@@ -137,8 +139,9 @@ The [histogram](https://en.wikipedia.org/wiki/Histogram) is one of the most comm
 
 ```{r}
 #| label: 'hist-basic'
-#| fig.height: 5
-#| fig.width: 6
+#| fig-height: 5
+#| fig-width: 6
+#| fig-alt: "Histogram showing the distribution of waiting times between eruptions of the Old Faithful geyser. The plot displays a unimodal distribution with a peak around 70 minutes. The histogram is divided into 20 bins, with the x-axis representing waiting times in minutes and the y-axis representing the frequency of eruptions."
 
 hist(x = faithful$waiting)
 ```
@@ -147,8 +150,9 @@ With this plot, we can see a trend where the geyser mostly erupts in roughly 50 
 
 ```{r}
 #| label: 'hist-basic-pretty'
-#| fig.height: 5
-#| fig.width: 6
+#| fig-height: 5
+#| fig-width: 6
+#| fig-alt: "Histogram showing the distribution of waiting times between eruptions, titled 'Waiting Times Between Eruptions'. The x-axis represents waiting time in minutes, ranging from 40 to 90. The y-axis shows the count of occurrences, with a maximum of about 27. The distribution appears bimodal, with peaks around 50-55 minutes and 75-80 minutes. The histogram uses light blue bars, and the overall shape suggests two clusters of waiting times."
 
 hist(
   x      = faithful$waiting,
@@ -218,6 +222,7 @@ The `ggplot()` function initializes the plot with whatever data you're using. Wh
 #| label: ggblank
 #| fig.height: 5
 #| fig.width: 7
+#| fig-alt: "Blank plot with no data displayed."
 
 mpg %>% 
   ggplot()
@@ -231,6 +236,7 @@ The `aes()` function determines which variables will be _mapped_ to the geometri
 #| label: ggaes
 #| fig.height: 5
 #| fig.width: 7
+#| fig-alt: 'Empty scatter plot with a gray background and white gridlines. The x-axis is labeled "displ" and ranges from 2 to 7. The y-axis is labeled "hwy" and ranges from 20 to 40. No data points or trend lines are visible on the plot.'
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy))
@@ -244,6 +250,7 @@ The geometries are the visual representations of the data. Here I'll use `geom_p
 #| label: ggpoint
 #| fig.height: 5
 #| fig.width: 7
+#| fig-alt: "Scatter plot showing the relationship between engine displacement (displ) on the x-axis and highway fuel efficiency (hwy) on the y-axis. The x-axis ranges from 2 to 7, while the y-axis ranges from 20 to 40. Data points are represented by black dots. There is a general negative trend, with higher displacement values corresponding to lower highway fuel efficiency. The plot has a gray background with white gridlines. Points are clustered more densely in the lower displacement range and become sparser as displacement increases."
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -258,6 +265,7 @@ Use `labs()` to modify the plot labels. The arguments in the `labs()` function m
 #| label: gglabs
 #| fig.height: 5
 #| fig.width: 7
+#| fig-alt: "Scatter plot titled 'Most larger engine vehicles are less fuel efficient'. The x-axis shows 'Engine displacement (liters)' ranging from 2 to 7, and the y-axis shows 'Highway fuel economy (mpg)' ranging from 20 to 45. Black dots represent individual vehicles. There's a clear negative trend: as engine displacement increases, fuel economy generally decreases. Data points are more concentrated at lower displacements and higher fuel economies, becoming sparser as displacement increases and fuel economy decreases. The plot has a light gray background with white gridlines."
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -277,6 +285,7 @@ The theme controls the overall look of the plot. Here I'll use `theme_bw()` (bla
 #| label: ggtheme_bw
 #| fig.height: 5
 #| fig.width: 7
+#| fig-alt: 'Scatter plot titled "Most larger engine vehicles are less fuel efficient". The x-axis shows "Engine displacement (liters)" ranging from 2 to 7, and the y-axis shows "Highway fuel economy (mpg)" ranging from 15 to 45. Black dots represent individual vehicles. There is a clear negative trend: as engine displacement increases, fuel economy generally decreases. Data points are more concentrated at lower displacements and higher fuel economies, becoming sparser as displacement increases and fuel economy decreases. The plot has a white background with light gray gridlines.'
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -305,6 +314,7 @@ There are LOTS of ggplot themes. Here are a few we use the most:
 #| fig.height: 4
 #| fig.width: 6
 #| out-width: "100%"
+#| fig-alt: "Scatter plot showing the relationship between engine displacement (displ) on the x-axis and highway fuel efficiency (hwy) on the y-axis. The x-axis ranges from 2 to 7 liters, while the y-axis ranges from 15 to 45 miles per gallon. Data points are represented by black dots. There is a clear negative trend, with higher displacement values generally corresponding to lower highway fuel efficiency. The plot has a white background with light gray gridlines. Points are more densely clustered in the lower displacement range and become sparser as displacement increases. The overall pattern suggests that vehicles with larger engines tend to have lower fuel efficiency on highways."
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -324,6 +334,7 @@ mpg %>%
 #| fig.width: 6
 #| echo: false
 #| out-width: "100%"
+#| fig-alt: "Scatter plot displaying the relationship between engine displacement (displ) on the x-axis and highway fuel efficiency (hwy) on the y-axis. The x-axis ranges from 2 to 7 liters, while the y-axis ranges from 15 to 45 miles per gallon. Data points are represented by black dots. A negative trend is evident, with higher displacement values generally corresponding to lower highway fuel efficiency. The plot has a white background with light gray gridlines. Points are more densely clustered in the lower displacement range and become sparser as displacement increases. The distribution suggests that vehicles with larger engines tend to have lower fuel efficiency on highways."
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -343,6 +354,7 @@ mpg %>%
 #| fig.width: 6
 #| echo: false
 #| out-width: "100%"
+#| fig-alt: "Scatter plot showing the relationship between engine displacement (displ) on the x-axis and highway fuel efficiency (hwy) on the y-axis. The x-axis ranges from 2 to 7 liters, while the y-axis ranges from approximately 15 to 45 miles per gallon. Black dots represent individual data points. The plot exhibits a clear negative trend, with higher displacement values generally corresponding to lower highway fuel efficiency. Data points are more densely clustered at lower displacement values and higher fuel efficiency, becoming sparser as displacement increases and fuel efficiency decreases. The plot has a white background with black axes and no gridlines, focusing attention on the data distribution."
 
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) +
@@ -386,6 +398,7 @@ For a bar chart, we use `geom_col()`, mapping `operator` to the `x` axis and `n`
 #| label: birds_before
 #| fig.height: 4
 #| fig.width: 6
+#| fig-alt: "Bar chart comparing the number of flights (n) for four major airlines. The x-axis shows the airline operators: AMERICAN AIRLINES, DELTA AIR LINES, SOUTHWEST AIRLINES, and UNITED AIRLINES, with labels significantly overlapping due to their length. The y-axis represents the number of flights, ranging from 0 to approximately 17,500. SOUTHWEST AIRLINES has the highest number of flights at around 17,500, followed closely by AMERICAN AIRLINES and UNITED AIRLINES, both with about 15,000 flights. DELTA AIR LINES has the lowest number, with approximately 9,000 flights. The bars are dark gray, set against a light gray background with white gridlines. The overlapping x-axis labels make it difficult to read the airline names clearly."
 
 # Format the data frame
 wildlife_impacts %>%
@@ -411,6 +424,7 @@ A better solutions is to just flip the coordinates with `coord_flip()`:
 #| label: birds_coord_flip
 #| fig.height: 4
 #| fig.width: 6
+#| fig-alt: "Horizontal bar chart comparing the number of flights (n) for four major airlines. The y-axis lists the operators: UNITED AIRLINES, SOUTHWEST AIRLINES, DELTA AIR LINES, and AMERICAN AIRLINES. The x-axis represents the number of flights, ranging from 0 to approximately 17,500. SOUTHWEST AIRLINES has the highest number of flights at around 17,500, followed closely by AMERICAN AIRLINES and UNITED AIRLINES, both with about 15,000 flights. DELTA AIR LINES has the lowest number, with approximately 9,000 flights. The bars are dark gray, set against a light gray background with white gridlines. This horizontal layout eliminates the issue of overlapping labels, making the airline names clearly readable."
 
 # Format the data frame
 wildlife_impacts %>%
@@ -433,6 +447,7 @@ Or better yet, just reverse the `x` and `y` mapping:
 #| label: birds_coord_flip2
 #| fig.height: 4
 #| fig.width: 6
+#| fig-alt: "Horizontal bar chart comparing the number of flights (n) for four major airlines. The y-axis lists the operators: UNITED AIRLINES, SOUTHWEST AIRLINES, DELTA AIR LINES, and AMERICAN AIRLINES. The x-axis represents the number of flights, ranging from 0 to approximately 17,500. SOUTHWEST AIRLINES has the highest number of flights at around 17,500, followed closely by AMERICAN AIRLINES and UNITED AIRLINES, both with about 15,000 flights. DELTA AIR LINES has the lowest number, with approximately 9,000 flights. The bars are dark gray, set against a light gray background with white gridlines. This horizontal layout allows for clear readability of airline names and easy comparison of flight numbers across operators."
 
 # Format the data frame
 wildlife_impacts %>%
@@ -456,6 +471,7 @@ If you want to sort the bars in descending order, you can use the `reorder()` fu
 #| label: birds_fct_reorder
 #| fig.height: 4
 #| fig.width: 6
+#| fig-alt: "Horizontal bar chart showing the number of flights (n) for four major airlines. The y-axis, labeled 'reorder(operator, n)', lists the airlines in descending order of flight numbers: SOUTHWEST AIRLINES, UNITED AIRLINES, AMERICAN AIRLINES, and DELTA AIR LINES. The x-axis represents the number of flights, ranging from 0 to approximately 17,500. SOUTHWEST AIRLINES leads with about 17,500 flights, followed by UNITED AIRLINES and AMERICAN AIRLINES both with around 15,000 flights, and DELTA AIR LINES with approximately 9,000 flights. Bars are dark gray against a light gray background with white gridlines. This layout allows for easy comparison of flight numbers across operators, with airlines sorted from most to least flights."
 
 wildlife_impacts %>%
   count(operator) %>%
@@ -478,6 +494,7 @@ One slightly annoying feature of `ggplot` is that the bars are not flush against
 #| label: birds_scales1
 #| fig.height: 4
 #| fig.width: 6
+#| fig-alt: ""
 
 # Format the data frame
 wildlife_impacts %>%
@@ -500,6 +517,7 @@ You can also change the break points and limits of the bars with `breaks` and `l
 #| label: birds_scales2
 #| fig.height: 4
 #| fig.width: 6
+#| fig-alt: ""
 
 # Format the data frame
 wildlife_impacts %>%
@@ -534,6 +552,7 @@ For horizontal bars, add only a vertical grid (the horizontal grid is distractin
 #| label: birds_theme
 #| fig.height: 4
 #| fig.width: 6
+#| fig-alt: ""
 
 # Format the data frame
 wildlife_impacts %>%
@@ -561,6 +580,7 @@ At a minimum, you should add a title and axis labels to your charts. In the exam
 #| label: birds_annotate
 #| fig.height: 4
 #| fig.width: 6
+#| fig-alt: ""
 
 # Format the data frame
 wildlife_impacts %>%
