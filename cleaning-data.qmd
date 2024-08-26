@@ -10,15 +10,15 @@ suppressWarnings(suppressMessages(source("_common.R")))
 # Add new variables
 wildlife_impacts_orig <- wildlife_impacts
 wildlife_impacts <- wildlife_impacts %>%
-    mutate(
-        weekday_name = wday(incident_date, label = TRUE),
-        phase_of_flt = str_to_lower(phase_of_flt),
-        phase_of_flt = case_when(
-            phase_of_flt %in% c('approach', 'arrival', 'descent',
-                                'landing roll') ~ 'arrival',
-            phase_of_flt %in% c('climb', 'departure',
-                                'take-off run') ~ 'departure',
-            TRUE ~ 'other'))
+  mutate(
+    weekday_name = wday(incident_date, label = TRUE),
+    phase_of_flt = str_to_lower(phase_of_flt),
+    phase_of_flt = case_when(
+      phase_of_flt %in% c('approach', 'arrival', 'descent', 'landing roll') ~ 'arrival',
+      phase_of_flt %in% c('climb', 'departure', 'take-off run') ~ 'departure',
+      TRUE ~ 'other'
+    )
+  )
 
 bad_abbs <- c("MH", "AE", "AA", "AE", "AP")
 
