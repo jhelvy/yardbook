@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -206,22 +206,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#wide-and-long-formatted-data" id="toc-wide-and-long-formatted-data" class="nav-link active" data-scroll-target="#wide-and-long-formatted-data"><span class="header-section-number">3.1</span> “Wide” and “Long” Formatted Data</a>
+  <li><a href="#wide-and-long-formatted-data" id="toc-wide-and-long-formatted-data" class="nav-link active" data-scroll-target="#wide-and-long-formatted-data"><span class="header-section-number">3.1</span> “Wide” and “Long” Formatted Data</a></li>
+  <li><a href="#tidy-data-long-format" id="toc-tidy-data-long-format" class="nav-link" data-scroll-target="#tidy-data-long-format"><span class="header-section-number">3.2</span> Tidy data = “Long” format</a></li>
+  <li><a href="#reshaping-data" id="toc-reshaping-data" class="nav-link" data-scroll-target="#reshaping-data"><span class="header-section-number">3.3</span> Reshaping data</a>
   <ul class="collapse">
-  <li><a href="#the-data-federal-rd-spending-by-department" id="toc-the-data-federal-rd-spending-by-department" class="nav-link" data-scroll-target="#the-data-federal-rd-spending-by-department"><span class="header-section-number">3.1.1</span> The Data: Federal R&amp;D Spending by Department</a></li>
-  <li><a href="#wide-format" id="toc-wide-format" class="nav-link" data-scroll-target="#wide-format"><span class="header-section-number">3.1.2</span> “Wide” format</a></li>
-  <li><a href="#long-format" id="toc-long-format" class="nav-link" data-scroll-target="#long-format"><span class="header-section-number">3.1.3</span> “Long” format</a></li>
-  <li><a href="#tidy-data-long-format" id="toc-tidy-data-long-format" class="nav-link" data-scroll-target="#tidy-data-long-format"><span class="header-section-number">3.1.4</span> Tidy data = “Long” format</a></li>
-  <li><a href="#do-the-names-describe-the-values" id="toc-do-the-names-describe-the-values" class="nav-link" data-scroll-target="#do-the-names-describe-the-values"><span class="header-section-number">3.1.5</span> <strong>Do the names describe the values?</strong></a></li>
-  <li><a href="#reshaping-data" id="toc-reshaping-data" class="nav-link" data-scroll-target="#reshaping-data"><span class="header-section-number">3.1.6</span> Reshaping data</a></li>
+  <li><a href="#from-long-to-wide-with-pivot_wider" id="toc-from-long-to-wide-with-pivot_wider" class="nav-link" data-scroll-target="#from-long-to-wide-with-pivot_wider"><span class="header-section-number">3.3.1</span> From “long” to “wide” with <code>pivot_wider()</code></a></li>
+  <li><a href="#from-wide-to-long-with-pivot_longer" id="toc-from-wide-to-long-with-pivot_longer" class="nav-link" data-scroll-target="#from-wide-to-long-with-pivot_longer"><span class="header-section-number">3.3.2</span> From “wide” to “long” with <code>pivot_longer()</code></a></li>
   </ul></li>
-  <li><a href="#tidy-data-wrangling" id="toc-tidy-data-wrangling" class="nav-link" data-scroll-target="#tidy-data-wrangling"><span class="header-section-number">3.2</span> Tidy data wrangling</a></li>
-  <li><a href="#tidy-data-vizualization" id="toc-tidy-data-vizualization" class="nav-link" data-scroll-target="#tidy-data-vizualization"><span class="header-section-number">3.3</span> Tidy data vizualization</a></li>
+  <li><a href="#tidy-data-wrangling" id="toc-tidy-data-wrangling" class="nav-link" data-scroll-target="#tidy-data-wrangling"><span class="header-section-number">3.4</span> Tidy data wrangling</a>
+  <ul class="collapse">
+  <li><a href="#example-1-total-rd-spending-in-each-year" id="toc-example-1-total-rd-spending-in-each-year" class="nav-link" data-scroll-target="#example-1-total-rd-spending-in-each-year"><span class="header-section-number">3.4.1</span> Example 1: Total R&amp;D spending in each year</a></li>
+  <li><a href="#example-2-visualizing-total-spending-by-department" id="toc-example-2-visualizing-total-spending-by-department" class="nav-link" data-scroll-target="#example-2-visualizing-total-spending-by-department"><span class="header-section-number">3.4.2</span> Example 2: Visualizing total spending by department</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/tidy-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part2-exploring.html">Exploring Data</a></li><li class="breadcrumb-item"><a href="./tidy-data.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Tidy Data</span></a></li></ol></nav>
 <div class="quarto-title">
@@ -252,11 +253,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Handle and process date data.</li>
 </ul>
 </blockquote>
-<section id="wide-and-long-formatted-data" class="level2" data-number="3.1">
+<section id="wide-and-long-formatted-data" class="level2 page-columns page-full" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="wide-and-long-formatted-data"><span class="header-section-number">3.1</span> “Wide” and “Long” Formatted Data</h2>
-<section id="the-data-federal-rd-spending-by-department" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="the-data-federal-rd-spending-by-department"><span class="header-section-number">3.1.1</span> The Data: Federal R&amp;D Spending by Department</h3>
+<p>Datasets are usually structured in one of two ways:</p>
+<ul>
+<li><strong>Wide</strong> format: each variable has its own column</li>
+<li><strong>Long</strong> format: each observation has its own row</li>
+</ul>
+<center>
+<img src="images/data-shapes.png" width="500">
+</center>
+<div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside"><a href="https://tavareshugo.github.io/r-intro-tidyverse-gapminder/09-reshaping/index.html">Source</a></span></div></div>
+<p>Take a look at this example of a dataset on federal R&amp;D spending by U.S. government department:</p>
 <div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>fed_spend_wide <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">'data'</span>, <span class="st">'fed_spend_wide.csv'</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 15
 #&gt;    year   DHS   DOC   DOD   DOE   DOT   EPA   HHS Interior  NASA   NIH   NSF
@@ -270,33 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; # ℹ 3 more variables: Other &lt;dbl&gt;, USDA &lt;dbl&gt;, VA &lt;dbl&gt;</code></pre>
 </div>
 </div>
-</section>
-<section id="wide-format" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="wide-format"><span class="header-section-number">3.1.2</span> “Wide” format</h3>
+<p>As the name suggests, this dataset is in <strong>wide</strong> format, where each department is a column.</p>
+<p>Compare this to the <strong>long</strong> format:</p>
 <div class="cell" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; # A tibble: 6 × 15
-#&gt;    year   DHS   DOC   DOD   DOE   DOT   EPA   HHS Interior  NASA   NIH   NSF
-#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1  1976     0   819 35696 10882  1142   968  9226     1152 12513  8025  2372
-#&gt; 2  1977     0   837 37967 13741  1095   966  9507     1082 12553  8214  2395
-#&gt; 3  1978     0   871 37022 15663  1156  1175 10533     1125 12516  8802  2446
-#&gt; 4  1979     0   952 37174 15612  1004  1102 10127     1176 13079  9243  2404
-#&gt; 5  1980     0   945 37005 15226  1048   903 10045     1082 13837  9093  2407
-#&gt; 6  1981     0   829 41737 14798   978   901  9644      990 13276  8580  2300
-#&gt; # ℹ 3 more variables: Other &lt;dbl&gt;, USDA &lt;dbl&gt;, VA &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<p>Dimensions:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 42 15</code></pre>
-</div>
-</div>
-</section>
-<section id="long-format" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="long-format"><span class="header-section-number">3.1.3</span> “Long” format</h3>
-<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">'data'</span>, <span class="st">'fed_spend_long.csv'</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 3
 #&gt;   department  year rd_budget_mil
@@ -309,28 +300,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; 6 NSF         1976          2372</code></pre>
 </div>
 </div>
-<p>Dimensions:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 588   3</code></pre>
+<p>This is the same dataset, but in <strong>long</strong> format, where each observation has its own row. Here you will notice that the department names are now variables, and the R&amp;D spending is a single column. The year is repeated for each department.</p>
+<p><strong>How do we know which format a dataset is in?</strong></p>
+<p>A helpful heuristic is to ask yourself:</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Do the names describe the values?</strong></p>
 </div>
 </div>
+</div>
+<ul>
+<li>If <strong>Yes</strong>: “Long” format</li>
+<li>If <strong>No</strong>: “Wide” format</li>
+</ul>
 </section>
-<section id="tidy-data-long-format" class="level3" data-number="3.1.4">
-<h3 data-number="3.1.4" class="anchored" data-anchor-id="tidy-data-long-format"><span class="header-section-number">3.1.4</span> Tidy data = “Long” format</h3>
+<section id="tidy-data-long-format" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="tidy-data-long-format"><span class="header-section-number">3.2</span> Tidy data = “Long” format</h2>
+<p>When we refer to “tidy data”, we are referring to data in <strong>long</strong> format that follows the “tidy” principles:</p>
 <ul>
 <li>Each <strong>variable</strong> has its own <strong>column</strong></li>
 <li>Each <strong>observation</strong> has its own <strong>row</strong></li>
 </ul>
 <center>
-<img src="images/tidy-data.png" width="1000">
+<img src="images/tidy-data.png" width="600">
 </center>
-</section>
-<section id="do-the-names-describe-the-values" class="level3" data-number="3.1.5">
-<h3 data-number="3.1.5" class="anchored" data-anchor-id="do-the-names-describe-the-values"><span class="header-section-number">3.1.5</span> <strong>Do the names describe the values?</strong></h3>
-<section id="yes-long-format" class="level4" data-number="3.1.5.1">
-<h4 data-number="3.1.5.1" class="anchored" data-anchor-id="yes-long-format"><span class="header-section-number">3.1.5.1</span> <strong>Yes</strong>: “Long” format</h4>
+<p>You can verify that the federal spending dataset is in long format:</p>
 <div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 3
 #&gt;   department  year rd_budget_mil
@@ -344,38 +344,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="no-wide-format" class="level4" data-number="3.1.5.2">
-<h4 data-number="3.1.5.2" class="anchored" data-anchor-id="no-wide-format"><span class="header-section-number">3.1.5.2</span> <strong>No</strong>: “Wide” format</h4>
-<div class="cell" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; # A tibble: 6 × 8
-#&gt;    year   DHS   DOC   DOD   DOE   DOT   EPA   HHS
-#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1  1976     0   819 35696 10882  1142   968  9226
-#&gt; 2  1977     0   837 37967 13741  1095   966  9507
-#&gt; 3  1978     0   871 37022 15663  1156  1175 10533
-#&gt; 4  1979     0   952 37174 15612  1004  1102 10127
-#&gt; 5  1980     0   945 37005 15226  1048   903 10045
-#&gt; 6  1981     0   829 41737 14798   978   901  9644</code></pre>
-</div>
-</div>
-</section>
-</section>
-<section id="reshaping-data" class="level3" data-number="3.1.6">
-<h3 data-number="3.1.6" class="anchored" data-anchor-id="reshaping-data"><span class="header-section-number">3.1.6</span> Reshaping data</h3>
-<section id="pivot_longer-and-pivot_wider" class="level4" data-number="3.1.6.1">
-<h4 data-number="3.1.6.1" class="anchored" data-anchor-id="pivot_longer-and-pivot_wider"><span class="header-section-number">3.1.6.1</span> <code>pivot_longer()</code> and <code>pivot_wider()</code></h4>
+<section id="reshaping-data" class="level2 page-columns page-full" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="reshaping-data"><span class="header-section-number">3.3</span> Reshaping data</h2>
+<p>We use the <code>pivot_longer()</code> and <code>pivot_wider()</code> functions to reshape data between long and wide formats.</p>
 <center>
-<img src="images/tidyr-pivoting.gif" width="530">
+<img src="images/data-pivot.png" width="600">
 </center>
-</section>
-<section id="from-long-to-wide-with-pivot_wider" class="level4" data-number="3.1.6.2">
-<h4 data-number="3.1.6.2" class="anchored" data-anchor-id="from-long-to-wide-with-pivot_wider"><span class="header-section-number">3.1.6.2</span> From “long” to “wide” with <code>pivot_wider()</code></h4>
-<center>
-<img src="images/tidy-wider.png" width="600">
-</center>
+<div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside"><a href="https://tavareshugo.github.io/r-intro-tidyverse-gapminder/09-reshaping/index.html">Source</a></span></div></div>
+<section id="from-long-to-wide-with-pivot_wider" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="from-long-to-wide-with-pivot_wider"><span class="header-section-number">3.3.1</span> From “long” to “wide” with <code>pivot_wider()</code></h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 3
 #&gt;   department  year rd_budget_mil
@@ -388,13 +367,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; 6 NSF         1976          2372</code></pre>
 </div>
 </div>
+<p>To convert to wide format, we need to specify which column to convert into the column names and which column to convert into the column values:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fed_spend_wide <span class="ot">&lt;-</span> fed_spend_long <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> department,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> rd_budget_mil)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fed_spend_wide <span class="ot">&lt;-</span> fed_spend_long <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> department,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> rd_budget_mil</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 15
 #&gt;    year   DOD  NASA   DOE   HHS   NIH   NSF  USDA Interior   DOT   EPA   DOC
@@ -409,13 +390,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="from-wide-to-long-with-pivot_longer" class="level4" data-number="3.1.6.3">
-<h4 data-number="3.1.6.3" class="anchored" data-anchor-id="from-wide-to-long-with-pivot_longer"><span class="header-section-number">3.1.6.3</span> From “wide” to “long” with <code>pivot_longer()</code></h4>
-<center>
-<img src="images/tidy-longer.png" width="600">
-</center>
+<section id="from-wide-to-long-with-pivot_longer" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="from-wide-to-long-with-pivot_longer"><span class="header-section-number">3.3.2</span> From “wide” to “long” with <code>pivot_longer()</code></h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 15
 #&gt;    year   DOD  NASA   DOE   HHS   NIH   NSF  USDA Interior   DOT   EPA   DOC
@@ -429,15 +407,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; # ℹ 3 more variables: DHS &lt;dbl&gt;, VA &lt;dbl&gt;, Other &lt;dbl&gt;</code></pre>
 </div>
 </div>
+<p>To convert to long format, we need to create new column names for the names and values, and we also need to specify which columns to convert:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="ot">&lt;-</span> fed_spend_wide <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>( </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> DOD<span class="sc">:</span>Other</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="ot">&lt;-</span> fed_spend_wide <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>( </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> DOD<span class="sc">:</span>Other</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 6 × 3
+#&gt;    year department rd_budget_mil
+#&gt;   &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;
+#&gt; 1  1976 DOD                35696
+#&gt; 2  1976 NASA               12513
+#&gt; 3  1976 DOE                10882
+#&gt; 4  1976 HHS                 9226
+#&gt; 5  1976 NIH                 8025
+#&gt; 6  1976 NSF                 2372</code></pre>
+</div>
+</div>
+<p>You can also set <code>cols</code> by selecting which columns <em>not</em> to use, like this:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="ot">&lt;-</span> fed_spend_wide <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>year</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 3
 #&gt;    year department rd_budget_mil
@@ -451,74 +452,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="can-also-set-cols-by-selecting-which-columns-not-to-use" class="level4" data-number="3.1.6.4">
-<h4 data-number="3.1.6.4" class="anchored" data-anchor-id="can-also-set-cols-by-selecting-which-columns-not-to-use"><span class="header-section-number">3.1.6.4</span> Can also set <code>cols</code> by selecting which columns <em>not</em> to use</h4>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt;  [1] "year"     "DOD"      "NASA"     "DOE"      "HHS"      "NIH"     
-#&gt;  [7] "NSF"      "USDA"     "Interior" "DOT"      "EPA"      "DOC"     
-#&gt; [13] "DHS"      "VA"       "Other"</code></pre>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="ot">&lt;-</span> fed_spend_wide <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>, </span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>year</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; # A tibble: 6 × 3
-#&gt;    year department rd_budget_mil
-#&gt;   &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;
-#&gt; 1  1976 DOD                35696
-#&gt; 2  1976 NASA               12513
-#&gt; 3  1976 DOE                10882
-#&gt; 4  1976 HHS                 9226
-#&gt; 5  1976 NIH                 8025
-#&gt; 6  1976 NSF                 2372</code></pre>
-</div>
-</div>
 </section>
-</section>
-</section>
-<section id="tidy-data-wrangling" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="tidy-data-wrangling"><span class="header-section-number">3.2</span> Tidy data wrangling</h2>
-<p>What is tidy data wrangling? (a quick explanation with cute graphics, by <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a>)</p>
+<section id="tidy-data-wrangling" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="tidy-data-wrangling"><span class="header-section-number">3.4</span> Tidy data wrangling</h2>
+<p>There’s a good reason why we like to keep our data in a long (tidy) format: it lets us use a consistent set of functions for manipulating, summarizing, and visualizing data.</p>
+<p>Here’s a quick explanation with cute graphics, by <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a>:</p>
 <center>
-<img src="images/horst_tidydata_1.jpg" width="700">
+<img src="images/horst_tidydata_1.jpg" width="700"> <img src="images/horst_tidydata_2.jpg" width="700"> <img src="images/horst_tidydata_3.jpg" width="700">
 </center>
-<center>
-<img src="images/horst_tidydata_2.jpg" width="700">
-</center>
-<center>
-<img src="images/horst_tidydata_3.jpg" width="700">
-</center>
-<p>Compute the total R&amp;D spending in each year</p>
+<section id="example-1-total-rd-spending-in-each-year" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="example-1-total-rd-spending-in-each-year"><span class="header-section-number">3.4.1</span> Example 1: Total R&amp;D spending in each year</h3>
+<p>This is a simple enough task, but with our data in wide format, we need to add each column manually like this:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; # A tibble: 6 × 15
-#&gt;    year   DOD  NASA   DOE   HHS   NIH   NSF  USDA Interior   DOT   EPA   DOC
-#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1  1976 35696 12513 10882  9226  8025  2372  1837     1152  1142   968   819
-#&gt; 2  1977 37967 12553 13741  9507  8214  2395  1796     1082  1095   966   837
-#&gt; 3  1978 37022 12516 15663 10533  8802  2446  1962     1125  1156  1175   871
-#&gt; 4  1979 37174 13079 15612 10127  9243  2404  2054     1176  1004  1102   952
-#&gt; 5  1980 37005 13837 15226 10045  9093  2407  1887     1082  1048   903   945
-#&gt; 6  1981 41737 13276 14798  9644  8580  2300  1964      990   978   901   829
-#&gt; # ℹ 3 more variables: DHS &lt;dbl&gt;, VA &lt;dbl&gt;, Other &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<p>Let’s compute the total R&amp;D spending in each year</p>
-<p><strong>Approach 1</strong>: Create new <code>total</code> by adding each variable</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fed_spend_wide <span class="sc">%&gt;%</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total =</span> DHS <span class="sc">+</span> DOC <span class="sc">+</span> DOD <span class="sc">+</span> DOE <span class="sc">+</span> DOT <span class="sc">+</span> EPA <span class="sc">+</span> HHS <span class="sc">+</span> Interior <span class="sc">+</span> NASA <span class="sc">+</span> NIH <span class="sc">+</span> NSF <span class="sc">+</span> Other <span class="sc">+</span> USDA <span class="sc">+</span> VA) <span class="sc">%&gt;%</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fed_spend_wide <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total =</span> DHS <span class="sc">+</span> DOC <span class="sc">+</span> DOD <span class="sc">+</span> DOE <span class="sc">+</span> DOT <span class="sc">+</span> EPA <span class="sc">+</span> HHS <span class="sc">+</span> Interior <span class="sc">+</span> NASA <span class="sc">+</span> NIH <span class="sc">+</span> NSF <span class="sc">+</span> Other <span class="sc">+</span> USDA <span class="sc">+</span> VA) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 42 × 2
 #&gt;    year total
@@ -532,16 +480,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; # ℹ 36 more rows</code></pre>
 </div>
 </div>
-<p><strong>Approach 2</strong>: Reshape first, then summarise</p>
+<p>This is cumbersome, and prone to error.</p>
+<p>An alternative approach is to embrace the tidy data format. We’ll use <code>pivot_longer()</code> to convert the data into long format first, and then we’ll summarise the data:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="ot">&lt;-</span> fed_spend_wide <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>, </span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>year</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  ) </span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="ot">&lt;-</span> fed_spend_wide <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>year</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 3
 #&gt;    year department rd_budget_mil
@@ -554,10 +503,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; 6  1976 NSF                 2372</code></pre>
 </div>
 </div>
+<p>Now that our data is in long format, we can use the <code>group_by()</code> and <code>summarise()</code> functions to compute the total R&amp;D spending in each year:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="sc">%&gt;%</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(rd_budget_mil))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fed_spend_long <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(rd_budget_mil))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 42 × 2
 #&gt;    year total
@@ -571,35 +521,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; # ℹ 36 more rows</code></pre>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> fed_spend_wide <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>, </span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>year</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(rd_budget_mil))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; # A tibble: 6 × 2
-#&gt;    year total
-#&gt;   &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1  1976 86227
-#&gt; 2  1977 91807
-#&gt; 3  1978 94864
-#&gt; 4  1979 96601
-#&gt; 5  1980 96305
-#&gt; 6  1981 98304</code></pre>
-</div>
-</div>
+<p>This is a much cleaner approach, and it’s much less prone to error as we don’t need to manually specify each column that we are summing.</p>
 </section>
-<section id="tidy-data-vizualization" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="tidy-data-vizualization"><span class="header-section-number">3.3</span> Tidy data vizualization</h2>
+<section id="example-2-visualizing-total-spending-by-department" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="example-2-visualizing-total-spending-by-department"><span class="header-section-number">3.4.2</span> Example 2: Visualizing total spending by department</h3>
+<p>Let’s see how we can do this with our data in wide format:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fed_spend_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 15
 #&gt;    year   DOD  NASA   DOE   HHS   NIH   NSF  USDA Interior   DOT   EPA   DOC
@@ -614,13 +542,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fed_spend_wide) <span class="sc">+</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> rd_budget_mil, <span class="at">y =</span> department)) <span class="sc">+</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">"R&amp;D Spending ($Millions)"</span>,</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Federal Agency"</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fed_spend_wide) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> rd_budget_mil, <span class="at">y =</span> department)) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">"R&amp;D Spending ($Millions)"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Federal Agency"</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>#&gt; Error in `geom_col()`:
 #&gt; ! Problem while computing aesthetics.
@@ -629,20 +557,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #&gt; ! object 'rd_budget_mil' not found</code></pre>
 </div>
 </div>
+<p>In wide format, we actually cannot plot the total by department, because there is no <code>department</code> variable!</p>
+<p>Here we must first convert to long format, and then we can plot the data:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>fed_spend_wide <span class="sc">%&gt;%</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>,</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>year</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> rd_budget_mil, <span class="at">y =</span> department)) <span class="sc">+</span></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"R&amp;D Spending ($Millions)"</span>,</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Federal Agency"</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fed_spend_wide <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"department"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rd_budget_mil"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>year</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> rd_budget_mil, <span class="at">y =</span> <span class="fu">reorder</span>(department, rd_budget_mil))) <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"R&amp;D Spending ($Millions)"</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Federal Agency"</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -653,6 +583,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
