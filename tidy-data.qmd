@@ -10,14 +10,14 @@ suppressWarnings(suppressMessages(source("_common.R")))
 wildlife_impacts_orig <- wildlife_impacts
 wildlife_impacts <- wildlife_impacts %>%
     mutate(
-        weekday_name = wday(incident_date, label = TRUE),
-        phase_of_flt = str_to_lower(phase_of_flt),
-        phase_of_flt = case_when(
-            phase_of_flt %in% c('approach', 'arrival', 'descent',
-                                'landing roll') ~ 'arrival',
-            phase_of_flt %in% c('climb', 'departure',
-                                'take-off run') ~ 'departure',
-            TRUE ~ 'other'))
+      weekday_name = wday(incident_date, label = TRUE),
+      phase_of_flt = str_to_lower(phase_of_flt),
+      phase_of_flt = case_when(
+        phase_of_flt %in% c('approach', 'arrival', 'descent', 'landing roll') ~ 'arrival',
+        phase_of_flt %in% c('climb', 'departure', 'take-off run') ~ 'departure',
+        TRUE ~ 'other'
+      )
+    )
 ```
 
 > ### Learning Objectives {.unnumbered}
@@ -30,109 +30,103 @@ wildlife_impacts <- wildlife_impacts %>%
 
 ## "Wide" and "Long" Formatted Data
 
-### The Data: Federal R&D Spending by Department
+Datasets are usually structured in one of two ways:
+
+- **Wide** format: each variable has its own column
+- **Long** format: each observation has its own row
+
+<center>
+<img src="images/data-shapes.png" width=500>
+</center>
+
+[[Source](https://tavareshugo.github.io/r-intro-tidyverse-gapminder/09-reshaping/index.html)]{.aside}
+
+Take a look at this example of a dataset on federal R&D spending by U.S. government department:
 
 ```{r}
-#| echo: false
+fed_spend_wide <- read_csv(here('data', 'fed_spend_wide.csv'))
 
 head(fed_spend_wide)
 ```
 
-### "Wide" format
+As the name suggests, this dataset is in **wide** format, where each department is a column. 
+
+Compare this to the **long** format:
 
 ```{r}
-#| echo: false
-
-head(fed_spend_wide)
-```
-
-Dimensions:
-
-```{r}
-#| echo: false
-
-dim(fed_spend_wide)
-```
-
-### "Long" format
-
-```{r}
-#| echo: false
+fed_spend_long <- read_csv(here('data', 'fed_spend_long.csv'))
 
 head(fed_spend_long)
 ```
 
-Dimensions:
+This is the same dataset, but in **long** format, where each observation has its own row. Here you will notice that the department names are now variables, and the R&D spending is a single column. The year is repeated for each department.
 
-```{r}
-#| echo: false
+**How do we know which format a dataset is in?**
 
-dim(fed_spend_long)
-```
+A helpful heuristic is to ask yourself:
 
-### Tidy data = "Long" format
+
+::: {.callout-tip}
+
+**Do the names describe the values?**
+
+:::
+
+- If **Yes**: "Long" format
+- If **No**: "Wide" format
+
+## Tidy data = "Long" format
+
+When we refer to "tidy data", we are referring to data in **long** format that follows the "tidy" principles:
 
 - Each **variable** has its own **column**
 - Each **observation** has its own **row**
 
 <center>
-<img src="images/tidy-data.png" width = "1000">
+<img src="images/tidy-data.png" width = "600">
 </center>
 
-### **Do the names describe the values?**
-
-#### **Yes**: "Long" format
-
-```{r}
-#| echo: false
-
-head(fed_spend_long)
-```
-
-#### **No**: "Wide" format
-
-```{r}
-#| echo: false
-
-head(dplyr::select(fed_spend_wide, year:HHS))
-```
-
-### Reshaping data
-
-#### `pivot_longer()` and `pivot_wider()`
-
-<center>
-<img src="images/tidyr-pivoting.gif" width=530>
-</center>
-
-#### From "long" to "wide" with `pivot_wider()`
-
-<center>
-<img src="images/tidy-wider.png" width=600>
-</center>
+You can verify that the federal spending dataset is in long format:
 
 ```{r}
 head(fed_spend_long)
 ```
+
+## Reshaping data
+
+We use the `pivot_longer()` and `pivot_wider()` functions to reshape data between long and wide formats.
+
+<center>
+<img src="images/data-pivot.png" width=600>
+</center>
+
+[[Source](https://tavareshugo.github.io/r-intro-tidyverse-gapminder/09-reshaping/index.html)]{.aside}
+
+### From "long" to "wide" with `pivot_wider()`
+
+```{r}
+head(fed_spend_long)
+```
+
+To convert to wide format, we need to specify which column to convert into the column names and which column to convert into the column values:
 
 ```{r}
 fed_spend_wide <- fed_spend_long %>%
   pivot_wider(
     names_from = department,
-    values_from = rd_budget_mil)
+    values_from = rd_budget_mil
+  )
 
 head(fed_spend_wide)
 ```
 
-#### From "wide" to "long" with `pivot_longer()`
-
-<center>
-<img src="images/tidy-longer.png" width=600>
-</center>
+### From "wide" to "long" with `pivot_longer()`
 
 ```{r}
 head(fed_spend_wide)
 ```
+
+To convert to long format, we need to create new column names for the names and values, and we also need to specify which columns to convert:
 
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
@@ -145,11 +139,7 @@ fed_spend_long <- fed_spend_wide %>%
 head(fed_spend_long)
 ```
 
-#### Can also set `cols` by selecting which columns _not_ to use
-
-```{r}
-names(fed_spend_wide)
-```
+You can also set `cols` by selecting which columns _not_ to use, like this:
 
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
@@ -164,29 +154,19 @@ head(fed_spend_long)
 
 ## Tidy data wrangling
 
-What is tidy data wrangling?
-(a quick explanation with cute graphics, by [Allison Horst](https://github.com/allisonhorst/stats-illustrations))
+There's a good reason why we like to keep our data in a long (tidy) format: it lets us use a consistent set of functions for manipulating, summarizing, and visualizing data.
+
+Here's a quick explanation with cute graphics, by [Allison Horst](https://github.com/allisonhorst/stats-illustrations):
 
 <center>
 <img src="images/horst_tidydata_1.jpg" width=700>
-</center>
-
-<center>
 <img src="images/horst_tidydata_2.jpg" width=700>
-</center>
-<center>
 <img src="images/horst_tidydata_3.jpg" width=700>
 </center>
 
-Compute the total R&D spending in each year
+### Example 1: Total R&D spending in each year
 
-```{r}
-head(fed_spend_wide)
-```
-
-Let's compute the total R&D spending in each year
-
-**Approach 1**: Create new `total` by adding each variable
+This is a simple enough task, but with our data in wide format, we need to add each column manually like this:
 
 ```{r}
 fed_spend_wide %>%
@@ -194,7 +174,9 @@ fed_spend_wide %>%
   select(year, total)
 ```
 
-**Approach 2**: Reshape first, then summarise
+This is cumbersome, and prone to error. 
+
+An alternative approach is to embrace the tidy data format. We'll use `pivot_longer()` to convert the data into long format first, and then we'll summarise the data:
 
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
@@ -207,28 +189,19 @@ fed_spend_long <- fed_spend_wide %>%
 head(fed_spend_long)
 ```
 
+Now that our data is in long format, we can use the `group_by()` and `summarise()` functions to compute the total R&D spending in each year:
+
 ```{r}
 fed_spend_long %>%
   group_by(year) %>%
   summarise(total = sum(rd_budget_mil))
 ```
 
-```{r}
-total <- fed_spend_wide %>%
-  pivot_longer(
-    names_to = "department", 
-    values_to = "rd_budget_mil",
-    cols = -year
-  ) %>% 
-  group_by(year) %>%
-  summarise(total = sum(rd_budget_mil))
-```
+This is a much cleaner approach, and it's much less prone to error as we don't need to manually specify each column that we are summing.
 
-```{r}
-head(total)
-```
+### Example 2: Visualizing total spending by department
 
-## Tidy data vizualization
+Let's see how we can do this with our data in wide format:
 
 ```{r}
 head(fed_spend_wide)
@@ -246,6 +219,10 @@ ggplot(fed_spend_wide) +
   )
 ```
 
+In wide format, we actually cannot plot the total by department, because there is no `department` variable!
+
+Here we must first convert to long format, and then we can plot the data:
+
 ```{r}
 #| label: fed-spend-bars-long
 #| fig-width: 6
@@ -258,7 +235,7 @@ fed_spend_wide %>%
     cols = -year
   ) %>%
   ggplot() +
-  geom_col(aes(x = rd_budget_mil, y = department)) +
+  geom_col(aes(x = rd_budget_mil, y = reorder(department, rd_budget_mil))) +
   theme_bw() +
   labs(
     x = "R&D Spending ($Millions)",
