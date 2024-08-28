@@ -62,3 +62,8 @@ state_abbs <- tibble::tribble(
     "Armed Forces Middle East",             "AE",
         "Armed Forces Pacific",             "AP"
 )
+
+bad_abbs <- c("MH", "AE", "AA", "AE", "AP")
+
+state_abbs_50 <- state_abbs %>%
+  filter(!state_abb %in% bad_abbs)

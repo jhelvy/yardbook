@@ -6,43 +6,17 @@
 #| include: false
 
 suppressWarnings(suppressMessages(source("_common.R")))
-
-# Add new variables
-wildlife_impacts_orig <- wildlife_impacts
-wildlife_impacts <- wildlife_impacts %>%
-  mutate(
-    weekday_name = wday(incident_date, label = TRUE),
-    phase_of_flt = str_to_lower(phase_of_flt),
-    phase_of_flt = case_when(
-      phase_of_flt %in% c('approach', 'arrival', 'descent', 'landing roll') ~ 'arrival',
-      phase_of_flt %in% c('climb', 'departure', 'take-off run') ~ 'departure',
-      TRUE ~ 'other'
-    )
-  )
-
-bad_abbs <- c("MH", "AE", "AA", "AE", "AP")
-
-state_abbs_50 <- state_abbs %>% 
-  filter(!state_abb %in% bad_abbs)
 ```
 
 > ### Learning Objectives {.unnumbered}
 >
-> * Reshape data between long and wide formats.
-> * Wrangle and format data, including dealing with messy Excel files.
-> * Merge multiple datasets effectively.
+> * Merge multiple datasets effectively with joins.
 > * Clean, organize, and recode variables.
 > * Handle and process date data.
 
 ## Merging Data Sets with Joins
 
-To start off, let's take a look at this map. What's wrong with it?
-
-<center>
-<img src="images/join_fail.jpg" height=600>
-</center>
-
-Clearly, the abbreviations are all mixed up. The likely culprit: merging two columns
+Let's say we have two data sets: state names, and state abbreviations. Now we want to merge them into a data frame so that the state names and abbreviations are in the same row. 
 
 ```{r}
 #| echo: false
@@ -55,12 +29,22 @@ head(names)
 head(abbs)
 ```
 
+We might be tempted to simply merge the two data sets using `bind_cols()`, like this:
+
 ```{r}
 result <- bind_cols(names, abbs)
 head(result)
 ```
 
-As shown above, simply binding or merging two data sets is not the best choice. This is where joins come into play.
+While this _looks_ like it works, if you look closely, you'll see that the state abbreviations are all mixed up (e.g., Alabama and Alaska are swapped). 
+
+This is where joins come into play.
+
+::: {.callout-note}
+
+Joining is a way to combine two data sets based on a common variable.
+
+:::
 
 There are three types of joins that we can utilize to properly merge data sets.
 
@@ -68,68 +52,97 @@ There are three types of joins that we can utilize to properly merge data sets.
 2. `left_join()` / `right_join()`
 3. `full_join()`
 
-Take a look at the different joins applied to the `band_members` & `band_instruments` data sets.
+We'll take a look at the different joins applied to the `band_members` & `band_instruments` data sets.
 
 ```{r}
 band_members
-```
-
-```{r}
 band_instruments
 ```
 
-#### `inner_join()`
+### `inner_join()`
+
+In inner joins, only the rows that have a match on the common variable are kept. This gif illustrates the inner join:
+
+<center>
+<img src="images/inner_join.gif">
+</center>
+
+Applied to our example, we get:
 
 ```{r}
 band_members %>%
     inner_join(band_instruments)
 ```
 
+### `full_join()`
+
+In full joins, all rows from both data sets are kept. This gif illustrates the full join:
+
 <center>
-<img src="images/inner_join.gif">
+<img src="images/full_join.gif">
 </center>
 
-#### `full_join()`
+Applied to our example, we get:
 
 ```{r}
 band_members %>%
     full_join(band_instruments)
 ```
 
+Note here that `NA` values are introduced for the missing matches.
+
+### `left_join()`
+
+In left joins, all rows from the left data set are kept. This gif illustrates the left join:
+
 <center>
-<img src="images/full_join.gif">
+<img src="images/left_join.gif">
 </center>
 
-#### `left_join()`
+Applied to our example, we get:
 
 ```{r}
 band_members %>%
     left_join(band_instruments)
 ```
 
+Here we get an `NA` for Mick Stones as we don't know what instrument he plays (he is not in the `band_instruments` data set).
+
+### `right_join()`
+
+Right joins are just the opposite of left joins. All rows from the right data set are kept. This gif illustrates the right join:
+
 <center>
-<img src="images/left_join.gif">
+<img src="images/right_join.gif">
 </center>
 
-#### `right_join()`
+Applied to our example, we get:
 
 ```{r}
 band_members %>%
     right_join(band_instruments)
 ```
 
-<center>
-<img src="images/right_join.gif">
-</center>
+### We can also specify the joining variable name
 
-#### We can also specify the joining variable name
+If you don't specify the joining variable name, R will use the first variable name that appears in both data sets:
 
-```{r, echo=TRUE, message=TRUE}
+```{r}
+#| echo: true
+#| message: true
+
 band_members %>%
     left_join(band_instruments)
 ```
 
-```{r, echo=TRUE, message=TRUE}
+Here you see the message `` Joining with `by = join_by(name)` ``, because R realized that the `name` variable appears in each dataset. 
+
+We can be more explicit by specifying the joining variable name, like this:
+
+```{r}
+#| echo: true
+#| message: true
+
 band_members %>%
     left_join(
         band_instruments,
@@ -137,7 +150,13 @@ band_members %>%
     )
 ```
 
-#### If the names differ, use `by = c("left_name" = "joining_name")`
+Here we get no message because we told R which variable to use to join.
+
+### What if the names differ?
+
+If the matching column has a different name in each data frame, use `by = c("left_name" = "joining_name")` to specify the correct joining name.
+
+For example, in the two data frames below we have `name` in one of them and `artist` in the other. Since these don't match, R won't know which column to use by default to do the join. Here is how we can tell it that these two columns should be used for matching:
 
 ```{r}
 band_members
@@ -155,15 +174,7 @@ band_members %>%
   ) 
 ```
 
-Or, just rename the joining variable in a pipe.
-
-```{r}
-band_members
-```
-
-```{r}
-band_instruments2
-```
+We can also just rename the joining variable before joining, like this:
 
 ```{r}
 band_members %>%
@@ -176,9 +187,15 @@ band_members %>%
 
 ## Variable Types and Names
 
-### Variable Types
+### Fixing Variable Types
 
-#### Always check variable types after reading in data!
+::: {.callout-important}
+
+Always check variable types after reading in data!
+
+:::
+
+A lot of times variables get encoded into a data type that is not what you would want after reading in an external data file. Take a look at this data set:
 
 ```{r}
 wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
@@ -186,24 +203,9 @@ wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
 glimpse(wind)
 ```
 
-#### Be careful converting strings to numbers!
+Here we see that many variables that should be numeric are actually characters (e.g. `Ranking`, `Equivalent Homes Powered`, `Total Investment ($ Millions)`, and `# of Wind Turbines`).
 
-##### `as.numeric()`
-
-```{r}
-as.numeric(c("2.1", "3.7", "4.50"))
-as.numeric(c("$2.1", "$3.7", "$4.50"))
-```
-
-##### `parse_number()`
-
-```{r}
-parse_number(c("2.1", "3.7", "4.50"))
-parse_number(c("$2.1", "$3.7", "$4.50"))
-parse_number(c("1-800-123-4567"))
-```
-
-Once applied we get:
+To address this, one of the first things we usually do is convert incorrect data types to the appropriate ones, like this:
 
 ```{r}
 wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
@@ -217,66 +219,113 @@ wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %
 glimpse(wind)
 ```
 
-<!--
-got the content on select() from Suzan Baert:
-https://suzan.rbind.io/2018/01/dplyr-tutorial-1/
--->
+::: {.callout-important}
 
-### Renaming made easy
+Be careful converting strings to numbers!
 
-`janitor::clean_names()`
+:::
 
-The `janitor` package is a great tool to "clean" names of columns in data sets.
+If you use `as.numeric()` (as we did above), you can get NAs if there are any non-numeric characters in the data. For example:
 
-<center>
-<img src="images/janitor_logo.png" width=200>
-</center>
+::: {.grid}
 
-If we take the `wind` data ..
+::: {.g-col-6}
+
+This works great:
+
+```{r}
+as.numeric(c("2.1", "3.7", "4.50"))
+```
+
+:::
+
+::: {.g-col-6}
+
+The `$` symbol breaks this:
+
+```{r}
+as.numeric(c("$2.1", "$3.7", "$4.50"))
+```
+
+:::
+
+:::
+
+
+A solution is to use `parse_number()` instead, which parses strings for numbers:
+
+::: {.grid}
+
+::: {.g-col-6}
+
+This works great:
+
+```{r}
+parse_number(c("2.1", "3.7", "4.50"))
+```
+
+:::
+
+::: {.g-col-6}
+
+The `$` symbol breaks this:
+
+```{r}
+parse_number(c("$2.1", "$3.7", "$4.50"))
+```
+
+:::
+
+:::
+
+### Fixing variable names
+
+You might also notice that the variables names in the `wind` dataset are long and messy:
+
 ```{r}
 wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx'))
 
-glimpse(wind)
+names(wind)
 ```
 
-.. and use janitor, we can easily "clean" the names.
+We can easily fix these with `janitor::clean_names()`:
+
 ```{r}
 library(janitor)
 
 wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
   clean_names()
 
-glimpse(wind)
+names(wind)
 ```
 
-We can even change the style of the names.
+We can even specify the style of the names:
+
 ```{r}
 library(janitor)
 
 wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
   clean_names(case = 'lower_camel')
 
-glimpse(wind)
+names(wind)
 ```
 
-```{r}
-library(janitor)
+## Using `select()` to rename and reorder variables
 
-wind <- read_excel(here::here('data', 'US_State_Wind_Energy_Facts_2018.xlsx')) %>%
-  clean_names(case = 'screaming_snake')
-
-glimpse(wind)
-```
-
-#### `select()` : More Powerful Than You Probably Thought
-
-Example: data on sleeping patterns of different mammals
+Here's an example data set on the sleeping patterns of different mammals:
 
 ```{r}
 glimpse(msleep)
 ```
 
-Use `select()` to choose which columns to **keep**
+The primary use of `select()` is to choose which columns to **keep** or drop:
+
+
+::: {.grid}
+
+::: {.g-col-6}
+
+Selecting variables to **keep**
 
 ```{r}
 msleep %>%
@@ -284,7 +333,11 @@ msleep %>%
   glimpse()
 ```
 
-Use `select()` to choose which columns to **drop**
+:::
+
+::: {.g-col-6}
+
+Selecting variables to **drop**
 
 ```{r}
 msleep %>%
@@ -292,7 +345,11 @@ msleep %>%
   glimpse()
 ```
 
-##### We can also select columns based on **partial column names**
+:::
+
+:::
+
+We can also select columns based on **partial column names**
 
 For example, we can select columns that start with "sleep":
 
@@ -310,9 +367,13 @@ msleep %>%
   glimpse()
 ```
 
-##### Use `select()` to select columns based on their **data type**
+You can also use `select()` to select columns based on their **data type**
 
-Select only numeric columns:
+::: {.grid}
+
+::: {.g-col-6}
+
+Select only **numeric** columns:
 
 ```{r}
 msleep %>%
@@ -320,7 +381,12 @@ msleep %>%
     glimpse()
 ```
 
-Select only character columns:
+
+:::
+
+::: {.g-col-6}
+
+Select only **character** columns:
 
 ```{r}
 msleep %>%
@@ -328,13 +394,13 @@ msleep %>%
     glimpse()
 ```
 
-##### Use `select()` to **reorder** variables
+:::
 
-```{r}
-msleep %>%
-    select(everything()) %>%
-    glimpse()
-```
+:::
+
+You can also use `select()` to **reorder** variables. The key is to use `everything()`, which tells R to keep all the other variables in the data frame. 
+
+For example, if we wanted to move the `conservation` and `awake` variables to the first two columns, we could do this:
 
 ```{r}
 msleep %>%
@@ -342,20 +408,9 @@ msleep %>%
     glimpse()
 ```
 
-##### Use `select()` to **rename** variables
+You can also use `select()` to **rename** variables. 
 
-Use `rename()` to just change the name
-
-```{r}
-msleep %>%
-  rename(
-    animal = name,
-    extinction_threat = conservation
-  ) %>%
-  glimpse()
-```
-
-Use `select()` to change the name **and drop everything else**
+The pattern here is `new = old`:
 
 ```{r}
 msleep %>%
@@ -366,27 +421,15 @@ msleep %>%
   glimpse()
 ```
 
-##### Use `select()` to **rename** variables
+Notice however that this drops everything else. 
 
-Use `rename()` to just change the name
+If you wanted to just rename them but keep all other variables, use `rename()`:
 
 ```{r}
 msleep %>%
   rename(
     animal = name,
     extinction_threat = conservation
-  ) %>%
-  glimpse()
-```
-
-Use `select()` + `everything()` to change names **and keep everything else**
-
-```{r}
-msleep %>%
-  select(
-    animal = name,
-    extinction_threat = conservation,
-    everything()
   ) %>%
   glimpse()
 ```
@@ -394,6 +437,12 @@ msleep %>%
 ## Recoding Variables
 
 ### Recoding with `ifelse()`
+
+The `ifelse()` function takes the pattern:
+
+```
+if <condition>, <value if condition is TRUE>, <value if condition if FALSE>
+```
 
 Example: Create a variable, `cost_high`, that is `TRUE` if the repair costs were greater than the median costs and `FALSE` otherwise.
 
@@ -413,7 +462,9 @@ wildlife_impacts1 %>%
 
 ### Recoding with **nested** `ifelse()`
 
-Create a variable, `season`, based on the `incident_month` variable.
+Often times you may want to make a category variable that takes different values based on different conditions. You can "nest" multiple `ifelse()` statements to achieve this.
+
+For example, let's say we wanted to create a variable, `season`, based on the `incident_month` variable. We could do this like so:
 
 ```{r}
 wildlife_impacts2 <- wildlife_impacts %>%
@@ -428,9 +479,11 @@ wildlife_impacts2 %>%
   head()
 ```
 
+Here we're entering into another `ifelse()` statement as the "else" condition of an earlier condition. 
+
 ### Recoding with `case_when()`
 
-Create a variable, `season`, based on the `incident_month` variable.
+You can achieve the same thing as the example about usin ghte `case_when()` function, which produces slightly cleaner code.
 
 **Note**: If you don't include the final `TRUE ~ 'winter'` condition, you'll get `NA` for those cases.
 
@@ -448,9 +501,9 @@ wildlife_impacts2 %>%
   head()
 ```
 
-#### Recoding with `case_when()` with `between()`
+### Recoding with `case_when()` and `between()`
 
-Create a variable, `season`, based on the `incident_month` variable.
+Here's another approach to achieve the same thing but using the `between()` function to note any months between a start and end month:
 
 ```{r}
 wildlife_impacts2 <- wildlife_impacts %>%
@@ -466,55 +519,22 @@ wildlife_impacts2 %>%
     head()
 ```
 
-#### `case_when()` is "cleaner" than `ifelse()`
-
-Convert the `num_engs` variable into a word of the number.
-
-`ifelse()`
-
-```{r}
-wildlife_impacts3 <- wildlife_impacts %>%
-  mutate(num_engs = ifelse(
-    num_engs == 1, 'one', ifelse(
-    num_engs == 2, 'two', ifelse(
-    num_engs == 3, 'three', ifelse(
-    num_engs == 4, 'four',
-    as.character(num_engs)))))
-  )
-
-unique(wildlife_impacts3$num_engs)
-```
-
-`case_when()`
-
-```{r}
-wildlife_impacts3 <- wildlife_impacts %>%
-  mutate(num_engs = case_when(
-    num_engs == 1 ~ 'one',
-    num_engs == 2 ~ 'two',
-    num_engs == 3 ~ 'three',
-    num_engs == 4 ~ 'four')
-  )
-
-unique(wildlife_impacts3$num_engs)
-```
-
 ### Break a single variable into two with `separate()`
+
+The `tb_rates` data set contains information on tuberculosis rates in different countries. It looks like this:
 
 ```{r}
 tb_rates
 ```
+
+We can break the `rate` variable into two separate variables, `cases` and `population`, using the `separate()` function:
 
 ```{r}
 tb_rates %>%
   separate(rate, into = c("cases", "population"))
 ```
 
-### Break a single variable into two with `separate()`
-
-```{r}
-tb_rates
-```
+You can also specify the separator:
 
 ```{r}
 tb_rates %>%
@@ -525,9 +545,7 @@ tb_rates %>%
   )
 ```
 
-```{r}
-tb_rates
-```
+You can also convert the new variables to numeric by adding `convert = TRUE`:
 
 ```{r}
 tb_rates %>%
@@ -539,52 +557,9 @@ tb_rates %>%
   )
 ```
 
-You can also break up a variable by an index
-
-```{r}
-tb_rates
-```
-
-```{r}
-tb_rates %>%
-  separate(
-    year, 
-    into = c("century", "year"),
-    sep = 2
-  )
-```
-
-### `unite()`: The opposite of `separate()`
-
-```{r}
-tb_rates
-```
-
-```{r}
-tb_rates %>%
-  separate(
-    year, 
-    into = c("century", "year"),
-    sep = 2
-  ) %>%
-  unite(year_new, century, year)
-```
-
-```{r}
-tb_rates
-```
-
-```{r}
-tb_rates %>%
-  separate(
-    year, 
-    into = c("century", "year"),
-    sep = 2
-  ) %>%
-  unite(year_new, century, year, sep = "")
-```
-
 ## Dealing with Dates Data
+
+Dates are notoriously annoying to deal with.
 
 <center>
 <img src="images/dates.png" width=600>
@@ -592,18 +567,25 @@ tb_rates %>%
 
 ### Create Dates from Strings
 
+To deal with dates, we'll use the `lubridate` package. 
+
+::: {.callout-note}
+
+Check out the `lubridate` **[cheat sheet](https://rawgit.com/rstudio/cheatsheets/master/lubridate.pdf)**
+
+:::
+
+The key concept to remember with `lubridate` is:
+
 **order is the ONLY thing that matters!**
 
-#### Year-Month-Day
+The package has special functions that convert date strings into formal date formats. The function names are based on the order of the date:
 
-```{r}
-ymd('2020-02-26')
-```
+::: {.grid}
 
-```{r}
-ymd('2020-02-26')
-ymd('2020 Feb 26')
-```
+::: {.g-col-4}
+
+Year-Month-Day
 
 ```{r}
 ymd('2020-02-26')
@@ -612,7 +594,11 @@ ymd('2020 Feb. 26')
 ymd('2020 february 26')
 ```
 
-#### Month-Day-Year
+:::
+
+::: {.g-col-4}
+
+Month-Day-Year
 
 ```{r}
 mdy('February 26, 2020')
@@ -620,7 +606,11 @@ mdy('Feb. 26, 2020')
 mdy('Feb 26 2020')
 ```
 
-#### Day-Month-Year
+:::
+
+::: {.g-col-4}
+
+Day-Month-Year
 
 ```{r}
 dmy('26 February 2020')
@@ -628,535 +618,52 @@ dmy('26 Feb. 2020')
 dmy('26 Feb, 2020')
 ```
 
-##### Check out the `lubridate` **[cheat sheet](https://rawgit.com/rstudio/cheatsheets/master/lubridate.pdf)**
+:::
+
+:::
 
 ### Extracting information from dates
 
-```{r}
-date <- today()
-date
-```
-
-```{r}
-# Get the year
-year(date)
-```
+The `today()` function returns the current date:
 
 ```{r}
 date <- today()
 date
 ```
 
+You can extract different components of the date using the `year()`, `month()`, and `day()` functions:
 ```{r}
-# Get the year
-year(date)
 
-# Get the month
+year(date)
 month(date)
+day(date)
+```
 
-# Get the month name
+You can also get the month name in a specific format using the `month()` function:
+
+```{r}
 month(date, label = TRUE, abbr = FALSE)
 ```
 
+You can also get the weekday name in a specific format using the `wday()` function:
+
 ```{r}
-# Get the day
-day(date)
-
-# Get the weekday
 wday(date)
-
-# Get the weekday name
+wday(date)
 wday(date, label = TRUE, abbr = TRUE)
 ```
 
-### Modifying date elements
+The same functions can also be used to modify elements of dates:
 
 ```{r}
 date <- today()
 date
-```
 
-```{r}
 # Change the year
 year(date) <- 2016
-date
-```
+date 
 
-```{r}
 # Change the day
 day(date) <- 30
-```
-
-```{r}
 date
-```
-
-## Strategies for Dealing with Messy Excel Files
-
-Example: When columns are repeated; like in the data for the winners of Nathan's hot dog eating contest.
-
-### Strategies
-
-#### 1. divide & conquer
-#### 2. pivot long, separate, pivot wide
-
-<center>
-<img src="images/hot_dogs.png" width=500>
-</center>
-
-### Strategy 1: divide & conquer
-
-Steps:
-
-1. Read in the data
-2. Clean the names
-3. Remove `*` note at bottom of table
-
-```{r}
-hot_dogs <- read_excel(here::here('data', 'hot_dog_winners.xlsx'),
-  sheet = 'hot_dog_winners') %>%
-  clean_names() %>%
-  dplyr::filter(!is.na(mens))
-
-glimpse(hot_dogs)
-```
-
-Steps
-
-1. Read in the data
-2. Clean the names
-3. Remove `*` note at bottom of table
-4. **Split data into two competitions with the same variable names**
-5. **Create new variable in each data frame: `competition`**
-
-```{r}
-hot_dogs_m <- hot_dogs %>%
-  select(
-    year,
-    competitor = mens,
-    dogs_eaten = dogs_eaten_3,
-    country    = country_4) %>%
-  mutate(competition = 'Mens')
-
-hot_dogs_w <- hot_dogs %>%
-  select(
-      year,
-      competitor = womens,
-      dogs_eaten = dogs_eaten_6,
-      country    = country_7) %>%
-  mutate(competition = 'Womens') %>%
-  dplyr::filter(!is.na(competitor))
-```
-
-Steps
-
-1. Read in the data
-2. Clean the names
-3. Remove `*` note at bottom of table
-4. Split data into two competitions with the same variable names
-5. Create new variable in each data frame: `competition`
-6. **Merge data together with `bind_rows()`**
-7. **Clean up final data frame**
-
-```{r}
-hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>%
-  mutate(
-    new_record = str_detect(dogs_eaten, "\\*"),
-    dogs_eaten = parse_number(dogs_eaten),
-    year       = as.numeric(year)
-  )
-
-glimpse(hot_dogs)
-```
-
-
-<img src="images/hot_dogs.png" width=500>
-
-```{r}
-head(hot_dogs)
-```
-
-### Strategy 2: pivot long, separate, pivot wide
-
-Steps:
-
-1. Read in the data
-2. Clean the names
-3. Remove `*` note at bottom of table
-
-```{r}
-hot_dogs <- read_excel(here::here('data', 'hot_dog_winners.xlsx'),
-  sheet = 'hot_dog_winners') %>%
-  clean_names() %>%
-  dplyr::filter(!is.na(mens))
-
-glimpse(hot_dogs)
-```
-
-Steps:
-
-1. Read in the data
-2. Clean the names
-3. Remove `*` note at bottom of table
-4. **Rename variables**
-5. **Gather all the "joint" variables**
-
-```{r}
-hot_dogs <- hot_dogs %>%
-  select(
-    year,
-    competitor.mens   = mens,
-    competitor.womens = womens,
-    dogs_eaten.mens   = dogs_eaten_3,
-    dogs_eaten.womens = dogs_eaten_6,
-    country.mens      = country_4,
-    country.womens    = country_7
-  ) %>%
-  pivot_longer(
-    names_to = 'variable', 
-    values_to = 'value',
-    competitor.mens:country.womens
-  )
-
-head(hot_dogs, 3)
-```
-
-Steps:
-
-1. Read in the data
-2. Clean the names
-3. Remove `*` note at bottom of table
-4. Rename variables
-5. Gather all the "joint" variables
-6. **Separate "joint" variables into components**
-
-```{r}
-hot_dogs <- hot_dogs %>%
-  separate(
-    variable, 
-    into = c('variable', 'competition'),
-    sep = '\\.'
-  )
-
-head(hot_dogs)
-```
-
-Steps:
-
-1. Read in the data
-2. Clean the names
-3. Remove `*` note at bottom of table
-4. Rename variables
-5. Gather all the "joint" variables
-6. Separate "joint" variables into components
-7. **Spread variable and value back to columns**
-8. **Clean up final data frame**
-
-```{r}
-hot_dogs <- hot_dogs %>%
-  spread(key = variable, value = value) %>%
-  mutate(
-    new_record = str_detect(dogs_eaten, "\\*"),
-    dogs_eaten = parse_number(dogs_eaten),
-    year       = as.numeric(year)
-  )
-
-glimpse(hot_dogs)
-```
-
-<div style="display: flex; justify-content: space-between;">
-
-<div style="flex: 0 0 48%; padding-right: 10px;">
-
-Divide & conquer
-
-```{r, eval=FALSE}
-hot_dogs <- read_excel(here::here('data', 'hot_dog_winners.xlsx'),
-  sheet = 'hot_dog_winners') %>%
-  clean_names() %>%
-  dplyr::filter(!is.na(mens))
-
-# Divide
-hot_dogs_m <- hot_dogs %>%
-  select(
-    year,
-    competitor = mens,
-    dogs_eaten = dogs_eaten_3,
-    country    = country_4) %>%
-  mutate(competition = 'Mens')
-hot_dogs_w <- hot_dogs %>%
-  select(
-    year,
-    competitor = womens,
-    dogs_eaten = dogs_eaten_6,
-    country    = country_7) %>%
-  mutate(competition = 'Womens') %>%
-  dplyr::filter(!is.na(competitor))
-
-# Merge and finish cleaning
-hot_dogs <- bind_rows(hot_dogs_m, hot_dogs_w) %>%
-  mutate(
-    new_record = str_detect(dogs_eaten, "\\*"),
-    dogs_eaten = parse_number(dogs_eaten),
-    year       = as.numeric(year)
-  )
-```
-
-</div>
-<div style="flex: 0 0 48%; padding-left: 10px;">
-
-Pivot long, separate, pivot wide
-
-```{r, eval=FALSE}
-hot_dogs <- read_excel(
-  here::here('data', 'hot_dog_winners.xlsx'),
-  sheet = 'hot_dog_winners') %>%
-  clean_names() %>%
-  dplyr::filter(!is.na(mens)) %>%
-
-  # Rename variables
-  select(
-    year,
-    competitor.mens   = mens,
-    competitor.womens = womens,
-    dogs_eaten.mens   = dogs_eaten_3,
-    dogs_eaten.womens = dogs_eaten_6,
-    country.mens      = country_4,
-    country.womens    = country_7
-  ) %>%
-  # Gather "joint" variables
-  pivot_longer(
-    names_to = 'variable', 
-    values_to = 'value',
-    competitor.mens:country.womens
-  ) %>%
-  # Separate "joint" variables
-  separate(
-    variable, 
-    into = c('variable', 'competition'),
-    sep = '\\.'
-  ) %>%
-  # Spread "joint" variables
-  pivot_wider(
-    names_from = variable, 
-    values_from = value
-  ) %>%
-  # Finish cleaning
-  mutate(
-    new_record = str_detect(dogs_eaten, "\\*"),
-    dogs_eaten = parse_number(dogs_eaten),
-    year       = as.numeric(year)
-  )
-```
-
-</div>
-</div>
-
-### Strategies for dealing with **sub-headers**
-
-Example: OICA passenger car sales data
-
-<center>
-<img src="images/pc_sales.png" width=800>
-</center>
-
-Steps:
-
-1. Read in the data, skipping first 5 rows
-2. Clean the names
-
-```{r}
-pc_sales <- read_excel(here::here('data', 'pc_sales_2018.xlsx'),
-  sheet = 'pc_sales', skip = 5) %>%
-  clean_names() %>%
-  rename(country = regions_countries)
-
-glimpse(pc_sales)
-```
-
-Steps:
-
-1. Read in the data, skipping first 5 rows
-2. Clean the names
-3. **Drop bad columns**
-4. **Filter out bad rows**
-
-Use **datapasta** to get rows to drop
-
-```{r}
-drop <- c(
-  'EUROPE', 'EU 28 countries + EFTA',
-  'EU 15 countries + EFTA', 'EUROPE NEW MEMBERS',
-  'RUSSIA, TURKEY & OTHER EUROPE', 'AMERICA',
-  'NAFTA', 'CENTRAL & SOUTH AMERICA',
-  'ASIA/OCEANIA/MIDDLE EAST', 'AFRICA', 'ALL COUNTRIES')
-
-pc_sales <- pc_sales %>%
-  # Drop bad columns
-  select(-c(x2:x4)) %>%  
-  # Filter out bad rows
-  filter(
-    ! country %in% drop,
-    ! is.na(country)
-  )
-
-head(pc_sales)
-```
-
-Steps:
-
-1. Read in the data, skipping first 5 rows
-2. Clean the names
-3. Drop bad columns
-4. Filter out bad rows
-5. **Gather the year variables**
-
-```{r}
-pc_sales <- pc_sales %>%
-  pivot_longer(
-    names_to = 'year', 
-    values_to = 'num_cars', 
-    cols = x2005:x2018
-  )
-
-head(pc_sales)
-```
-
-Steps:
-
-1. Read in the data, skipping first 5 rows
-2. Clean the names
-3. Drop bad columns
-4. Filter out bad rows
-5. Gather the year variables
-6. **Separate the "x" from the year**
-
-```{r}
-pc_sales <- pc_sales %>%
-  separate(
-    year, 
-    into = c('drop', 'year'), 
-    sep = 'x',
-    convert = TRUE
-  )
-
-head(pc_sales)
-```
-
-Steps:
-
-1. Read in the data, skipping first 5 rows
-2. Clean the names
-3. Drop bad columns
-4. Filter out bad rows
-5. Gather the year variables
-6. Separate the "x" from the year
-7. **Remove the `drop` column**
-8. **Finish cleaning**
-
-```{r}
-pc_sales <- pc_sales %>%
-  select(-drop) %>%
-  mutate(country  = str_to_title(country))
-
-head(pc_sales)
-```
-
-##### What if I wanted to keep the continents?
-
-### Strategy: Join a new data frame linking country -> continent
-
-```{r}
-drop <- c(
-  'EUROPE', 'EU 28 countries + EFTA',
-  'EU 15 countries + EFTA', 'EUROPE NEW MEMBERS',
-  'RUSSIA, TURKEY & OTHER EUROPE', 'AMERICA',
-  'NAFTA', 'CENTRAL & SOUTH AMERICA',
-  'ASIA/OCEANIA/MIDDLE EAST', 'AFRICA', 'ALL COUNTRIES')
-
-pc_sales <- read_excel(
-  here::here('data', 'pc_sales_2018.xlsx'),
-  sheet = 'pc_sales', skip = 5) %>%
-  clean_names() %>%
-  rename(country = regions_countries) %>% 
-  # Drop bad columns
-  select(-c(x2:x4)) %>%  
-  # Filter out bad rows
-  filter(
-    ! country %in% drop,
-    ! is.na(country)
-  ) %>% 
-  pivot_longer(
-    names_to = 'year', values_to = 'num_cars', 
-    cols = x2005:x2018
-  ) %>%
-  separate(
-    year, 
-    into = c('drop', 'year'), 
-    sep = 'x',
-    convert = TRUE
-  ) %>% 
-  select(-drop)
-
-head(pc_sales, 3)
-```
-
-### Strategy 1: Find another source
-
-### Strategy 2: Hand-make it
-
-```{r}
-pc_regions <- read_csv(here::here("data", "pc_regions.csv"))
-
-head(pc_regions)
-```
-
-```{r}
-pc_sales <- pc_sales %>% 
-  left_join(pc_regions)
-
-head(pc_sales)
-```
-
-<img src="images/pc_sales.png" width=800>
-
-```{r}
-drop <- c(
-  'EUROPE', 'EU 28 countries + EFTA',
-  'EU 15 countries + EFTA', 'EUROPE NEW MEMBERS',
-  'RUSSIA, TURKEY & OTHER EUROPE', 'AMERICA',
-  'NAFTA', 'CENTRAL & SOUTH AMERICA',
-  'ASIA/OCEANIA/MIDDLE EAST', 'AFRICA', 'ALL COUNTRIES')
-
-pc_regions <- read_csv(here::here("data", "pc_regions.csv"))
-
-pc_sales <- read_excel(
-  here::here('data', 'pc_sales_2018.xlsx'),
-  sheet = 'pc_sales', skip = 5) %>%
-  clean_names() %>%
-  rename(country = regions_countries) %>% 
-  # Drop bad columns
-  select(-c(x2:x4)) %>%       
-  # Filter out bad rows
-  filter(
-    ! country %in% drop,
-    ! is.na(country)
-  ) %>% 
-  pivot_longer(
-    names_to = 'year', values_to = 'num_cars', 
-    cols = x2005:x2018
-  ) %>%
-  separate(
-    year, into = c('drop', 'year'), sep = 'x',
-    convert = TRUE
-  ) %>% 
-  select(-drop) %>% 
-  left_join(pc_regions) %>% 
-  mutate(
-    country  = str_to_title(country), 
-    region  = str_to_title(region), 
-    subregion  = str_to_title(subregion)
-  )
-
-head(pc_sales)
 ```

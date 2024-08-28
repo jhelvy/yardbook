@@ -10,11 +10,9 @@ suppressWarnings(suppressMessages(source("_common.R")))
 
 > ### Learning Objectives {.unnumbered}
 >
-> * Reshape data between long and wide formats.
-> * Wrangle and format data, including dealing with messy Excel files.
-> * Merge multiple datasets effectively.
-> * Clean, organize, and recode variables.
-> * Handle and process date data.
+> * Understand the concept of tidy data (wide and long formats).
+> * Be able to reshape data between long and wide formats.
+> * Understand the benefits of using tidy data for data manipulation, visualization, and analysis.
 
 ## "Wide" and "Long" Formatted Data
 
