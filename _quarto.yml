@@ -42,7 +42,7 @@ book:
       chapters:
         - tidy-data.qmd
         - cleaning-data.qmd
-    #     - good-practices.qmd
+        - good-practices.qmd
     #     - summarizing-data.qmd
     # - part: part3-data-viz.qmd
     #   chapters:
