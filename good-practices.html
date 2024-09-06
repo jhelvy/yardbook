@@ -8,7 +8,7 @@
 
 <meta name="author" content="John Paul Helveston">
 
-<title>Getting Started – Yet Another R Dataviz Book</title>
+<title>5&nbsp; Good Data Practices – Yet Another R Dataviz Book</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,8 +31,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./quarto.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./cleaning-data.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -84,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part1-getting-started.html">Getting Started</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part2-exploring.html">Exploring Data</a></li><li class="breadcrumb-item"><a href="./good-practices.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Good Data Practices</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -125,7 +124,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./part1-getting-started.html" class="sidebar-item-text sidebar-link active">
+            <a href="./part1-getting-started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Getting Started</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -169,7 +168,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./good-practices.html" class="sidebar-item-text sidebar-link">
+  <a href="./good-practices.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Good Data Practices</span></span></a>
   </div>
 </li>
@@ -180,15 +179,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#data-provenance" id="toc-data-provenance" class="nav-link active" data-scroll-target="#data-provenance"><span class="header-section-number">5.1</span> Data Provenance</a></li>
+  <li><a href="#documenting-data-sources" id="toc-documenting-data-sources" class="nav-link" data-scroll-target="#documenting-data-sources"><span class="header-section-number">5.2</span> Documenting Data Sources</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/good-practices.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part2-exploring.html">Exploring Data</a></li><li class="breadcrumb-item"><a href="./good-practices.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Good Data Practices</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-part" class="quarto-section-identifier">Getting Started</span></h1>
+<h1 class="title"><span id="sec-chapter" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Good Data Practices</span></span></h1>
 </div>
 
 
@@ -205,10 +211,49 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This section offers a quick introduction to the <a href="https://ggplot2.tidyverse.org/">{ggplot2}</a> package for making charts and <a href="https://quarto.org/">Quarto</a> for making reproducible reports.</p>
-<p>We like using Quarto for exploring data and making data visualizations because it allows us to easily blend code, text, and charts, enabling us to document our entire analysis from start to finish.</p>
+<blockquote class="blockquote">
+<h3 id="learning-objectives" class="unnumbered anchored">Learning Objectives</h3>
+<ul>
+<li>Assess and document the validity, accuracy, and origin of data sources.</li>
+<li>Ensure the reproducibility of results using detailed data documentation.</li>
+<li>Understand the importance of data provenance and its impact on data quality and reliability.</li>
+</ul>
+</blockquote>
+<section id="data-provenance" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="data-provenance"><span class="header-section-number">5.1</span> Data Provenance</h2>
+<p>It matters where you get you data! When starting your search for data to address a research question, think about:</p>
+<p><strong>Validity</strong></p>
+<ul>
+<li>Is this data trustworthy? Is it authentic?</li>
+<li>Where did the data come from?</li>
+<li>How has the data been changed / managed over time?</li>
+<li>Is the data complete?</li>
+</ul>
+<p><strong>Comprehension</strong></p>
+<ul>
+<li>Is this data accurate?</li>
+<li>Can you explain your results?</li>
+<li>Is this the right data to answer your question?</li>
+</ul>
+<p><strong>Reproducibility</strong></p>
+<p>People should be able to fully replicate your results from your raw data and code.</p>
+</section>
+<section id="documenting-data-sources" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="documenting-data-sources"><span class="header-section-number">5.2</span> Documenting Data Sources</h2>
+<p><strong>Document your data source like a museum curator</strong></p>
+<p>Whenever you download data, you should <strong>at a minimum</strong> record the following:</p>
+<ul>
+<li>The name of the file you are describing.</li>
+<li>The date you downloaded it.</li>
+<li>The original name of the downloaded file (in case you renamed it).</li>
+<li>The url to the site you downloaded it from.</li>
+<li>The source of the <em>original</em> data (sometimes different from the site you downloaded it from).</li>
+<li>A short description of the data, maybe how they were collected (if available).</li>
+<li>A dictionary for the data (e.g.&nbsp;a simple markdown table describing each variable).</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -633,14 +678,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link" aria-label="Preface">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      <a href="./cleaning-data.html" class="pagination-link" aria-label="Cleaning Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Cleaning Data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./quarto.html" class="pagination-link" aria-label="Introduction to Quarto">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Quarto</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
@@ -651,7 +693,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/part1-getting-started.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jhelvy/yardbook/edit/main/good-practices.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jhelvy/yardbook/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

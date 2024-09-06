@@ -2,30 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://yardbook.jhelvy.com/index.html</loc>
-    <lastmod>2024-08-28T11:59:06.231Z</lastmod>
+    <lastmod>2024-09-06T18:50:17.571Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/quarto.html</loc>
-    <lastmod>2024-08-28T11:59:06.232Z</lastmod>
+    <lastmod>2024-09-06T18:50:17.572Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/ggplot.html</loc>
-    <lastmod>2024-08-28T11:59:05.917Z</lastmod>
+    <lastmod>2024-09-06T18:50:17.250Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/tidy-data.html</loc>
-    <lastmod>2024-08-28T11:59:06.232Z</lastmod>
+    <lastmod>2024-09-06T18:50:17.573Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/cleaning-data.html</loc>
-    <lastmod>2024-08-28T11:59:05.638Z</lastmod>
+    <lastmod>2024-09-06T18:50:16.933Z</lastmod>
+  </url>
+  <url>
+    <loc>https://yardbook.jhelvy.com/good-practices.html</loc>
+    <lastmod>2024-09-06T18:50:17.250Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/part2-exploring.html</loc>
-    <lastmod>2024-08-28T11:59:06.231Z</lastmod>
+    <lastmod>2024-09-06T18:50:17.572Z</lastmod>
   </url>
   <url>
     <loc>https://yardbook.jhelvy.com/part1-getting-started.html</loc>
-    <lastmod>2024-08-28T11:59:06.231Z</lastmod>
+    <lastmod>2024-09-06T18:50:17.572Z</lastmod>
   </url>
 </urlset>

@@ -256,10 +256,43 @@
     "href": "cleaning-data.html#dealing-with-dates-data",
     "title": "4  Cleaning Data",
     "section": "4.5 Dealing with Dates Data",
-    "text": "4.5 Dealing with Dates Data\nDates are notoriously annoying to deal with.\n\n\n\n\n4.5.1 Create Dates from Strings\nTo deal with dates, we’ll use the lubridate package.\n\n\n\n\n\n\nCheck out the lubridate cheat sheet\n\n\n\nThe key concept to remember with lubridate is:\norder is the ONLY thing that matters!\nThe package has special functions that convert date strings into formal date formats. The function names are based on the order of the date:\n\n\nYear-Month-Day\n\nymd('2020-02-26')\n\n#&gt; [1] \"2020-02-26\"\n\nymd('2020 Feb 26')\n\n#&gt; [1] \"2020-02-26\"\n\nymd('2020 Feb. 26')\n\n#&gt; [1] \"2020-02-26\"\n\nymd('2020 february 26')\n\n#&gt; [1] \"2020-02-26\"\n\n\n\n\nMonth-Day-Year\n\nmdy('February 26, 2020')\n\n#&gt; [1] \"2020-02-26\"\n\nmdy('Feb. 26, 2020')\n\n#&gt; [1] \"2020-02-26\"\n\nmdy('Feb 26 2020')\n\n#&gt; [1] \"2020-02-26\"\n\n\n\n\nDay-Month-Year\n\ndmy('26 February 2020')\n\n#&gt; [1] \"2020-02-26\"\n\ndmy('26 Feb. 2020')\n\n#&gt; [1] \"2020-02-26\"\n\ndmy('26 Feb, 2020')\n\n#&gt; [1] \"2020-02-26\"\n\n\n\n\n\n\n4.5.2 Extracting information from dates\nThe today() function returns the current date:\n\ndate &lt;- today()\ndate\n\n#&gt; [1] \"2024-08-28\"\n\n\nYou can extract different components of the date using the year(), month(), and day() functions:\n\nyear(date)\n\n#&gt; [1] 2024\n\nmonth(date)\n\n#&gt; [1] 8\n\nday(date)\n\n#&gt; [1] 28\n\n\nYou can also get the month name in a specific format using the month() function:\n\nmonth(date, label = TRUE, abbr = FALSE)\n\n#&gt; [1] August\n#&gt; 12 Levels: January &lt; February &lt; March &lt; April &lt; May &lt; June &lt; ... &lt; December\n\n\nYou can also get the weekday name in a specific format using the wday() function:\n\nwday(date)\n\n#&gt; [1] 4\n\nwday(date)\n\n#&gt; [1] 4\n\nwday(date, label = TRUE, abbr = TRUE)\n\n#&gt; [1] Wed\n#&gt; Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat\n\n\nThe same functions can also be used to modify elements of dates:\n\ndate &lt;- today()\ndate\n\n#&gt; [1] \"2024-08-28\"\n\n# Change the year\nyear(date) &lt;- 2016\ndate \n\n#&gt; [1] \"2016-08-28\"\n\n# Change the day\nday(date) &lt;- 30\ndate\n\n#&gt; [1] \"2016-08-30\"",
+    "text": "4.5 Dealing with Dates Data\nDates are notoriously annoying to deal with.\n\n\n\n\n4.5.1 Create Dates from Strings\nTo deal with dates, we’ll use the lubridate package.\n\n\n\n\n\n\nCheck out the lubridate cheat sheet\n\n\n\nThe key concept to remember with lubridate is:\norder is the ONLY thing that matters!\nThe package has special functions that convert date strings into formal date formats. The function names are based on the order of the date:\n\n\nYear-Month-Day\n\nymd('2020-02-26')\n\n#&gt; [1] \"2020-02-26\"\n\nymd('2020 Feb 26')\n\n#&gt; [1] \"2020-02-26\"\n\nymd('2020 Feb. 26')\n\n#&gt; [1] \"2020-02-26\"\n\nymd('2020 february 26')\n\n#&gt; [1] \"2020-02-26\"\n\n\n\n\nMonth-Day-Year\n\nmdy('February 26, 2020')\n\n#&gt; [1] \"2020-02-26\"\n\nmdy('Feb. 26, 2020')\n\n#&gt; [1] \"2020-02-26\"\n\nmdy('Feb 26 2020')\n\n#&gt; [1] \"2020-02-26\"\n\n\n\n\nDay-Month-Year\n\ndmy('26 February 2020')\n\n#&gt; [1] \"2020-02-26\"\n\ndmy('26 Feb. 2020')\n\n#&gt; [1] \"2020-02-26\"\n\ndmy('26 Feb, 2020')\n\n#&gt; [1] \"2020-02-26\"\n\n\n\n\n\n\n4.5.2 Extracting information from dates\nThe today() function returns the current date:\n\ndate &lt;- today()\ndate\n\n#&gt; [1] \"2024-09-06\"\n\n\nYou can extract different components of the date using the year(), month(), and day() functions:\n\nyear(date)\n\n#&gt; [1] 2024\n\nmonth(date)\n\n#&gt; [1] 9\n\nday(date)\n\n#&gt; [1] 6\n\n\nYou can also get the month name in a specific format using the month() function:\n\nmonth(date, label = TRUE, abbr = FALSE)\n\n#&gt; [1] September\n#&gt; 12 Levels: January &lt; February &lt; March &lt; April &lt; May &lt; June &lt; ... &lt; December\n\n\nYou can also get the weekday name in a specific format using the wday() function:\n\nwday(date)\n\n#&gt; [1] 6\n\nwday(date)\n\n#&gt; [1] 6\n\nwday(date, label = TRUE, abbr = TRUE)\n\n#&gt; [1] Fri\n#&gt; Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat\n\n\nThe same functions can also be used to modify elements of dates:\n\ndate &lt;- today()\ndate\n\n#&gt; [1] \"2024-09-06\"\n\n# Change the year\nyear(date) &lt;- 2016\ndate \n\n#&gt; [1] \"2016-09-06\"\n\n# Change the day\nday(date) &lt;- 30\ndate\n\n#&gt; [1] \"2016-09-30\"",
     "crumbs": [
       "Exploring Data",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Cleaning Data</span>"
+    ]
+  },
+  {
+    "objectID": "good-practices.html",
+    "href": "good-practices.html",
+    "title": "5  Good Data Practices",
+    "section": "",
+    "text": "5.1 Data Provenance\nIt matters where you get you data! When starting your search for data to address a research question, think about:\nValidity\nComprehension\nReproducibility\nPeople should be able to fully replicate your results from your raw data and code.",
+    "crumbs": [
+      "Exploring Data",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Good Data Practices</span>"
+    ]
+  },
+  {
+    "objectID": "good-practices.html#data-provenance",
+    "href": "good-practices.html#data-provenance",
+    "title": "5  Good Data Practices",
+    "section": "",
+    "text": "Is this data trustworthy? Is it authentic?\nWhere did the data come from?\nHow has the data been changed / managed over time?\nIs the data complete?\n\n\n\nIs this data accurate?\nCan you explain your results?\nIs this the right data to answer your question?",
+    "crumbs": [
+      "Exploring Data",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Good Data Practices</span>"
+    ]
+  },
+  {
+    "objectID": "good-practices.html#documenting-data-sources",
+    "href": "good-practices.html#documenting-data-sources",
+    "title": "5  Good Data Practices",
+    "section": "5.2 Documenting Data Sources",
+    "text": "5.2 Documenting Data Sources\nDocument your data source like a museum curator\nWhenever you download data, you should at a minimum record the following:\n\nThe name of the file you are describing.\nThe date you downloaded it.\nThe original name of the downloaded file (in case you renamed it).\nThe url to the site you downloaded it from.\nThe source of the original data (sometimes different from the site you downloaded it from).\nA short description of the data, maybe how they were collected (if available).\nA dictionary for the data (e.g. a simple markdown table describing each variable).",
+    "crumbs": [
+      "Exploring Data",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Good Data Practices</span>"
     ]
   },
   {
