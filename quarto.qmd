@@ -19,10 +19,15 @@ suppressWarnings(suppressMessages(source("_common.R")))
 
 Quarto is a multilingual version of RMarkdown built on Pandoc that allows us to seamlessly combine text and code to create dynamic outputs. Like RMarkdown, it uses knitr to render outputs in the form of documents, web pages, and more.  
 
-<center>
-<img src="images/how-qmd-works.png" width=100%>
-</center>
-<br>
+```{r}
+#| label: how-qmd-works
+#| out-width: "600"
+#| echo: false
+#| fig-align: "center"
+#| fig-alt: "A flowchart showing the conversion process from qmd to PDF. The steps are: qmd file, knitr, md file, pandoc, and finally outputs of Word document, PDF file, and web globe icon."
+
+knitr::include_graphics("images/how-qmd-works.png")
+```
 
 Use R Projects (`.Rproj` files) to organize your analysis. When you double-click a `.Rproj` file, RStudio will open an set the working directory to the project folder. 
 
@@ -34,9 +39,15 @@ Use R Projects (`.Rproj` files) to organize your analysis. When you double-click
 
 So open files that look like this:
 
-<center>
-<img src = "images/rproj.png" width = "75">
-</center>
+```{r}
+#| label: rproj
+#| out-width: "600"
+#| echo: false
+#| fig-align: "center"
+#| fig-alt: "The RStudio logo consisting of a blue transparent cube containing a large capital letter R in a lighter blue shade."
+
+knitr::include_graphics("images/rproj.png.png")
+```
 
 ## Anatomy of a Quarto Markdown Document
 
@@ -137,7 +148,14 @@ Use the `#` symbol to create headers.
 
 **..to get this**
 
-<img src = "images/headers.png" width = 1000>
+```{r}
+#| label: headers
+#| out-width: "1000"
+#| echo: false
+#| fig-alt: "A text sample showing different header sizes from Header 1 to Header 6, with font size decreasing for each subsequent header level."
+
+knitr::include_graphics("images/headers.png")
+```
 
 :::
 
@@ -259,9 +277,15 @@ Simple **url link** to another site:
 
 Don't want to use Markdown? Use RStudio Visual Mode! This is a WYSIWYG editor that allows you to write like you would in Word, but then RStudio will convert it to Markdown for you.
 
-<center>
-<img src="images/visual-mode.png" width=500>
-</center>
+```{r}
+#| label: visual-mode
+#| out-width: "500"
+#| echo: false
+#| fig-align: "center"
+#| fig-alt: "A screenshot of a Quarto document editor interface. The file name 'quarto_demo.qmd' is visible at the top. Below it are tabs for 'Source' and 'Visual' views, with 'Source' highlighted. The editor shows the first few lines of a Quarto document, including YAML front matter with title and format specifications."
+
+knitr::include_graphics("images/visual-mode.png")
+```
 
 ## R Code
 
@@ -313,8 +337,11 @@ Use chunk options to control what code chunks output.
 See all options [here](https://quarto.org/docs/reference/cells/cells-knitr.html)
 
 ```{r}
+#| label: chunks_options
+#| out-width: 75%
 #| echo: false
-#| out.width: 75%
+#| fig-align: "center"
+#| fig-alt: "A table with three columns: 'option', 'default', and 'effect'. The table lists various Quarto chunk options such as eval, echo, warning, error, message, tidy, results, cache, comment, fig.width, and fig.height. For each option, it shows the default value and a brief description of its effect on code chunk execution and output."
 
 knitr::include_graphics('images/chunks_options.png')
 ```
