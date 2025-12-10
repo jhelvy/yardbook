@@ -57,6 +57,9 @@ book:
     #     - anim.qmd
     #     - interact.qmd
     
+execute:
+  freeze: auto
+
 format:
   html:
     theme:
@@ -67,6 +70,3 @@ format:
 
     author-meta: "John Paul Helveston"
     callout-appearance: simple
-
-exclude:
-  cache: true

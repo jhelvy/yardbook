@@ -91,3 +91,9 @@ The book emphasizes:
 3. Chapters are added to `_quarto.yml` when ready
 4. Book is rendered to `_book/` directory
 5. Published to https://yardbook.jhelvy.com/
+
+**Working Process**:
+- Work on one chapter at a time
+- Most chapters have existing content that needs formatting improvements
+- Use Quarto's `freeze: auto` feature to cache computational results and speed up rendering
+- Individual chapters can be slow to render due to complex visualizations and data processing
