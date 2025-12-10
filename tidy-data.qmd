@@ -116,7 +116,7 @@ To convert to long format, we need to create new column names for the names and 
 
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
-  pivot_longer( 
+  pivot_longer(
     names_to = "department",
     values_to = "rd_budget_mil",
     cols = DOD:Other
@@ -130,7 +130,7 @@ You can also set `cols` by selecting which columns _not_ to use, like this:
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
   pivot_longer(
-    names_to = "department", 
+    names_to = "department",
     values_to = "rd_budget_mil",
     cols = -year
   )
@@ -145,9 +145,9 @@ There's a good reason why we like to keep our data in a long (tidy) format: it l
 Here's a quick explanation with cute graphics, by [Allison Horst](https://github.com/allisonhorst/stats-illustrations):
 
 <center>
-<img src="images/horst_tidydata_1.jpg" width=700>
-<img src="images/horst_tidydata_2.jpg" width=700>
-<img src="images/horst_tidydata_3.jpg" width=700>
+<img src="images/horst_tidydata_1.jpg" width=500>
+<img src="images/horst_tidydata_2.jpg" width=500>
+<img src="images/horst_tidydata_3.jpg" width=500>
 </center>
 
 ### Example 1: Total R&D spending in each year
@@ -156,7 +156,22 @@ This is a simple enough task, but with our data in wide format, we need to add e
 
 ```{r}
 fed_spend_wide %>%
-  mutate(total = DHS + DOC + DOD + DOE + DOT + EPA + HHS + Interior + NASA + NIH + NSF + Other + USDA + VA) %>%
+  mutate(
+    total = DHS +
+      DOC +
+      DOD +
+      DOE +
+      DOT +
+      EPA +
+      HHS +
+      Interior +
+      NASA +
+      NIH +
+      NSF +
+      Other +
+      USDA +
+      VA
+  ) %>%
   select(year, total)
 ```
 
@@ -167,10 +182,10 @@ An alternative approach is to embrace the tidy data format. We'll use `pivot_lon
 ```{r}
 fed_spend_long <- fed_spend_wide %>%
   pivot_longer(
-    names_to = "department", 
+    names_to = "department",
     values_to = "rd_budget_mil",
     cols = -year
-  ) 
+  )
 
 head(fed_spend_long)
 ```
@@ -200,8 +215,8 @@ ggplot(fed_spend_wide) +
   geom_col(aes(x = rd_budget_mil, y = department)) +
   theme_bw() +
   labs(
-      x = "R&D Spending ($Millions)",
-      y = "Federal Agency"
+    x = "R&D Spending ($Millions)",
+    y = "Federal Agency"
   )
 ```
 

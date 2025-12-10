@@ -562,7 +562,7 @@ tb_rates %>%
 Dates are notoriously annoying to deal with.
 
 <center>
-<img src="images/dates.png" width=600>
+<img src="images/dates.png" width=500>
 </center>
 
 ### Create Dates from Strings

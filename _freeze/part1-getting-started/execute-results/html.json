@@ -1,0 +1,15 @@
+{
+  "hash": "4c6604a49a005df10b9a507cdb556232",
+  "result": {
+    "engine": "knitr",
+    "markdown": "# Getting Started {#sec-part}\n\n\n\n\n\n::: {.cell}\n\n:::\n\n\n\n\n\nThis section offers a quick introduction to the [{ggplot2}](https://ggplot2.tidyverse.org/) package for making charts and [Quarto](https://quarto.org/) for making reproducible reports. \n\nWe like using Quarto for exploring data and making data visualizations because it allows us to easily blend code, text, and charts, enabling us to document our entire analysis from start to finish.",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

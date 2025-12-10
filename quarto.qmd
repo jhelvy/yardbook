@@ -41,12 +41,12 @@ So open files that look like this:
 
 ```{r}
 #| label: rproj
-#| out-width: "600"
+#| out-width: "100"
 #| echo: false
 #| fig-align: "center"
 #| fig-alt: "The RStudio logo consisting of a blue transparent cube containing a large capital letter R in a lighter blue shade."
 
-knitr::include_graphics("images/rproj.png.png")
+knitr::include_graphics("images/rproj.png")
 ```
 
 ## Anatomy of a Quarto Markdown Document
