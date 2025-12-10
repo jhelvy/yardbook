@@ -664,11 +664,7 @@ Interpretation:
 - Closer to 1 is stronger correlation
 - Closer to 0 is weaker correlation
 
-`
-``
-{
-  r
-}
+```{r}
 cor(
   x = GaltonFamilies$midparentHeight,
   y = GaltonFamilies$childHeight,
