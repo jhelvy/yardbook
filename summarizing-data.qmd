@@ -10,19 +10,28 @@ suppressWarnings(suppressMessages(source("_common.R")))
 
 ## Types of Data
 
+::: {.columns}
+::: {.column width="48%"}
 **Categorical**
 
 Subdivide things into _groups_
 
 - What type?
 - Which category?
+:::
 
+::: {.column width="4%"}
+:::
+
+::: {.column width="48%"}
 **Numerical**
 
 Measure things with numbers
 
 - How many?
 - How much?
+:::
+:::
 
 #### Categorical (discrete) variables:
 
@@ -68,8 +77,8 @@ e.g.: `temp` in Beaver data
 #| echo: false
 
 beaver1 %>%
-    arrange(day) %>%
-    head()
+  arrange(day) %>%
+  head()
 ```
 
 **Ratio**
@@ -84,13 +93,15 @@ e.g.: `height` & `speed` in wildlife impacts
 #| echo: false
 
 wildlife_impacts %>%
-    filter(!is.na(height), ! is.na(speed)) %>%
-    dplyr::select(incident_date, height, speed) %>%
-    head()
+  filter(!is.na(height), !is.na(speed)) %>%
+  dplyr::select(incident_date, height, speed) %>%
+  head()
 ```
 
 ### Key Questions
 
+::: {.columns}
+::: {.column width="48%"}
 **Categorical**
 
 <span style="color:blue;">Does this work? Does the order matter?</span>
@@ -98,14 +109,21 @@ wildlife_impacts %>%
 Yes: Ordinal
 
 No: Nominal
+:::
 
+::: {.column width="4%"}
+:::
+
+::: {.column width="48%"}
 **Numerical**
 
 <span style="color:blue;">Is there a "baseline"?</span>
 
-Yes: Ratio 
+Yes: Ratio
 
 No: Interval
+:::
+:::
 
 ### Variable Encoding
 **Be careful of how variables are encoded!**
@@ -144,7 +162,7 @@ When ratio data are discrete (i.e. counts)
 
 ```{r}
 wildlife_impacts %>%
-  filter(! is.na(height)) %>%
+  filter(!is.na(height)) %>%
   summarise(
     mean = mean(height),
     median = median(height)
@@ -158,22 +176,14 @@ Percent of data below mean:
 
 percentiles <- ecdf(wildlife_impacts$height)
 meanP <- percentiles(mean(wildlife_impacts$height, na.rm = TRUE))
-paste0(round(100*meanP, 1), '%')
+paste0(round(100 * meanP, 1), '%')
 ```
 
 **On average, at what height do planes hit birds?**
 
-<img src="figs/wildlife-hist.png" width=700>
+<img src="figs/wildlife-hist.png" width=500>
 
 On average, where do planes hit birds? Saying ~1000 ft is misleading. It's much more likely to be under 100 ft.
-
-**Beware the "flaw of averages"**
-
-*What happened to the statistician that crossed a river with an average depth of 3 feet?*
-
-*...he drowned*
-
-<img src="images/foa.jpg" width=700>
 
 ### <span style="color:blue;">Variability ("Spread")</span>
 
@@ -199,7 +209,7 @@ daysToShip %>%
   gather(warehouse, days, warehouseA:warehouseB) %>%
   group_by(warehouse) %>%
   summarise(
-    mean   = mean(days),
+    mean = mean(days),
     median = median(days)
   )
 ```
@@ -211,15 +221,15 @@ daysToShip %>%
   gather(warehouse, days, warehouseA:warehouseB) %>%
   group_by(warehouse) %>%
   summarise(
-    mean   = mean(days),
+    mean = mean(days),
     median = median(days),
-    range  = max(days) - min(days),
-    sd     = sd(days)
+    range = max(days) - min(days),
+    sd = sd(days)
   )
 ```
 
 <center>
-<img src="figs/days-to-ship.png" width=700>
+<img src="figs/days-to-ship.png" width=500>
 </center>
 
 **Interpreting the standard deviation**
@@ -269,10 +279,11 @@ One great example of the importance of visualizing data would be Anscombe's Quar
 
 **Anscombe's Quartet**
 
-<img src = "images/anscombe_data.png" width = "700">
+<img src = "images/anscombe_data.png" width = "500">
+
 <span class="footer-small">Stephen Few (2009, pg. 6)</span>
 
-<img src="figs/anscombe-quartet.png" width=700>
+<img src="figs/anscombe-quartet.png" width=500>
 
 <span class="footer-small">Stephen Few (2009, pg. 6)</span>
 
@@ -280,7 +291,7 @@ One great example of the importance of visualizing data would be Anscombe's Quar
 
 (More [here](https://www.autodeskresearch.com/publications/samestats))
 
-<img src="images/datasaurus.png" width=700>
+<img src="images/datasaurus.png" width=500>
 
 ### The data _type_ determines how to summarize and visualize it.
 
@@ -483,7 +494,7 @@ Ask yourself:
 Check out [these guides](https://eda.seas.gwu.edu/2023-Fall/references.html#choosing-the-right-chart)
 
 <center>
-<img src = "images/plots-table.png" width = "800">
+<img src = "images/plots-table.png" width = "500">
 </center>
 
 ### Two **Categorical** Variables
@@ -519,13 +530,13 @@ wildlife_impacts %>%
       x = n,
       y = reorder(operator, n),
       fill = reorder(time_of_day, n)
-    ), 
+    ),
     width = 0.7,
     position = 'dodge'
   ) +
   theme(legend.position = "bottom") +
   labs(
-    fill = "Time of day", 
+    fill = "Time of day",
     y = "Airline"
   )
 ```
@@ -560,7 +571,7 @@ Visualize with **boxplot**
 #| fig.align: center
 
 ggplot(wildlife_impacts) +
-  geom_boxplot(aes(x = speed, y = operator)) + 
+  geom_boxplot(aes(x = speed, y = operator)) +
   labs(
     x = 'Speed (mph)',
     y = 'Airline'
@@ -595,7 +606,7 @@ Galton, F. (1886). ["Regression towards mediocrity in hereditary stature"](http:
 
 "midparent height" is just a scaled mean:
 ```{r, eval=FALSE}
-midparentHeight =  (father + 1.08*mother)/2
+midparentHeight = (father + 1.08 * mother) / 2
 ```
 
 ```{r}
@@ -606,11 +617,12 @@ midparentHeight =  (father + 1.08*mother)/2
 
 library(HistData)
 
-galtonScatterplot <- GaltonFamilies %>% 
+galtonScatterplot <- GaltonFamilies %>%
   ggplot() +
   geom_point(
     aes(x = midparentHeight, y = childHeight),
-    size = 0.5, alpha = 0.7
+    size = 0.5,
+    alpha = 0.7
   ) +
   theme_classic() +
   labs(
@@ -620,7 +632,7 @@ galtonScatterplot <- GaltonFamilies %>%
 
 galtonScatterplot
 ```
- 
+
 ### How do you measure correlation? (**Pearson**)
 
 Pearson came up with this:
@@ -634,11 +646,11 @@ Assumptions: <br/>
 <div style="display: flex; justify-content: space-between;">
 
 <div style="flex: 1; margin-right: 10px;">
-  <img src="figs/cor_vstrong_p.png" width=350>
+  <img src="figs/cor_vstrong_p.png" width=250>
 </div>
 
 <div style="flex: 1; margin-right: 10px;">
-  <img src="figs/cor_quad.png" width=350>
+  <img src="figs/cor_quad.png" width=250>
 </div>
 
 </div>
@@ -652,7 +664,11 @@ Interpretation:
 - Closer to 1 is stronger correlation
 - Closer to 0 is weaker correlation
 
-```{r}
+`
+``
+{
+  r
+}
 cor(
   x = GaltonFamilies$midparentHeight,
   y = GaltonFamilies$childHeight,
@@ -660,7 +676,7 @@ cor(
 )
 ```
 
-<img src="figs/galtonScatterplot.png" width=700>
+<img src="figs/galtonScatterplot.png" width=500>
 
 ### What does $r$ mean?
 
@@ -669,7 +685,7 @@ cor(
 - $\pm 0.5 - 0.8$: Strong
 - $\pm 0.8 - 1.0$: Very strong
 
-<img src="figs/cor_p.png" width=700>
+<img src="figs/cor_p.png" width=500>
 
 Test your understanding of $r$ here:
 [guessthecorrelation.com](http://guessthecorrelation.com/)
@@ -677,7 +693,7 @@ Test your understanding of $r$ here:
 **Coefficient of determination: $r^2$**
 Percent of variance in one variable that is explained by the other variable
 
-<img src="images/rsquared_venn.png" width = 700>
+<img src="images/rsquared_venn.png" width = 500>
 
 $r$ | $r^2$
 ----|------
@@ -716,37 +732,21 @@ If correlation between parent and child height is 0.32, then 10% of the variance
 ([They can cause spurious correlations](https://www.tylervigen.com/spurious-correlations))
 
 Dual Axes:
-<img src="images/hbr_two_axes1.png" width=700>
+<img src="images/hbr_two_axes1.png" width=500>
 </center>
 
 Single Axis:
-<img src="images/hbr_two_axes2.png" width=700>
+<img src="images/hbr_two_axes2.png" width=500>
 
 ### Outliers
 
 <center>
-<img src = "images/outliers.jpeg" width = "680">
+<img src = "images/outliers.jpeg" width = "500">
 </center>
 
 **Pearson** correlation is highly sensitive to outliers
 
-<div style="display: flex; justify-content: space-between;">
-
-<div style="flex: 1; margin-right: 10px;">
-  <img src="figs/pearson_base.png" width=260>
-</div>
-
-<div style="flex: 1; margin-right: 10px;">
-  <img src="figs/pearson1.png" width=260>
-</div>
-
-<div style="flex: 1; margin-right: 10px;">
-  <img src="figs/pearson2.png" width=260>
-</div>
-
-</div>
-
-<img src="figs/pearson_grid.png" width=700>
+<img src="figs/pearson_grid.png" width=500>
 
 ### **Spearman**'s rank-order correlation
 
@@ -762,38 +762,7 @@ Assumptions:
 
 **Spearman correlation more robust to outliers**
 
-<img src="figs/spearman_grid.png" width=700>
-
-<div style="display: flex; justify-content: space-between;">
-
-<div style="flex: 1; margin-right: 10px;">
-  <img src="figs/pearson_grid.png" width=300>
-</div>
-
-<div style="flex: 1; margin-right: 10px;">
-```{r}
-#| echo: false
-
-tribble(
-    ~Pearson, ~Spearman,
-    -0.56,    0.53,
-    0.39,     0.69,
-    0.94,     0.81,
-    0.38,     0.76,
-    0.81,     0.79,
-    0.31,     0.70,
-    0.95,     0.81,
-    0.51,     0.75,
-    -0.56,    0.53) %>%
-    kbl()
-```
-</div>
-
-<div style="flex: 1; margin-right: 10px;">
-  <img src="figs/outlier_compare.png" width=300>
-</div>
-
-</div>
+<img src="figs/spearman_grid.png" width=500>
 
 ### Summary of correlation
 
@@ -807,7 +776,7 @@ R command (hint: add `use = "complete.obs"` to drop NA values)
 ```{r}
 #| eval: false
 
-pearson  <- cor(x, y, method = "pearson", use = "complete.obs")
+pearson <- cor(x, y, method = "pearson", use = "complete.obs")
 spearman <- cor(x, y, method = "spearman", use = "complete.obs")
 ```
 
@@ -816,11 +785,12 @@ spearman <- cor(x, y, method = "spearman", use = "complete.obs")
 ```{r}
 #| eval: false
 
-scatterplot <- mtcars %>% 
+scatterplot <- mtcars %>%
   ggplot() +
   geom_point(
     aes(x = mpg, y = hp),
-    size = 2, alpha = 0.7
+    size = 2,
+    alpha = 0.7
   ) +
   theme_classic(base_size = 20) +
   labs(
@@ -832,7 +802,7 @@ scatterplot
 ```
 
 <center>
-<img src="figs/mtcarsScatterplotBase.png" width=700>
+<img src="figs/mtcarsScatterplotBase.png" width=500>
 </center>
 
 ### Adding a correlation label to a chart
@@ -855,18 +825,20 @@ Add label to the chart with `annotate()`
 scatterplot +
   annotate(
     geom = 'text',
-    x = 25, y = 310,
+    x = 25,
+    y = 310,
     label = corrLabel,
-    hjust = 0, size = 7
+    hjust = 0,
+    size = 7
   )
 ```
 
-<img src="figs/mtcarsScatterplot.png" width=700>
+<img src="figs/mtcarsScatterplot.png" width=500>
 
 ### Visualize all the correlations: `ggcorr()`
 
 <center>
-<img src="images/all-the-correlations.jpeg" width=700>
+<img src="images/all-the-correlations.jpeg" width=500>
 </center>
 
 ```{r}
@@ -882,7 +854,7 @@ mtcars %>%
   ggcorr()
 ```
 
-<img src="figs/ggcor_mtcars.png" width=700>
+<img src="figs/ggcor_mtcars.png" width=500>
 </center>
 
 ```{r}
@@ -902,7 +874,7 @@ mtcars %>%
   )
 ```
 
-<img src="figs/ggcor_mtcars_labels.png" width=700>
+<img src="figs/ggcor_mtcars_labels.png" width=500>
 
 ```{r}
 #| eval: false
@@ -918,7 +890,7 @@ ggcor_mtcars_final <- mtcars %>%
   )
 ```
 
-<img src="figs/ggcor_mtcars_final.png" width=700>
+<img src="figs/ggcor_mtcars_final.png" width=500>
 
 **Pearson**
 
@@ -934,7 +906,7 @@ mtcars %>%
   )
 ```
 
-<img src="figs/ggcor_mtcars_pearson.png" width=700>
+<img src="figs/ggcor_mtcars_pearson.png" width=500>
 
 **Spearman**
 
@@ -950,7 +922,7 @@ mtcars %>%
   )
 ```
 
-<img src="figs/ggcor_mtcars_spearman.png" width=700>
+<img src="figs/ggcor_mtcars_spearman.png" width=500>
 
 ### Correlograms: `ggpairs()`
 
@@ -958,8 +930,14 @@ mtcars %>%
 #| eval: false
 
 library('GGally')
-```
-```{r}
+`
+`
+`
+`
+``
+{
+  r
+}
 #| eval: false
 
 mtcars %>%
@@ -970,7 +948,7 @@ mtcars %>%
 - Look for linear relationships
 - View distribution of each variable
 
-<img src="figs/ggpairs_mtcars.png" width=700>
+<img src="figs/ggpairs_mtcars.png" width=500>
 
 ### **Simpson's Paradox**: when correlation betrays you
 
@@ -978,8 +956,8 @@ At first glance, it seems that body mass and bill depth are negatively correlate
 
 **Body mass vs. Bill depth**
 
-<img src="figs/simpson_penguins.png" width=700>
+<img src="figs/simpson_penguins.png" width=500>
 
 **Body mass vs. Bill depth**
 
-<img src="figs/simpson_penguins_good.png" width=700>
+<img src="figs/simpson_penguins_good.png" width=500>
